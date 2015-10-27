@@ -26,4 +26,6 @@ COPY ./etc/marathon /etc/marathon
 VOLUME /tmp/mesos
 
 COPY ./docker-entrypoint.sh /docker-entrypoint.sh
-# ENTRYPOINT ["/docker-entrypoint.sh"]
+
+# Comment this line to instead end up with a bash shell
+ENTRYPOINT ["/docker-entrypoint.sh"]
