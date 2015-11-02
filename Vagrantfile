@@ -25,8 +25,14 @@ Vagrant.configure(2) do |config|
 
   config.vm.network "forwarded_port", guest: 8080, host: 8080
   config.vm.network "forwarded_port", guest: 5050, host: 5050
+  config.vm.network "forwarded_port", guest: 5051, host: 5051
   config.vm.network "forwarded_port", guest: 8500, host: 8500
   config.vm.network "forwarded_port", guest: 80, host: 8000
+
+  # NOTE: these map the port resources advertised by the mesos-slave
+  for i in 10000..10050
+    config.vm.network "forwarded_port", guest: i, host: i
+  end
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -80,23 +86,38 @@ Vagrant.configure(2) do |config|
     echo "deb http://http.debian.net/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
 
     apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-    echo "deb http://apt.dockerproject.org/repo debian-jessie main" | tee /etc/apt/sources.list.d/docker.list
+    echo "deb http://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
 
     apt-get update
+    apt-get upgrade
     apt-get install -y marathon mesos python2.7 python-virtualenv
     apt-get install -y supervisor
     apt-get install -y docker-engine
     apt-get install -y nginx
     apt-get install -y python-pip
     apt-get install -y python-dev
-
-    # Install miscellaneous useful tools
+    apt-get install -y unzip
     apt-get install -y curl jq
     pip install pyasn1>=0.1.8
     pip install consular
     mkdir -p /usr/local/consul
     wget -P /usr/local/consul -qc https://releases.hashicorp.com/consul/0.5.2/consul_0.5.2_linux_amd64.zip
     wget -P /usr/local/consul -qc https://releases.hashicorp.com/consul/0.5.2/consul_0.5.2_web_ui.zip
+    usermod -aG docker vagrant
+  SHELL
 
+  config.vm.provision "shell", run: "always", inline: <<-SHELL
+    service zookeeper stop
+    update-rc.d -f zookeeper remove
+    service zookeeper restart
+
+    service mesos-master stop
+    update-rc.d -f mesos-master remove
+    service mesos-master restart
+    service marathon restart
+
+    service mesos-slave stop
+    update-rc.d -f mesos-slave remove
+    service mesos-slave restart
   SHELL
 end
