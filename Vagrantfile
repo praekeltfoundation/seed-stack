@@ -23,6 +23,7 @@ Vagrant.configure(2) do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
 
+  config.vm.network "forwarded_port", guest: 9000, host: 9000
   config.vm.network "forwarded_port", guest: 8080, host: 8080
   config.vm.network "forwarded_port", guest: 5050, host: 5050
   config.vm.network "forwarded_port", guest: 5051, host: 5051
@@ -53,18 +54,16 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "./etc/mesos", "/etc/mesos"
   config.vm.synced_folder "./etc/mesos-master", "/etc/mesos-master"
   config.vm.synced_folder "./etc/mesos-slave", "/etc/mesos-slave"
+  config.vm.synced_folder "./etc/consul.d", "/etc/consul.d"
+  config.vm.synced_folder "./etc/consular", "/etc/consular"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
   config.vm.provider "virtualbox" do |vb|
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-  #
-    # Need some room to run all the containers
-    vb.memory = "2048"
-    vb.cpus = 2
+    vb.memory = "1024"
+    vb.cpus = 1
   end
   #
   # View the documentation for the provider you are using for more
@@ -100,9 +99,23 @@ Vagrant.configure(2) do |config|
     apt-get install -y curl jq
     pip install pyasn1>=0.1.8
     pip install consular
-    mkdir -p /usr/local/consul
-    wget -P /usr/local/consul -qc https://releases.hashicorp.com/consul/0.5.2/consul_0.5.2_linux_amd64.zip
-    wget -P /usr/local/consul -qc https://releases.hashicorp.com/consul/0.5.2/consul_0.5.2_web_ui.zip
+
+    mkdir -p /tmp/consul
+    mkdir -p /usr/share/consul
+
+    wget -P /tmp/consul -qc https://releases.hashicorp.com/consul/0.5.2/consul_0.5.2_linux_amd64.zip
+    unzip -d /tmp/consul/ /tmp/consul/consul_0.5.2_linux_amd64.zip
+    mv /tmp/consul/consul /usr/local/bin/consul
+
+    wget -P /tmp/consul -qc https://releases.hashicorp.com/consul/0.5.2/consul_0.5.2_web_ui.zip
+    unzip -d /tmp/consul/ /tmp/consul/consul_0.5.2_web_ui.zip
+    mv /tmp/consul/dist /usr/share/consul/ui
+
+    wget -P /tmp/consul -qc https://releases.hashicorp.com/consul-template/0.11.1/consul-template_0.11.1_linux_amd64.zip
+    unzip -d /tmp/consul/ /tmp/consul/consul-template_0.11.1_linux_amd64.zip
+    mv /tmp/consul/consul-template /usr/local/bin/consul-template
+    rm -rf /tmp/consul
+
     usermod -aG docker vagrant
   SHELL
 
@@ -119,5 +132,7 @@ Vagrant.configure(2) do |config|
     service mesos-slave stop
     update-rc.d -f mesos-slave remove
     service mesos-slave restart
+
+    supervisorctl reload
   SHELL
 end

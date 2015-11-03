@@ -1,0 +1,21 @@
+{
+  "id": "ping",
+  "cmd": "python3 -m http.server 8080",
+  "cpus": 0.5,
+  "mem": 32.0,
+  "labels": {
+    "domain": "ping.127.0.0.1.xip.io",
+    "country": "South Africa",
+    "project_type": "foo"
+  },
+  "container": {
+    "type": "DOCKER",
+    "docker": {
+      "image": "python:3",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "containerPort": 8080, "hostPort": 0 }
+      ]
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+    "bootstrap_expect": 1,
+    "server": true,
+    "data_dir": "/var/consul",
+    "ui_dir": "/usr/share/consul/ui",
+    "log_level": "INFO",
+    "enable_syslog": true,
+    "advertise_addr": "127.0.0.1",
+    "client_addr": "127.0.0.1",
+    "services": [{
+        "name": "marathon",
+        "port": 8080
+    }, {
+        "name": "mesos",
+        "port": 5050
+    }, {
+        "name": "zookeeper",
+        "port": 2181
+    }]
+}
