@@ -98,7 +98,7 @@ Vagrant.configure(2) do |config|
     apt-get install -y python-dev
     apt-get install -y unzip
     apt-get install -y curl jq
-    pip install pyasn1>=0.1.8
+    pip install "pyasn1>=0.1.8"
     pip install consular
 
     mkdir -p /tmp/consul
