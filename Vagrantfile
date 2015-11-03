@@ -31,9 +31,10 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 80, host: 8000
 
   # NOTE: these map the port resources advertised by the mesos-slave
-  for i in 10000..10050
-    config.vm.network "forwarded_port", guest: i, host: i
-  end
+  #       uncomment these if you want to access them directly on the host
+  # for i in 10000..10050
+  #   config.vm.network "forwarded_port", guest: i, host: i
+  # end
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
