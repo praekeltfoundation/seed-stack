@@ -3,14 +3,15 @@ set -x
 
 # Mesosphere repo for Mesos and Marathon
 apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF
-echo "deb http://repos.mesosphere.io/debian jessie main" > /etc/apt/sources.list.d/mesosphere.list
+echo "deb http://repos.mesosphere.io/ubuntu trusty main" > /etc/apt/sources.list.d/mesosphere.list
 
 # Docker repo
 apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-echo "deb http://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
+echo "deb http://apt.dockerproject.org/repo ubuntu-trusty main" > /etc/apt/sources.list.d/docker.list
 
-# Backports for OpenJDK 8 for Marathon 0.11+
-echo "deb http://http.debian.net/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+# Web Upd8 PPA for Oracle Java 8 for Marathon 0.11+
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7B2C3B0889BF5709A105D03AC2518248EEA14886
+echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /etc/apt/sources.list.d/webupd8team-java-trusty.list
 
 # Upgrade the system
 apt-get update
@@ -22,6 +23,10 @@ apt-get install -y \
     python-dev \
     python-pip \
     python-virtualenv
+
+# Install Java 8 after accepting the license agreement
+echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | /usr/bin/debconf-set-selections
+apt-get install -y oracle-java8-installer
 
 # Tell dpkg not to overwrite our config files when installing mesos, marathon and supervisor
 apt-get install -y -o Dpkg::Options::="--force-confold" \
@@ -41,7 +46,7 @@ apt-get install -y \
     jq
 
 # Install consular
-pip install "pyasn1>=0.1.8"
+apt-get install -y libffi-dev
 pip install consular
 
 # Install consul and consul-template
