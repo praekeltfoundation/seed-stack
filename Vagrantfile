@@ -89,7 +89,7 @@ Vagrant.configure(2) do |config|
     echo "deb http://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sources.list.d/docker.list
 
     apt-get update
-    apt-get upgrade
+    apt-get upgrade -y
     apt-get install -y marathon mesos python2.7 python-virtualenv
     apt-get install -y supervisor
     apt-get install -y docker-engine
