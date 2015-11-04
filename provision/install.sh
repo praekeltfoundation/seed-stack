@@ -33,6 +33,8 @@ apt-get install -y -o Dpkg::Options::="--force-confold" \
     marathon \
     mesos \
     supervisor
+rm /etc/mesos-master/*.dpkg-dist
+rm /etc/supervisor/*.dpkg-dist
 
 # Install docker and nginx
 apt-get install -y \
