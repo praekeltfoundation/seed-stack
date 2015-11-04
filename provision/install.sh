@@ -37,7 +37,7 @@ apt-get install -y -o Dpkg::Options::="--force-confold" \
 # Install docker and nginx
 apt-get install -y \
     docker-engine \
-    nginx \
+    nginx-light \
     unzip
 
 # Curl and jq are useful to have
