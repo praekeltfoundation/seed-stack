@@ -2,7 +2,7 @@
 set -x
 
 # Mesosphere repo for Mesos and Marathon
-apt-key adv --keyserver keyserver.ubuntu.com --recv E56151BF
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E56151BF
 echo "deb http://repos.mesosphere.io/ubuntu trusty main" > /etc/apt/sources.list.d/mesosphere.list
 
 # Docker repo
