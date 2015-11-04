@@ -6,4 +6,4 @@ service mesos-master restart
 service marathon restart
 service mesos-slave restart
 
-supervisorctl reload
+service supervisor restart
