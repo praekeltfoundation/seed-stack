@@ -11,7 +11,7 @@
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "python:3",
+      "image": "python:3-slim",
       "network": "BRIDGE",
       "portMappings": [
         { "containerPort": 8080, "hostPort": 0 }
