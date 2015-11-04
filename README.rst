@@ -9,12 +9,13 @@ Install Vagrant_ and then::
 
 This will result in a stack running:
 
-1. Mesos_ Master
-2. Mesos_ Slave
-3. Marathon_
-4. Consul_
-5. Consular_
-6. Nginx_
+1. Zookeeper_
+2. Mesos_ Master
+3. Mesos_ Slave
+4. Marathon_
+5. Consul_
+6. Consular_
+7. Nginx_
 
 Once running launch the sample ``python-server`` application::
 
@@ -45,3 +46,4 @@ Nginx
 .. _Consul: http://consul.io
 .. _Consular: http://consular.rtfd.org
 .. _Nginx: http://www.nginx.org
+.. _Zookeeper: https://zookeeper.apache.org/
