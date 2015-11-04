@@ -10,8 +10,12 @@ echo "deb http://apt.dockerproject.org/repo debian-jessie main" > /etc/apt/sourc
 
 apt-get update
 apt-get upgrade -y
-apt-get install -y marathon mesos python2.7 python-virtualenv
-apt-get install -y supervisor
+
+apt-get install -y python2.7 python-virtualenv
+# Tell dpkg not to overwrite our config files
+apt-get install -y -o Dpkg::Options::="--force-confold" marathon mesos
+apt-get install -y -o Dpkg::Options::="--force-confold" supervisor
+
 apt-get install -y docker-engine
 apt-get install -y nginx
 apt-get install -y python-pip
