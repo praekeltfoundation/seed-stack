@@ -53,6 +53,32 @@ pip install consular
 mkdir -p /tmp/consul
 mkdir -p /usr/share/consul
 
+# Install MC2
+
+apt-get install -y \
+    libpq-dev \
+    libffi-dev \
+    redis-server\
+    git
+
+
+mkdir -p /var/praekelt/logs
+cd /var/praekelt/
+if [ ! -d /var/praekelt/mc2 ]; then
+    git clone https://github.com/miltontony/mc2.git /var/praekelt/mc2
+else
+    cd mc2; git pull; cd /var/praekelt/;
+fi
+
+cd /var/praekelt/mc2; pip install -r requirements.txt
+./manage.py migrate --noinput
+./manage.py collectstatic --noinput
+
+# NOTE: wasn't sure about creating these in this project,
+# so I'm linking to them instead
+ln -s /var/praekelt/mc2/etc/nginx.conf /etc/nginx/sites-enabled/mc2.conf
+ln -s /var/praekelt/mc2/etc/supervisor.conf /etc/supervisor/conf.d/mc2.conf
+
 wget -P /tmp/consul -qc https://releases.hashicorp.com/consul/0.5.2/consul_0.5.2_linux_amd64.zip
 unzip -d /tmp/consul/ /tmp/consul/consul_0.5.2_linux_amd64.zip
 mv /tmp/consul/consul /usr/local/bin/consul
