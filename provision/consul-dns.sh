@@ -4,11 +4,8 @@ set -x
 # Get Dnsmasq to forward all DNS queries ending in 'consul' to Consul
 NAMESERVER='10.0.2.3' # VirtualBox DNS
 
-apt-get purge -y resolv-conf
 apt-get install -y dnsmasq
 
-# TODO: Not lose the auto-configured search
-echo "nameserver 127.0.0.1" > /etc/resolv.conf
 echo "nameserver $NAMESERVER" >  /etc/resolv.primary
 echo "resolv-file=/etc/resolv.primary" > /etc/dnsmasq.conf
 echo "server=/consul/127.0.0.1#8600" > /etc/dnsmasq.d/consul
