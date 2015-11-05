@@ -25,6 +25,8 @@ Once running launch the sample ``python-server`` application::
         -H 'Content-Type: application/json' \
         http://localhost:8080/v2/apps
 
+Then you should be able to use the application in your web browser at http://python-server.127.0.0.1.xip.io:8000
+
 The following services have port forwarding configured and are available
 on the host:
 
