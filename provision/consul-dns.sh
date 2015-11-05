@@ -13,5 +13,5 @@ service dnsmasq restart
 
 # Make Docker containers use the host for DNS queries
 DOCKER0_IP="$(ip addr show dev docker0 | grep -o 'inet [0-9.]\+' | cut -c6-)"
-echo "DOCKER_OPTS=\"--dns $DOCKER0_IP\"" >> /etc/default/docker
+echo "DOCKER_OPTS=\"--dns $DOCKER0_IP\"" > /etc/default/docker
 service docker restart
