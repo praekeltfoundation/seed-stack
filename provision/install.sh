@@ -61,6 +61,9 @@ mv /tmp/consul/consul /usr/local/bin/consul
 
 wget -P /tmp/consul -qc https://releases.hashicorp.com/consul/0.5.2/consul_0.5.2_web_ui.zip
 unzip -d /tmp/consul/ /tmp/consul/consul_0.5.2_web_ui.zip
+if [ -d /usr/share/consul/ui ]; then
+    rm -rf /usr/share/consul/ui
+fi
 mv /tmp/consul/dist /usr/share/consul/ui
 
 wget -P /tmp/consul -qc https://releases.hashicorp.com/consul-template/0.11.1/consul-template_0.11.1_linux_amd64.zip
