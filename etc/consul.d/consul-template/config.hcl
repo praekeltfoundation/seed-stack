@@ -10,7 +10,12 @@ syslog {
 }
 
 template {
-  source = "/etc/consular/nginx.ctmpl"
-  destination = "/etc/nginx/sites-enabled/consul_template.conf"
+  source = "/etc/consular/nginx-websites.ctmpl"
+  destination = "/etc/nginx/sites-enabled/seed-websites.conf"
+  command = "/etc/init.d/nginx reload"
+}
+template {
+  source = "/etc/consular/nginx-services.ctmpl"
+  destination = "/etc/nginx/sites-enabled/seed-services.conf"
   command = "/etc/init.d/nginx reload"
 }
