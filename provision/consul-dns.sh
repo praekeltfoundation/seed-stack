@@ -4,7 +4,7 @@ set -x
 # Get Dnsmasq to forward all DNS queries ending in 'consul' to Consul
 NAMESERVER='10.0.2.3' # VirtualBox DNS
 
-apt-get install -y dnsmasq
+apt-get install -qy dnsmasq
 
 echo "nameserver $NAMESERVER" >  /etc/resolv.primary
 echo -e "resolv-file=/etc/resolv.primary\ncache-size=0" > /etc/dnsmasq.conf

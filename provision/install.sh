@@ -17,8 +17,10 @@ echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /etc/a
 apt-get update
 apt-get upgrade -y
 
+APT_GET_INSTALL="apt-get install -qy -o APT::Install-Recommends=false -o APT::Install-Suggests=false"
+
 # Install python things
-apt-get install -y \
+$APT_GET_INSTALL \
     python2.7 \
     python-dev \
     python-pip \
@@ -26,32 +28,35 @@ apt-get install -y \
 
 # Install Java 8 after accepting the license agreement
 echo "oracle-java8-installer shared/accepted-oracle-license-v1-1 select true" | /usr/bin/debconf-set-selections
-apt-get install -y oracle-java8-installer
+$APT_GET_INSTALL oracle-java8-installer
 
 # Tell dpkg not to overwrite our config files when installing mesos, marathon and supervisor
-apt-get install -y -o Dpkg::Options::="--force-confold" \
+$APT_GET_INSTALL -o Dpkg::Options::="--force-confold" \
     marathon \
     mesos \
-    supervisor
+    supervisor \
+    zookeeper
 rm /etc/mesos-master/*.dpkg-dist
 rm /etc/supervisor/*.dpkg-dist
 
-# Install docker and nginx
-apt-get install -y \
-    docker-engine \
-    nginx-light \
-    unzip
+# Install docker with the recommended packages to get things like aufs
+apt-get install -qy docker-engine
+
+# Install nginx
+$APT_GET_INSTALL nginx-light
 
 # Curl and jq are useful to have
-apt-get install -y \
+$APT_GET_INSTALL \
     curl \
     jq
 
 # Install consular
-apt-get install -y libffi-dev
+$APT_GET_INSTALL libffi-dev
 pip install consular
 
 # Install consul and consul-template
+$APT_GET_INSTALL unzip
+
 mkdir -p /tmp/consul
 mkdir -p /usr/share/consul
 
