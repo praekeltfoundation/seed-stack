@@ -4,18 +4,29 @@
   "cpus": 0.5,
   "mem": 32.0,
   "labels": {
-    "domain": "ping.127.0.0.1.xip.io",
+    "domain": "python-server.127.0.0.1.xip.io",
     "country": "South Africa",
     "project_type": "foo"
   },
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "python:3",
+      "image": "python:3-slim",
       "network": "BRIDGE",
       "portMappings": [
         { "containerPort": 8080, "hostPort": 0 }
       ]
     }
-  }
+  },
+  "healthChecks": [
+    {
+      "protocol": "HTTP",
+      "path": "/",
+      "gracePeriodSeconds": 3,
+      "intervalSeconds": 10,
+      "portIndex": 0,
+      "timeoutSeconds": 10,
+      "maxConsecutiveFailures": 3
+    }
+  ]
 }
