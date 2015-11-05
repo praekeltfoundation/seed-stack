@@ -7,7 +7,7 @@ NAMESERVER='10.0.2.3' # VirtualBox DNS
 apt-get install -y dnsmasq
 
 echo "nameserver $NAMESERVER" >  /etc/resolv.primary
-echo "resolv-file=/etc/resolv.primary" > /etc/dnsmasq.conf
+echo -e "resolv-file=/etc/resolv.primary\ncache-size=0" > /etc/dnsmasq.conf
 echo "server=/consul/127.0.0.1#8600" > /etc/dnsmasq.d/consul
 service dnsmasq restart
 
