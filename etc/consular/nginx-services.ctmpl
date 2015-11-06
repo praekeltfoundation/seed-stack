@@ -12,7 +12,7 @@ upstream {{.Name}} { {{range service .Name}}
     server {{.Address}}:{{.Port}};{{end}}
 }
 {{else}}
-# Skipped service {{.Name}} as it does not have a KV domain entry.
+# Skipped service {{.Name}} as it does not have a KV location entry.
 {{end}}{{end}}
 server {
     listen 80;
