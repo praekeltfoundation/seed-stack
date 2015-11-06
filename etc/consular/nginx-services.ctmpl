@@ -11,9 +11,9 @@
 upstream {{.Name}} { {{range service .Name}}
     server {{.Address}}:{{.Port}};{{end}}
 }
-{{end}}{{else}}
+{{else}}
 # Skipped service {{.Name}} as it does not have a KV domain entry.
-{{end}}
+{{end}}{{end}}
 server {
     listen 80;
     {{range services}}{{$labels := ls (print "consular/" .Name) | explode}}{{if $labels.location}}
