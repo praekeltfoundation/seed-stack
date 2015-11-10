@@ -3,6 +3,6 @@ set -x
 
 apt-get install -y python2.7
 
-# Install the latest version of pip
-apt-get install -y curl ca-certificates
-curl -SL 'https://bootstrap.pypa.io/get-pip.py' | python
+# Install pip, avoiding the recommended dev dependencies and then updating
+apt-get install -y --no-install-recommends python-pip
+pip install --upgrade pip
