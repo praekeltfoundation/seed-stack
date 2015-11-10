@@ -10,6 +10,11 @@ syslog {
 }
 
 template {
+  source = "/etc/consular/nginx-upstreams.ctmpl"
+  destination = "/etc/nginx/sites-enabled/seed-upstreams.conf"
+  command = "/etc/init.d/nginx reload"
+}
+template {
   source = "/etc/consular/nginx-websites.ctmpl"
   destination = "/etc/nginx/sites-enabled/seed-websites.conf"
   command = "/etc/init.d/nginx reload"
