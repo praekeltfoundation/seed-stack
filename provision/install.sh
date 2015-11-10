@@ -10,10 +10,6 @@ apt-get upgrade -y
 /vagrant/provision/install/marathon.sh
 /vagrant/provision/install/docker.sh
 
-# Tell dpkg not to overwrite our config files when installing supervisor
-apt-get install -y -o Dpkg::Options::="--force-confold" supervisor
-rm /etc/supervisor/*.dpkg-dist
-
 # Install nginx
 apt-get install -y nginx-light
 
