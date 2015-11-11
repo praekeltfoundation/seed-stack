@@ -5,8 +5,8 @@
     "ui_dir": "/usr/share/consul/ui",
     "log_level": "INFO",
     "enable_syslog": true,
-    "advertise_addr": "127.0.0.1",
-    "client_addr": "127.0.0.1",
+    "advertise_addr": "10.0.2.15",
+    "client_addr": "0.0.0.0",
     "services": [{
         "name": "marathon",
         "port": 8080
