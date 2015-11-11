@@ -1,6 +1,8 @@
 #!/bin/bash -e
 set -x
 
+# DEPENDENCIES: consul, docker
+
 # Get Dnsmasq to forward all DNS queries ending in 'consul' to Consul
 NAMESERVER='10.0.2.3' # VirtualBox DNS
 
