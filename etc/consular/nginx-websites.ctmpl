@@ -8,12 +8,6 @@
 #       list of services in the Nginx config.
 
 {{range services}}{{$labels := ls (print "consular/" .Name) | explode }}{{if $labels.domain}}
-
-upstream {{.Name}} {
-  {{range service .Name }}server {{.Address}}:{{.Port}};
-  {{end}}
-}
-
 server {
   listen 80;
   server_name {{$labels.domain | parseJSON }};
