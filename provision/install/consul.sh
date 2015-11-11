@@ -28,3 +28,12 @@ mv /tmp/consul/consul-template /usr/local/bin/consul-template
 rm -rf /tmp/consul
 
 apt-get purge -y --auto-remove unzip
+
+# Set up the Consul user and permissions
+groupadd consul
+useradd -g consul consul
+
+chown -R consul /usr/share/consul
+
+mkdir -p /var/consul
+chown -R consul /var/consul
