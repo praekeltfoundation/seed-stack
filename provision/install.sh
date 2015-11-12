@@ -3,7 +3,8 @@ set -x
 
 # Upgrade the system
 apt-get update
-apt-get upgrade -y
+# FIXME: see issue #21
+#apt-get upgrade -y
 
 /vagrant/provision/install/python.sh
 /vagrant/provision/install/java8.sh
