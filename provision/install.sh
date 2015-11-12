@@ -18,6 +18,7 @@ apt-get install -y \
     curl \
     jq
 
+/vagrant/provision/install/supervisor.sh
 /vagrant/provision/install/consular.sh
 /vagrant/provision/install/consul.sh
 /vagrant/provision/install/consul-dns.sh
