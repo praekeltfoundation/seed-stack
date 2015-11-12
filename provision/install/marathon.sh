@@ -14,7 +14,7 @@ apt-get install -y \
     mesos
 
 # Copy over the config
-source /vagrant/provision/copy_config.sh
+source /vagrant/provision/install/copy-config.sh
 copy_config /etc/mesos /etc/mesos-master /etc/mesos-slave /etc/marathon/conf
 
 # Restart the services to reload the config

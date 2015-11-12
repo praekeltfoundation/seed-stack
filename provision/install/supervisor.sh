@@ -5,6 +5,6 @@ set -x
 apt-get install -y supervisor
 
 # Copy over the config
-source /vagrant/provision/copy_config.sh
+source /vagrant/provision/install/copy-config.sh
 copy_config /etc/supervisor
 service supervisor restart

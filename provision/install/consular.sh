@@ -16,6 +16,6 @@ apt-get purge -y --auto-remove build-essential libssl-dev libffi-dev python-dev
 apt-get install -y libffi6 openssl
 
 # Copy over the config
-source /vagrant/provision/copy_config.sh
+source /vagrant/provision/install/copy-config.sh
 copy_config /etc/consular
 supervisorctl restart consular
