@@ -14,10 +14,5 @@ apt-get purge -y --auto-remove build-essential libssl-dev libffi-dev python-dev
 apt-get install -y libffi6 openssl
 
 # Copy over the config
-CONF_DIRS=(/etc/consular)
-for dir in $CONF_DIRS; do
-    mkdir -p "$dir"
-    for src in $(find "/vagrant${dir}" -type f -maxdepth 1); do
-        cp "$src" "$dir/$(basename $src)"
-    done
-done
+source /vagrant/provision/copy_config.sh
+copy_config /etc/consular
