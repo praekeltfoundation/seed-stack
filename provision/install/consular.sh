@@ -1,6 +1,8 @@
 #!/bin/bash -e
 set -x
 
+# DEPENDENCIES: supervisor
+
 # Install dependencies for building Twisted and cryptography
 apt-get install -y build-essential libssl-dev libffi-dev python-dev
 
