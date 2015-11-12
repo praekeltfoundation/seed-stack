@@ -32,3 +32,4 @@ apt-get purge -y --auto-remove unzip
 # Copy over the config
 source /vagrant/provision/copy_config.sh
 copy_config /etc/consul.d/server /etc/consul.d/consul-template
+supervisorctl restart consul consul_template

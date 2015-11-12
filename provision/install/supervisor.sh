@@ -8,3 +8,4 @@ rm /etc/supervisor/*.dpkg-dist
 # Copy over the config
 source /vagrant/provision/copy_config.sh
 copy_config /etc/supervisor
+service supervisor restart

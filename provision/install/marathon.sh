@@ -17,3 +17,8 @@ rm /etc/mesos-master/*.dpkg-dist
 # Copy over the config
 source /vagrant/provision/copy_config.sh
 copy_config /etc/mesos /etc/mesos-master /etc/mesos-slave /etc/marathon/conf
+
+# Restart the services to reload the config
+service mesos-master restart
+service mesos-slave restart
+service marathon restart

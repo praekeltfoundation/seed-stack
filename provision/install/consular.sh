@@ -16,3 +16,4 @@ apt-get install -y libffi6 openssl
 # Copy over the config
 source /vagrant/provision/copy_config.sh
 copy_config /etc/consular
+supervisorctl restart consular
