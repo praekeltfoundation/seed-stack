@@ -28,3 +28,12 @@ mv /tmp/consul/consul-template /usr/local/bin/consul-template
 rm -rf /tmp/consul
 
 apt-get purge -y --auto-remove unzip
+
+# Copy over the config
+CONF_DIRS=(/etc/consul.d/server /etc/consul.d/consul-template)
+for dir in $CONF_DIRS; do
+    mkdir -p "$dir"
+    for src in $(find "/vagrant${dir}" -type f -maxdepth 1); do
+        cp "$src" "$dir/$(basename $src)"
+    done
+done

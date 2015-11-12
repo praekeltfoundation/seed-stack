@@ -13,3 +13,12 @@ apt-get install -y -o Dpkg::Options::="--force-confold" \
     marathon \
     mesos
 rm /etc/mesos-master/*.dpkg-dist
+
+# Copy over the config
+CONF_DIRS=(/etc/mesos /etc/mesos-master /etc/mesos-slave /etc/marathon/conf)
+for dir in $CONF_DIRS; do
+    mkdir -p "$dir"
+    for src in $(find "/vagrant${dir}" -type f -maxdepth 1); do
+        cp "$src" "$dir/$(basename $src)"
+    done
+done
