@@ -30,8 +30,8 @@ rm -rf /tmp/consul
 apt-get purge -y --auto-remove unzip
 
 # Set up the Consul user and permissions
-groupadd consul
-useradd -g consul consul
+id -g consul &> /dev/null || groupadd consul
+id -u consul &> /dev/null || useradd -g consul consul
 
 chown -R consul /usr/share/consul
 
