@@ -1,6 +1,8 @@
 #!/bin/bash -e
 set -x
 
+# DEPENDENCIES: supervisor
+
 CONSUL_VERSION="0.5.2"
 CONSUL_WEB_UI_VERSION=$CONSUL_VERSION
 CONSUL_TEMPLATE_VERSION="0.11.1"
@@ -28,3 +30,8 @@ mv /tmp/consul/consul-template /usr/local/bin/consul-template
 rm -rf /tmp/consul
 
 apt-get purge -y --auto-remove unzip
+
+# Copy over the config
+source /vagrant/provision/install/copy-config.sh
+copy_config /etc/consul.d/server /etc/consul.d/consul-template
+supervisorctl restart consul consul_template
