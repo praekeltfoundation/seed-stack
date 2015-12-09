@@ -3,10 +3,12 @@ set -x
 
 # DEPENDENCIES: python, java8
 
-# Mesosphere repo for Mesos and Marathon
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E56151BF
-echo "deb http://repos.mesosphere.io/ubuntu trusty main" > /etc/apt/sources.list.d/mesosphere.list
-apt-get update
+# We do this in install.sh to avoid unnecessary `apt-get update` runs.
+
+# # Mesosphere repo for Mesos and Marathon
+# apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E56151BF
+# echo "deb http://repos.mesosphere.io/ubuntu trusty main" > /etc/apt/sources.list.d/mesosphere.list
+# apt-get update
 
 # Install mesos/marathon
 apt-get install -y \
