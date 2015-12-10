@@ -15,7 +15,7 @@ Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
 
   # Give our box a name, because "default" is confusing.
-  config.vm.define "seed-stack"
+  config.vm.define "seed-stack-puppet"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -76,5 +76,8 @@ Vagrant.configure(2) do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", path: "provision/install.sh"
+  config.vm.provision :puppet do |puppet|
+    puppet.module_path = ["puppet/upstream_modules", "puppet/modules"]
+    puppet.manifests_path = "puppet/manifests"
+  end
 end
