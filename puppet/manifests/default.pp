@@ -112,5 +112,14 @@ node default {
   ~>
   service { 'dnsmasq': }
 
-  include consular
+  class { 'consular':
+    consular_args => [
+      '--host=localhost',
+      '--sync-interval=300',
+      '--purge',
+      '--registration-id=localhost',
+      '--consul=http://localhost:8500',
+      '--marathon=http://localhost:8080',
+    ],
+  }
 }

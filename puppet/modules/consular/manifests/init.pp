@@ -1,4 +1,6 @@
-class consular {
+class consular(
+  $consular_args = [],
+) {
   class { 'python' :
     version    => 'system',
     pip        => 'present',
@@ -25,5 +27,13 @@ class consular {
   ~>
   python::virtualenv { '/var/consular/venv':
     requirements => '/var/consular/requirements.txt',
+  }
+  ~>
+  file { '/etc/init/consular.conf':
+    content => template('consular/init.consular.conf.erb'),
+  }
+  ~>
+  service { 'consular':
+    ensure => running,
   }
 }
