@@ -15,6 +15,7 @@ node default {
   class { 'mesos':
     repo => 'mesosphere',
     zookeeper => $mesos_zk,
+    require => Class['oracle_java'],
   }
 
   class { 'mesos::master':
@@ -42,6 +43,7 @@ node default {
       hostname => 'localhost',
       event_subscriber => 'http_callback',
     },
+    require => Class['oracle_java'],
   }
 
   class { 'consul':
