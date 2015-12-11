@@ -15,7 +15,7 @@ Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
 
   # Give our box a name, because "default" is confusing.
-  config.vm.define "seed-stack-puppet"
+  config.vm.define "seed-stack"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
