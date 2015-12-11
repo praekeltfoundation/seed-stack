@@ -26,7 +26,6 @@ Vagrant.configure(2) do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
 
-  config.vm.network "forwarded_port", guest: 9000, host: 9000
   config.vm.network "forwarded_port", guest: 8080, host: 8080
   config.vm.network "forwarded_port", guest: 5050, host: 5050
   config.vm.network "forwarded_port", guest: 5051, host: 5051
@@ -76,5 +75,8 @@ Vagrant.configure(2) do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", path: "provision/install.sh"
+  config.vm.provision :puppet do |puppet|
+    puppet.module_path = ["puppet/upstream_modules", "puppet/modules"]
+    puppet.manifests_path = "puppet/manifests"
+  end
 end
