@@ -4,6 +4,7 @@ node default {
 
   class { 'docker':
     dns => $ipaddress_docker0,
+    docker_users => ['vagrant'],
   }
 
   # We need this because mesos::install doesn't wait for apt::update before
@@ -124,4 +125,12 @@ node default {
       '--marathon=http://localhost:8080',
     ],
   }
+
+  docker::run { 'registry':
+    image => 'registry:2',
+    ports => ['5000:5000'],
+    volumes => ['/var/docker-registry:/var/lib/registry'],
+    extra_parameters => ['--restart=always'],
+  }
+
 }
