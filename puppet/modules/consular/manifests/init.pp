@@ -13,8 +13,6 @@ class consular(
     'build-essential',
     'libssl-dev',
     'libffi-dev',
-    'openssl',
-    'libffi6',
   ]: }
   ->
   file { '/var/consular':
