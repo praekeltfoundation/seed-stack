@@ -1,5 +1,6 @@
 This directory contains some Puppet Forge modules and their dependencies:
 
+ * camptocamp-openssl
  * deric-mesos
  * garethr-docker
  * gdhbashton-consul_template

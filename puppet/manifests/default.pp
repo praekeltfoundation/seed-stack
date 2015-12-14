@@ -4,6 +4,31 @@ node default {
 
   class { 'docker':
     dns => $ipaddress_docker0,
+    docker_users => ['vagrant'],
+  }
+
+  # NOTE: This cert wrangling is only good for a single machine. We need some
+  # other mechanism to get our certs to the right place in a multi-node setup.
+  package { 'openssl': }
+  ->
+  file { '/var/docker-certs': ensure => directory }
+  ->
+  openssl::certificate::x509 { 'docker-registry':
+    country => 'NT',
+    organization => 'seed-stack',
+    commonname => 'docker-registry.service.consul',
+    base_dir => '/var/docker-certs',
+  }
+  ~>
+  file { '/usr/local/share/ca-certificates/docker-registry.crt':
+    ensure => link,
+    target => '/var/docker-certs/docker-registry.crt',
+  }
+  ~>
+  exec { 'update-ca-certificates':
+    refreshonly => true,
+    command => '/usr/sbin/update-ca-certificates',
+    notify => [Service['docker']],
   }
 
   # We need this because mesos::install doesn't wait for apt::update before
@@ -59,9 +84,10 @@ node default {
       'domain'           => 'consul.',
     },
     services => {
-      'marathon'  => { port => 8080 },
-      'mesos'     => { port => 5050 },
-      'zookeeper' => { port => 2181 },
+      'marathon'        => { port => 8080 },
+      'mesos'           => { port => 5050 },
+      'zookeeper'       => { port => 2181 },
+      'docker-registry' => { port => 5000 },
     },
   }
 
@@ -124,4 +150,21 @@ node default {
       '--marathon=http://localhost:8080',
     ],
   }
+
+  docker::run { 'registry':
+    image => 'registry:2',
+    ports => ['5000:5000'],
+    volumes => [
+      '/var/docker-registry:/var/lib/registry',
+      '/var/docker-certs:/certs',
+    ],
+    env => [
+      'REGISTRY_HTTP_TLS_CERTIFICATE=/certs/docker-registry.crt',
+      'REGISTRY_HTTP_TLS_KEY=/certs/docker-registry.key',
+    ],
+    extra_parameters => ['--restart=always'],
+    require => [Service['docker']],
+    subscribe => [Openssl::Certificate::X509['docker-registry']],
+  }
+
 }
