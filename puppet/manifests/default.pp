@@ -2,35 +2,31 @@ node default {
 
   include oracle_java
 
+  class { 'docker':
+    dns => $ipaddress_docker0,
+    docker_users => ['vagrant'],
+  }
+
   # NOTE: This cert wrangling is only good for a single machine. We need some
   # other mechanism to get our certs to the right place in a multi-node setup.
   package { 'openssl': }
   ->
-  file { '/var/docker-certs':
-    ensure => directory,
-  }
-  ->
   openssl::certificate::x509 { 'docker-registry':
     country => 'NT',
     organization => 'seed-stack',
-    commonname => 'docker-registry.service.dc1.consul',
+    commonname => 'docker-registry.service.consul',
     base_dir => '/var/docker-certs',
   }
-  ->
-  file { '/etc/docker/certs.d': ensure => directory }
-  ->
-  file { '/etc/docker/certs.d/docker-registry.service.dc1.consul:5000':
-    ensure => directory,
-  }
-  ->
-  file { '/etc/docker/certs.d/docker-registry.service.dc1.consul:5000/ca.crt':
+  ~>
+  file { '/usr/local/share/ca-certificates/docker-registry.crt':
     ensure => link,
     target => '/var/docker-certs/docker-registry.crt',
   }
-  ->
-  class { 'docker':
-    dns => $ipaddress_docker0,
-    docker_users => ['vagrant'],
+  ~>
+  exec { 'update-ca-certificates':
+    refreshonly => true,
+    command => '/usr/sbin/update-ca-certificates',
+    notify => [Service['docker']],
   }
 
   # We need this because mesos::install doesn't wait for apt::update before
