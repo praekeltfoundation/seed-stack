@@ -11,6 +11,8 @@ node default {
   # other mechanism to get our certs to the right place in a multi-node setup.
   package { 'openssl': }
   ->
+  file { '/var/docker-certs': ensure => directory }
+  ->
   openssl::certificate::x509 { 'docker-registry':
     country => 'NT',
     organization => 'seed-stack',
