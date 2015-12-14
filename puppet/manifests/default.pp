@@ -163,7 +163,8 @@ node default {
       'REGISTRY_HTTP_TLS_KEY=/certs/docker-registry.key',
     ],
     extra_parameters => ['--restart=always'],
-    require => Openssl::Certificate::X509['docker-registry'],
+    require => [Service['docker']],
+    subscribe => [Openssl::Certificate::X509['docker-registry']],
   }
 
 }
