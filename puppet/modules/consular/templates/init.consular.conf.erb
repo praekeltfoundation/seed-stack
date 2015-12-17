@@ -3,5 +3,5 @@ description "consular"
 start on stopped rc RUNLEVEL=[2345]
 respawn
 
-exec /var/consular/venv/bin/consular<%
+exec /usr/bin/consular<%
   @consular_args.each do |arg| %> <%= arg %><% end %>
