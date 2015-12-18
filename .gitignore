@@ -1,1 +1,3 @@
 .vagrant/
+
+/puppet/upstream_modules/
