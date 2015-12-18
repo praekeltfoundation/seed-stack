@@ -1,4 +1,4 @@
-moduledir 'puppet/upstream_modules'
+moduledir '/vagrant/puppet/upstream_modules'
 
 # Basic modules
 mod 'puppetlabs/apt', '2.2.1'
