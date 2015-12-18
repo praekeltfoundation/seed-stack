@@ -10,4 +10,4 @@ else
     echo "'r10k' Ruby gem already installed..."
 fi
 
-r10k puppetfile install --verbose info --puppetfile /vagrant/Puppetfile
+r10k puppetfile install --verbose info --puppetfile /vagrant/puppet/Puppetfile
