@@ -71,6 +71,10 @@ node default {
     require => Class['oracle_java'],
   }
 
+  package { 'unzip':
+    ensure => installed,
+  }
+
   class { 'consul':
     config_hash => {
       'bootstrap_expect' => 1,
@@ -89,6 +93,7 @@ node default {
       'zookeeper'       => { port => 2181 },
       'docker-registry' => { port => 5000 },
     },
+    require => Package['unzip']
   }
 
   class { 'consul_template':
@@ -99,6 +104,7 @@ node default {
     # For some reason, consul-template doesn't like this option.
     # consul_max_stale => '10m',
     log_level        => 'warn',
+    require => Package['unzip']
   }
 
   file { '/etc/consul-template/nginx-upstreams.ctmpl':
