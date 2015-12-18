@@ -1,1 +1,5 @@
 .vagrant/
+
+# Keep empty upstream_modules directory
+/puppet/upstream_modules/*
+!/puppet/upstream_modules/.gitkeep
