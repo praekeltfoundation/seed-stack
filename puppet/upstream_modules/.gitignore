@@ -1,4 +1,3 @@
-# Ignore everything in the directory except the README
+# Ignore everything in the directory
 *
-!README.md
 !.gitignore
