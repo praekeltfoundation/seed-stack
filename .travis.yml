@@ -4,8 +4,8 @@ install:
   - gem install --no-ri --no-rdoc puppet -v 3.4.3
   - gem install --no-ri --no-rdoc puppet-catalog-test
   # Install Puppet upstream modules
-  - cd puppet && ./install-modules.sh
+  - (cd puppet && ./install-modules.sh)
 
 script:
   # Run some Puppet tests
-  - cd puppet && ./run-tests.sh
+  - (cd puppet && ./run-tests.sh)
