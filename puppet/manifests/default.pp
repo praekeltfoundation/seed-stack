@@ -108,13 +108,6 @@ node default {
 
   class { 'consul_template':
     version          => $consul_template_version,
-    # FIXME: Consul Template 0.12.0+ is only available from the new
-    # releases.hashicorp.com website. v0.23.0 of the consul_template module
-    # doesn't build correct URLs for that site - so we have to give it the full
-    # URL. v0.24.0 does support the new site but also has a new bug that breaks
-    # (at least) first runs of the module. File an issue or PR with the module
-    # maintainer or switch to Consul Template debs.
-    download_url     => "https://releases.hashicorp.com/consul-template/${consul_template_version}/consul-template_${consul_template_version}_linux_amd64.zip",
     config_dir       => '/etc/consul-template',
     consul_host      => '127.0.0.1',
     consul_port      => 8500,
@@ -130,6 +123,7 @@ node default {
   }
   ~>
   consul_template::watch { 'nginx-upstreams':
+    source      => '/etc/consul-template/nginx-upstreams.ctmpl',
     destination => '/etc/nginx/sites-enabled/seed-upstreams.conf',
     command     => '/etc/init.d/nginx reload',
   }
@@ -139,6 +133,7 @@ node default {
   }
   ~>
   consul_template::watch { 'nginx-websites':
+    source      => '/etc/consul-template/nginx-websites.ctmpl',
     destination => '/etc/nginx/sites-enabled/seed-websites.conf',
     command     => '/etc/init.d/nginx reload',
   }
@@ -148,6 +143,7 @@ node default {
   }
   ~>
   consul_template::watch { 'nginx-services':
+    source      => '/etc/consul-template/nginx-services.ctmpl',
     destination => '/etc/nginx/sites-enabled/seed-services.conf',
     command     => '/etc/init.d/nginx reload',
   }
