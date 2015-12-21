@@ -1,0 +1,13 @@
+language: ruby
+cache: bundler
+gemfile: puppet/Gemfile
+
+before_script:
+  # All our build steps and tests are for Puppet at the moment
+  - cd puppet
+
+script:
+  # Install Puppet upstream modules
+  - bundle exec ./install-modules.sh
+  # Run some Puppet tests
+  - bundle exec ./run-tests.sh
