@@ -13,10 +13,14 @@ This will result in a stack running:
 2. Mesos_ Master
 3. Mesos_ Slave
 4. Marathon_
-5. Consul_
-6. Consular_
-7. Consul-Template_
-8. Nginx_
+5. Docker_
+6. `Docker Registry`_
+7. Consul_
+8. Consular_
+9. Consul-Template_
+10. Nginx_
+
+All of this is installed and configured using Puppet_. For more information, see the `Puppet README`_.
 
 Once running launch the sample ``python-server`` application::
 
@@ -39,6 +43,9 @@ Marathon
 Mesos
     http://localhost:5050
 
+Consul
+    http://localhost:8500
+
 Nginx
     http://localhost:8000
 
@@ -46,8 +53,12 @@ Nginx
 .. _Vagrant: http://www.vagrantup.com
 .. _Mesos: https://mesos.apache.org/
 .. _Marathon: http://mesosphere.github.io/marathon/
+.. _Docker: https://www.docker.com
+.. _Docker Registry: https://docs.docker.com/registry/
 .. _Consul: http://consul.io
 .. _Consular: http://consular.rtfd.org
 .. _Consul-Template: https://github.com/hashicorp/consul-template
 .. _Nginx: http://www.nginx.org
 .. _Zookeeper: https://zookeeper.apache.org/
+.. _Puppet: http://docs.puppetlabs.com/puppet/3/reference/
+.. _Puppet README: puppet/README.md
