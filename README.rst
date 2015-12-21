@@ -41,6 +41,9 @@ Marathon
 Mesos
     http://localhost:5050
 
+Consul
+    http://localhost:8500
+
 Nginx
     http://localhost:8000
 
