@@ -20,7 +20,7 @@ This will result in a stack running:
 9. Consul-Template_
 10. Nginx_
 
-All of this is installed and configured using Puppet_.
+All of this is installed and configured using Puppet_. For more information, see the `Puppet README`_.
 
 Once running launch the sample ``python-server`` application::
 
@@ -61,3 +61,4 @@ Nginx
 .. _Nginx: http://www.nginx.org
 .. _Zookeeper: https://zookeeper.apache.org/
 .. _Puppet: http://docs.puppetlabs.com/puppet/3/reference/
+.. _Puppet README: puppet/README.md
