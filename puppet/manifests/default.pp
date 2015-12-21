@@ -109,6 +109,8 @@ node default {
   class { 'consul_template':
     version          => $consul_template_version,
     config_dir       => '/etc/consul-template',
+    user             => 'root',
+    group            => 'root',
     consul_host      => '127.0.0.1',
     consul_port      => 8500,
     consul_retry     => '10s',
