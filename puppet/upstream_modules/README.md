@@ -1,5 +1,5 @@
 ## Puppet upstream modules directory
-Upstream Puppet modules are automatically downloaded to this directory when the Vagrant box is provisioned by [r10k](https://github.com/puppetlabs/r10k) based on the contents of the [Puppetfile](../Puppetfile).
+Upstream Puppet modules are automatically downloaded by [r10k](https://github.com/puppetlabs/r10k) to this directory when the Vagrant box is provisioned based on the contents of the [Puppetfile](../Puppetfile).
 
 The following 3rd party modules (and their dependencies) are installed:
 * [camptocamp/openssl](https://forge.puppetlabs.com/camptocamp/openssl)
