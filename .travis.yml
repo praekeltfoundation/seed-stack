@@ -1,11 +1,15 @@
 language: ruby
 cache: bundler
 
+before_install:
+  # All our build steps and tests are for Puppet at the moment
+  - cd puppet
+
 install:
-  - bundle install --jobs=3 --retry=3 --deployment --gemfile=puppet/Gemfile
+  - bundle install --jobs=3 --retry=3 --deployment --path="$(pwd)/vendor/bundle"
   # Install Puppet upstream modules
-  - (cd puppet && ./install-modules.sh)
+  - ./install-modules.sh
 
 script:
   # Run some Puppet tests
-  - (cd puppet && ./run-tests.sh)
+  - ./run-tests.sh
