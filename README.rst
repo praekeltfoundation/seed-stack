@@ -13,10 +13,11 @@ This will result in a stack running:
 2. Mesos_ Master
 3. Mesos_ Slave
 4. Marathon_
-5. Consul_
-6. Consular_
-7. Consul-Template_
-8. Nginx_
+5. Docker_
+6. Consul_
+7. Consular_
+8. Consul-Template_
+9. Nginx_
 
 Once running launch the sample ``python-server`` application::
 
@@ -46,6 +47,7 @@ Nginx
 .. _Vagrant: http://www.vagrantup.com
 .. _Mesos: https://mesos.apache.org/
 .. _Marathon: http://mesosphere.github.io/marathon/
+.. _Docker: https://www.docker.com
 .. _Consul: http://consul.io
 .. _Consular: http://consular.rtfd.org
 .. _Consul-Template: https://github.com/hashicorp/consul-template
