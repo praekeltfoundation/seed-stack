@@ -1,4 +1,5 @@
 class marathon(
+  $ensure         = 'present',
   $zookeeper      = undef,
   $master         = undef,
   $owner          = 'root',
@@ -17,7 +18,7 @@ class marathon(
   }
 
   package { 'marathon':
-    ensure  => 'present',
+    ensure  => $ensure,
     name    => 'marathon',
     require => Class['apt::update'],
   }

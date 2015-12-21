@@ -1,8 +1,15 @@
 node default {
 
+  $docker_ensure = '1.9.1*'
+  $mesos_ensure = '0.24.1*'
+  $marathon_ensure = '0.13.0*'
+  $consul_version = '0.6.0'
+  $consul_template_version = '0.12.0'
+
   include oracle_java
 
   class { 'docker':
+    ensure => $docker_ensure,
     dns => $ipaddress_docker0,
     docker_users => ['vagrant'],
   }
@@ -38,6 +45,7 @@ node default {
   $mesos_zk = 'zk://localhost:2181/mesos'
 
   class { 'mesos':
+    ensure => $mesos_ensure,
     repo => 'mesosphere',
     zookeeper => $mesos_zk,
     require => Class['oracle_java'],
@@ -62,6 +70,7 @@ node default {
   }
 
   class { 'marathon':
+    ensure => $marathon_ensure,
     zookeeper => 'zk://localhost:2181/marathon',
     master => $mesos_zk,
     options => {
@@ -76,6 +85,7 @@ node default {
   }
 
   class { 'consul':
+    version => $consul_version,
     config_hash => {
       'bootstrap_expect' => 1,
       'server'           => true,
@@ -97,6 +107,14 @@ node default {
   }
 
   class { 'consul_template':
+    version          => $consul_template_version,
+    # FIXME: Consul Template 0.12.0+ is only available from the new
+    # releases.hashicorp.com website. v0.23.0 of the consul_template module
+    # doesn't build correct URLs for that site - so we have to give it the full
+    # URL. v0.24.0 does support the new site but also has a new bug that breaks
+    # (at least) first runs of the module. File an issue or PR with the module
+    # maintainer or switch to Consul Template debs.
+    download_url     => "https://releases.hashicorp.com/consul-template/${consul_template_version}/consul-template_${consul_template_version}_linux_amd64.zip",
     config_dir       => '/etc/consul-template',
     consul_host      => '127.0.0.1',
     consul_port      => 8500,
