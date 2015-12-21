@@ -20,6 +20,8 @@ This will result in a stack running:
 9. Consul-Template_
 10. Nginx_
 
+All of this is installed and configured using Puppet_.
+
 Once running launch the sample ``python-server`` application::
 
     $ curl -XPOST \
@@ -58,3 +60,4 @@ Nginx
 .. _Consul-Template: https://github.com/hashicorp/consul-template
 .. _Nginx: http://www.nginx.org
 .. _Zookeeper: https://zookeeper.apache.org/
+.. _Puppet: http://docs.puppetlabs.com/puppet/3/reference/
