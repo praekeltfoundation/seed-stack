@@ -1,0 +1,11 @@
+# In normal usage, you shouldn't need to install any gems as this is done on
+# the guest VM. For development/testing (and Travis) it may be useful to install
+# the various gems.
+source 'https://rubygems.org'
+
+group :test do
+  ruby '1.9.3'
+  gem 'r10k'
+  gem 'puppet', '3.4.3'
+  gem 'puppet-catalog-test'
+end
