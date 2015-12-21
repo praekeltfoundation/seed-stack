@@ -14,7 +14,7 @@ This will result in a stack running:
 3. Mesos_ Slave
 4. Marathon_
 5. Docker_
-6. Docker Registry_
+6. `Docker Registry`_
 7. Consul_
 8. Consular_
 9. Consul-Template_
