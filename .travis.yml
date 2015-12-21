@@ -3,9 +3,8 @@ language: ruby
 install:
   - gem install --no-ri --no-rdoc puppet -v 3.4.3
   - gem install --no-ri --no-rdoc puppet-catalog-test
-  - gem install --no-ri --no-rdoc r10k
-  # Install upstream modules
-  - r10k puppetfile install -v info --puppetfile puppet/Puppetfile --moduledir puppet/upstream_modules
+  # Install Puppet upstream modules
+  - cd puppet && ./install-modules.sh
 
 script:
   # Run some Puppet tests
