@@ -9,4 +9,4 @@ install:
 
 script:
   # Run some Puppet tests
-  - puppet/run-tests.sh
+  - cd puppet && ./run-tests.sh
