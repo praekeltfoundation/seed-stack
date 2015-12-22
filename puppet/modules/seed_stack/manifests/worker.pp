@@ -25,12 +25,10 @@
 #
 # [*consul_client_addr*]
 #   The address to which Consul will bind client interfaces, including the HTTP,
-#   DNS, and RPC servers. NOTE: Even if *consul_client* is set to false this
-#   parameter must be set to the correct value.
+#   DNS, and RPC servers.
 #
 # [*consul_domain*]
-#   The domain to be served by Consul DNS. NOTE: Even if *consul_client* is set
-#   to false this parameter must be set to the correct value.
+#   The domain to be served by Consul DNS.
 #
 # [*consul_encrypt*]
 #   The secret key to use for encryption of Consul network traffic.
@@ -154,14 +152,16 @@ class seed_stack::worker (
   }
 
   # dnsmasq to serve DNS requests, sending requests in the Consul domain to Consul
-  $dnsmasq_server = inline_template('<%= @consul_domain.chop() %>') # Remove trailing '.'
-  package { 'dnsmasq': }
-  ~>
-  file { '/etc/dnsmasq.d/consul':
-    content => "cache-size=0\nserver=/$dnsmasq_server/$consul_advertise_addr#8600",
+  if ! controller {
+    $dnsmasq_server = inline_template('<%= @consul_domain.chop() %>') # Remove trailing '.'
+    package { 'dnsmasq': }
+    ~>
+    file { '/etc/dnsmasq.d/consul':
+      content => "cache-size=0\nserver=/$dnsmasq_server/$consul_advertise_addr#8600",
+    }
+    ~>
+    service { 'dnsmasq': }
   }
-  ~>
-  service { 'dnsmasq': }
 
   # Docker, using the host for DNS
   class { 'docker':

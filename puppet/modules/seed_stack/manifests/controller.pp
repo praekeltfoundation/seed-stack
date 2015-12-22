@@ -124,6 +124,15 @@ class seed_stack::controller (
     require => Package['unzip']
   }
 
+  $dnsmasq_server = inline_template('<%= @consul_domain.chop() %>') # Remove trailing '.'
+  package { 'dnsmasq': }
+  ~>
+  file { '/etc/dnsmasq.d/consul':
+    content => "cache-size=0\nserver=/$dnsmasq_server/$consul_advertise_addr#8600",
+  }
+  ~>
+  service { 'dnsmasq': }
+
   class { 'consular':
     # ensure => $consular_ensure, # TODO
     consular_args => [
