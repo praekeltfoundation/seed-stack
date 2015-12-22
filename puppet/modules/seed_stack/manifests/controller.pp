@@ -134,7 +134,7 @@ class seed_stack::controller (
   service { 'dnsmasq': }
 
   class { 'consular':
-    # ensure => $consular_ensure, # TODO
+    ensure        => $consular_ensure,
     consular_args => [
       "--host=$address",
       "--sync-interval=$consular_sync_interval",
