@@ -107,7 +107,7 @@ class seed_stack::controller (
     config_hash => {
       'server'           => true,
       'bootstrap_expect' => size($controller_addresses),
-      'join'             => delete($controller_addresses, $address),
+      'retry_join'       => delete($controller_addresses, $address),
       'data_dir'         => '/var/consul',
       'ui_dir'           => '/usr/share/consul',
       'log_level'        => 'INFO',

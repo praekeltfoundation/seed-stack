@@ -93,7 +93,7 @@ class seed_stack::worker (
       version     => $consul_version,
       config_hash => {
         'bootstrap_expect' => size($controller_addresses),
-        'join'             => $controller_addresses,
+        'retry_join'       => $controller_addresses,
         'server'           => false,
         'data_dir'         => '/var/consul',
         'log_level'        => 'INFO',
