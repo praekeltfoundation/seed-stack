@@ -17,6 +17,7 @@ The following 3rd party modules (and their dependencies) are installed:
 * [gdhbashton/consul_template](https://forge.puppetlabs.com/gdhbashton/consul_template)
 * [KyleAnderson/consul](https://forge.puppetlabs.com/KyleAnderson/consul)
 * [stankevich/python](https://forge.puppetlabs.com/stankevich/python)
+* [deric/zookeeper](https://forge.puppetlabs.com/deric/zookeeper)
 
 ### Travis tests
 The Puppet configuration has a few tests run on it using [Travis CI](https://travis-ci.org/praekelt/seed-stack). You can run the same tests as Travis on your local machine with the following commands (first making sure that you have Ruby **1.9.3** and [Bundler](http://bundler.io) installed):

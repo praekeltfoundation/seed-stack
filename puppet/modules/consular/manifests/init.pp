@@ -1,4 +1,5 @@
 class consular(
+  $ensure        = 'installed',
   $consular_args = [],
 ) {
   # NOTE: This is a temporary PPA that is managed manually by a single
@@ -11,7 +12,7 @@ class consular(
   }
   ~>
   package { 'python-consular':
-    ensure => 'latest',
+    ensure => $ensure,
     require => Class['apt::update'],
   }
   ~>
