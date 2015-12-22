@@ -60,7 +60,7 @@ class seed_stack::worker (
 
   # Docker
   $docker_ensure           = $seed_stack::params::docker_ensure,
-) inherits seed_stack {
+) inherits seed_stack::params {
 
   # Basic parameter validation
   validate_ip_address($address)

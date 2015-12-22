@@ -1,5 +1,6 @@
 # == Class: seed_stack
 #
-class seed_stack inherits seed_stack::params {
+# Use seed_stack::controller or seed_stack::worker
+class seed_stack {
 
 }
