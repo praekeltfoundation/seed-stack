@@ -28,8 +28,12 @@ node default {
     ensure => installed,
   }
 
-  include seed_stack::controller
+  class { 'seed_stack::controller':
+    address              => $ipaddress_eth0,
+    controller_addresses => [$ipaddress_eth0],
+  }
   class { 'seed_stack::worker':
+    address    => $ipaddress_eth0,
     controller => true,
   }
 
