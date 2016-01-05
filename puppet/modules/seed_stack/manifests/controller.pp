@@ -93,14 +93,17 @@ class seed_stack::controller (
 
   $marathon_zk = inline_template('zk://<%= @controller_addresses.map { |c| "#{c}:2181"}.join(",") %>/marathon')
   class { 'marathon':
-    ensure    => $marathon_ensure,
-    zookeeper => $marathon_zk,
-    master    => $mesos_zk,
-    options   => {
+    ensure      => $marathon_ensure,
+    manage_repo => false,
+    zookeeper   => $marathon_zk,
+    master      => $mesos_zk,
+    options     => {
       hostname         => $hostname,
       event_subscriber => 'http_callback',
     },
   }
+  # Ensure Mesos repo is added before installing Marathon
+  Apt::Source['mesosphere'] -> Package['marathon']
 
   class { 'consul':
     version => $consul_version,

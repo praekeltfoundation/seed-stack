@@ -16,3 +16,6 @@ mod 'gdhbashton/consul_template', '0.2.4'
 mod 'KyleAnderson/consul', '1.0.4'
 mod 'stankevich/python', '1.10.0'
 mod 'deric/zookeeper', '0.4.1'
+mod 'praekeltfoundation/marathon',
+  :git => 'https://github.com/praekeltfoundation/puppet-marathon',
+  :branch => 'develop'

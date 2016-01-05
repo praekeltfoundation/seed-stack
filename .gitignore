@@ -1,3 +1,6 @@
 .vagrant/
 
-.bundle/
+# Bundler caches for Puppet
+/puppet/.bundle/
+/puppet/vendor/bundle
+/puppet/bin/
