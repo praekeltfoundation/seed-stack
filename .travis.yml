@@ -1,6 +1,10 @@
 language: ruby
-cache: bundler
+cache:
+  - bundler
+  - directories:
+    - $HOME/librarian-puppet
 gemfile: puppet/Gemfile
+env: LIBRARIAN_PUPPET_TMP="$HOME/librarian-puppet"
 
 before_script:
   # All our build steps and tests are for Puppet at the moment
