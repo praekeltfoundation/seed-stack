@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 
 group :test do
   ruby '1.9.3'
-  gem 'r10k'
+  gem 'librarian-puppet'
   gem 'puppet', '3.4.3'
   gem 'puppet-catalog-test'
 end

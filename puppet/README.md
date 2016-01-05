@@ -3,12 +3,10 @@ The Vagrant box is provisioned using [Puppet](http://docs.puppetlabs.com/puppet/
 
 ### Notes
 * We use the system version of Puppet (3.4.3) that is installed by default on the [`ubuntu/trusty64`](https://atlas.hashicorp.com/ubuntu/boxes/trusty64) base box.
-* [r10k](https://github.com/puppetlabs/r10k) is run on the VM to manage upstream Puppet modules.
+* [librarian-puppet](http://librarian-puppet.com) is run on the VM to manage upstream Puppet modules.
 
 ### `upstream_modules` directory
-Upstream Puppet modules are automatically downloaded by r10k to [this directory](upstream_modules) when the box is provisioned based on the contents of the [Puppetfile](Puppetfile).
-
-**Note:** this directory is completely managed by r10k and any files that you manually add to it will be deleted by r10k when it runs.
+Upstream Puppet modules are automatically downloaded by librarian-puppet to [this directory](upstream_modules) when the box is provisioned based on the contents of the [Puppetfile](Puppetfile).
 
 The following 3rd party modules (and their dependencies) are installed:
 * [camptocamp/openssl](https://forge.puppetlabs.com/camptocamp/openssl)

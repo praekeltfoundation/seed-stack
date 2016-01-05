@@ -1,0 +1,50 @@
+FORGE
+  remote: https://forgeapi.puppetlabs.com
+  specs:
+    KyleAnderson-consul (1.0.4)
+      nanliu-staging (< 2.0.0, >= 0.4.0)
+      puppetlabs-stdlib (< 5.0.0, >= 4.6.0)
+    camptocamp-openssl (1.5.1)
+      puppetlabs-stdlib (< 5.0.0, >= 2.0.0)
+    deric-mesos (0.6.4)
+      puppetlabs-apt (>= 2.1.0)
+      puppetlabs-stdlib (>= 4.2.0)
+    deric-zookeeper (0.4.1)
+      puppetlabs-stdlib (>= 2.3.3)
+      richardc-datacat (>= 0)
+    garethr-docker (4.1.1)
+      puppetlabs-apt (<= 3.0.0, >= 1.1.0)
+      puppetlabs-stdlib (>= 4.1.0)
+      stahnma-epel (>= 0.0.6)
+    gdhbashton-consul_template (0.2.4)
+      nanliu-staging (>= 0.4.0)
+      puppetlabs-concat (>= 1.1.0)
+      puppetlabs-stdlib (>= 1.0.0)
+    nanliu-staging (1.0.3)
+    puppetlabs-apt (2.2.1)
+      puppetlabs-stdlib (< 5.0.0, >= 4.5.0)
+    puppetlabs-concat (1.2.5)
+      puppetlabs-stdlib (< 5.0.0, >= 3.2.0)
+    puppetlabs-stdlib (4.10.0)
+    richardc-datacat (0.6.2)
+    stahnma-epel (1.2.2)
+      puppetlabs-stdlib (>= 3.0.0)
+    stankevich-python (1.10.0)
+      puppetlabs-stdlib (< 6.0.0, >= 4.6.0)
+      stahnma-epel (< 2.0.0, >= 1.0.1)
+
+GITHUBTARBALL
+  remote: praekeltfoundation/puppet-marathon
+  specs:
+    praekeltfoundation-marathon (0.1.0)
+
+DEPENDENCIES
+  KyleAnderson-consul (>= 1.0.0)
+  camptocamp-openssl (>= 1.5.0)
+  deric-mesos (>= 0.6.4)
+  deric-zookeeper (>= 0.4.0)
+  garethr-docker (>= 4.1.0)
+  gdhbashton-consul_template (>= 0.2.4)
+  praekeltfoundation-marathon (= 0.1.0)
+  stankevich-python (>= 1.10.0)
+
