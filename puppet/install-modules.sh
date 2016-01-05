@@ -1,13 +1,13 @@
 #!/bin/bash -e
 
-# Install the upstream Puppet modules using r10k (and install that beforehand if
-# it hasn't been installed yet.)
+# Install the upstream Puppet modules using librarian-puppet (and install that
+# beforehand if it hasn't been installed yet).
 
-if ! gem list -i r10k >/dev/null; then
-    echo "Installing 'r10k' Ruby gem..."
-    gem install --no-ri --no-rdoc r10k
+if ! gem list -i librarian-puppet >/dev/null; then
+    echo "Installing 'librarian-puppet' Ruby gem..."
+    gem install --no-ri --no-rdoc librarian-puppet
 else
-    echo "'r10k' Ruby gem already installed..."
+    echo "'librarian-puppet' Ruby gem already installed..."
 fi
 
-r10k puppetfile install --verbose info
+librarian-puppet install --verbose --path=upstream_modules

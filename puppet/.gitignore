@@ -1,0 +1,9 @@
+# Bundler
+/.bundle/
+/vendor/bundle
+/bin/
+
+# librarian-puppet
+/.librarian
+/.tmp
+/vendor/puppet
