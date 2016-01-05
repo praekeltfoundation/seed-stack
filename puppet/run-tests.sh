@@ -14,7 +14,7 @@ puppet-catalog-test -v \
     -m modules:upstream_modules \
     -M manifests/default.pp \
     --fact osfamily=Debian \
-    --fact ipaddress=10.2.3.4 \
+    --fact ipaddress_eth0=10.2.3.4 \
     --fact architecture=amd64 \
     --fact operatingsystem=Ubuntu \
     --fact operatingsystemrelease=14.04 \
