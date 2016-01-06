@@ -13,3 +13,5 @@ mod 'stankevich/python', '>= 1.10.0'
 mod 'deric/zookeeper', '>= 0.4.0'
 mod 'praekeltfoundation/marathon', '0.1.0',
   :github_tarball => 'praekeltfoundation/puppet-marathon'
+mod 'praekeltfoundation/webupd8_oracle_java', '0.1.1',
+  :github_tarball => 'praekeltfoundation/puppet-webupd8_oracle_java'

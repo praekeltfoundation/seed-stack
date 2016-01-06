@@ -38,7 +38,7 @@ node default {
   }
 
   # Ensure that Oracle Java 8 is installed before Java is installed as a dependency
-  include oracle_java
+  include webupd8_oracle_java
   Package['oracle-java8-installer'] -> Package['marathon']
   Package['oracle-java8-installer'] -> Package['mesos']
   Package['oracle-java8-installer'] -> Package['zookeeper']
