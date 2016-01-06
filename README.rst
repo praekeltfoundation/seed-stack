@@ -34,9 +34,6 @@ Then you should be able to use the application in your web browser at http://pyt
 The following services have port forwarding configured and are available
 on the host:
 
-Supervisord
-    http://localhost:9000
-
 Marathon
     http://localhost:8080
 
