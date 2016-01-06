@@ -129,7 +129,7 @@ class seed_stack::worker (
 
   # Configure Nginx to load-balance across uptream services
   file { '/etc/consul-template/nginx-upstreams.ctmpl':
-    source => 'puppet:///modules/consular/nginx-upstreams.ctmpl',
+    source => 'puppet:///modules/seed_stack/nginx-upstreams.ctmpl',
   }
   ~>
   consul_template::watch { 'nginx-upstreams':
@@ -141,7 +141,7 @@ class seed_stack::worker (
 
   # Configure Nginx to route to upstream services
   file { '/etc/consul-template/nginx-services.ctmpl':
-    source => 'puppet:///modules/consular/nginx-services.ctmpl',
+    source => 'puppet:///modules/seed_stack/nginx-services.ctmpl',
   }
   ~>
   consul_template::watch { 'nginx-services':

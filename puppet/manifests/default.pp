@@ -44,7 +44,7 @@ node default {
   Package['oracle-java8-installer'] -> Package['zookeeper']
 
   file { '/etc/consul-template/nginx-websites.ctmpl':
-    source => 'puppet:///modules/consular/nginx-websites.ctmpl',
+    source => 'puppet:///modules/seed_stack/nginx-websites.ctmpl',
   }
   ~>
   consul_template::watch { 'nginx-websites':

@@ -40,6 +40,11 @@ GIT
       puppetlabs-stdlib (< 5.0.0, >= 4.6.0)
 
 GITHUBTARBALL
+  remote: praekeltfoundation/puppet-consular
+  specs:
+    praekeltfoundation-consular (0.1.0)
+
+GITHUBTARBALL
   remote: praekeltfoundation/puppet-marathon
   specs:
     praekeltfoundation-marathon (0.1.0)
@@ -56,6 +61,7 @@ DEPENDENCIES
   deric-zookeeper (>= 0.4.0)
   garethr-docker (>= 4.1.0)
   gdhbashton-consul_template (>= 0.2.4)
+  praekeltfoundation-consular (= 0.1.0)
   praekeltfoundation-marathon (= 0.1.0)
   praekeltfoundation-webupd8_oracle_java (= 0.1.1)
   stankevich-python (>= 1.10.0)
