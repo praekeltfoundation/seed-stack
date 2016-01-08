@@ -1,22 +1,11 @@
 # Puppet provisioning
 The Vagrant box is provisioned using [Puppet](http://docs.puppetlabs.com/puppet/3/reference/).
 
+The primary module used to provision the box is [`praekeltfoundation/seed_stack`](https://github.com/praekeltfoundation/puppet-seed_stack). See the documentation for the module for more information.
+
 ### Notes
 * We use the system version of Puppet (3.4.3) that is installed by default on the [`ubuntu/trusty64`](https://atlas.hashicorp.com/ubuntu/boxes/trusty64) base box.
 * [librarian-puppet](http://librarian-puppet.com) is run on the VM to manage upstream Puppet modules.
-
-### `upstream_modules` directory
-Upstream Puppet modules are automatically downloaded by librarian-puppet to [this directory](upstream_modules) when the box is provisioned based on the contents of the [Puppetfile](Puppetfile).
-
-The following 3rd party modules (and their dependencies) are installed:
-* [camptocamp/openssl](https://forge.puppetlabs.com/camptocamp/openssl)
-* [deric/mesos](https://forge.puppetlabs.com/deric/mesos)
-* [garethr/docker](https://forge.puppetlabs.com/garethr/docker)
-* [gdhbashton/consul_template](https://forge.puppetlabs.com/gdhbashton/consul_template)
-* [KyleAnderson/consul](https://forge.puppetlabs.com/KyleAnderson/consul)
-* [stankevich/python](https://forge.puppetlabs.com/stankevich/python)
-* [deric/zookeeper](https://forge.puppetlabs.com/deric/zookeeper)
-* [praekeltfoundation/marathon](https://github.com/praekeltfoundation/puppet-marathon)
 
 ### Travis tests
 The Puppet configuration has a few tests run on it using [Travis CI](https://travis-ci.org/praekelt/seed-stack). You can run the same tests as Travis on your local machine with the following commands (first making sure that you have Ruby **1.9.3** and [Bundler](http://bundler.io) installed):
