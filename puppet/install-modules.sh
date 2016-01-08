@@ -10,4 +10,4 @@ else
     echo "'librarian-puppet' Ruby gem already installed..."
 fi
 
-librarian-puppet install --verbose --path=upstream_modules
+librarian-puppet install --verbose

@@ -7,3 +7,4 @@
 /.librarian
 /.tmp
 /vendor/puppet
+/modules/

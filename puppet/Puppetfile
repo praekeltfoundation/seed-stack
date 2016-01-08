@@ -1,16 +1,8 @@
 forge "https://forgeapi.puppetlabs.com"
 
+mod 'praekeltfoundation/seed_stack',
+ :git => 'https://github.com/praekeltfoundation/puppet-seed_stack',
+ :ref => 'develop'
+
 # 3rd party modules
 mod 'camptocamp/openssl', '>= 1.5.0'
-mod 'deric/mesos', '>= 0.6.4'
-mod 'garethr/docker', '>= 4.1.0'
-mod 'gdhbashton/consul_template', '>= 0.2.4'
-mod 'KyleAnderson/consul', '>= 1.0.4'
-mod 'stankevich/python', '>= 1.10.0'
-mod 'deric/zookeeper', '>= 0.4.0'
-mod 'praekeltfoundation/marathon', '0.1.0',
-  :github_tarball => 'praekeltfoundation/puppet-marathon'
-mod 'praekeltfoundation/webupd8_oracle_java', '0.1.1',
-  :github_tarball => 'praekeltfoundation/puppet-webupd8_oracle_java'
-mod 'praekeltfoundation/consular', '0.1.0',
-  :github_tarball => 'praekeltfoundation/puppet-consular'
