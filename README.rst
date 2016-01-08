@@ -41,7 +41,7 @@ Mesos
     http://localhost:5050
 
 Consul
-    http://localhost:8500
+    http://localhost:8500/ui/
 
 Nginx
     http://localhost:8000

@@ -13,7 +13,7 @@ class seed_stack::params {
     'event_subscriber' => 'http_callback' # HTTP callbacks for Consular
   }
 
-  $consul_version           = '0.6.0'
+  $consul_version           = '0.6.1'
   $consul_advertise_addr    = '127.0.0.1'
   $consul_client_addr       = '0.0.0.0'
   $consul_domain            = 'consul.'
