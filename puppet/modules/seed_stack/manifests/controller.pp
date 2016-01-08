@@ -33,6 +33,9 @@
 # [*consul_encrypt*]
 #   The secret key to use for encryption of Consul network traffic.
 #
+# [*consul_ui*]
+#   Whether or not to enable the Consul web UI.
+#
 # [*consular_ensure*]
 #   The package ensure value for Consular.
 #
@@ -56,6 +59,7 @@ class seed_stack::controller (
   $consul_client_addr     = $seed_stack::params::consul_client_addr,
   $consul_domain          = $seed_stack::params::consul_domain,
   $consul_encrypt         = undef,
+  $consul_ui              = true,
 
   # Consular
   $consular_ensure        = $seed_stack::params::consular_ensure,
@@ -112,12 +116,12 @@ class seed_stack::controller (
       'bootstrap_expect' => size($controller_addresses),
       'retry_join'       => delete($controller_addresses, $address),
       'data_dir'         => '/var/consul',
-      'ui_dir'           => '/usr/share/consul',
       'log_level'        => 'INFO',
       'advertise_addr'   => $address,
       'client_addr'      => $consul_client_addr,
       'domain'           => $consul_domain,
       'encrypt'          => $consul_encrypt,
+      'ui'               => $consul_ui,
     },
     services => {
       'marathon'        => { port => 8080 },
