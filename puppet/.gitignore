@@ -6,4 +6,3 @@
 # librarian-puppet
 /.tmp
 /vendor/puppet
-/modules/
