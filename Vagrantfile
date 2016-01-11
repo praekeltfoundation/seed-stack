@@ -84,7 +84,7 @@ Vagrant.configure(2) do |config|
   end
   # Provision the VM using Puppet
   config.vm.provision :puppet do |puppet|
-    puppet.module_path = ["puppet/upstream_modules", "puppet/modules"]
+    puppet.module_path = ["puppet/modules"]
     puppet.manifests_path = "puppet/manifests"
   end
 end

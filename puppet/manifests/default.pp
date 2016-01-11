@@ -24,10 +24,6 @@ node default {
     notify => [Service['docker']],
   }
 
-  package { 'unzip':
-    ensure => installed,
-  }
-
   class { 'seed_stack::controller':
     address              => $ipaddress_eth0,
     controller_addresses => [$ipaddress_eth0],
@@ -36,12 +32,6 @@ node default {
     address    => $ipaddress_eth0,
     controller => true,
   }
-
-  # Ensure that Oracle Java 8 is installed before Java is installed as a dependency
-  include webupd8_oracle_java
-  Package['oracle-java8-installer'] -> Package['marathon']
-  Package['oracle-java8-installer'] -> Package['mesos']
-  Package['oracle-java8-installer'] -> Package['zookeeper']
 
   file { '/etc/consul-template/nginx-websites.ctmpl':
     source => 'puppet:///modules/seed_stack/nginx-websites.ctmpl',

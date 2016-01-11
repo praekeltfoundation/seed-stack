@@ -4,6 +4,5 @@
 /bin/
 
 # librarian-puppet
-/.librarian
 /.tmp
 /vendor/puppet

@@ -6,12 +6,9 @@
 find modules -iname '*.pp' |\
     xargs puppet parser validate --color false --render-as s --modulepath=modules
 
-find upstream_modules -iname '*.pp' |\
-    xargs puppet parser validate --color false --render-as s --modulepath=upstream_modules
-
 # Run the catalog test on the manifest
 puppet-catalog-test -v \
-    -m modules:upstream_modules \
+    -m modules \
     -M manifests/default.pp \
     --fact osfamily=Debian \
     --fact ipaddress_eth0=10.2.3.4 \

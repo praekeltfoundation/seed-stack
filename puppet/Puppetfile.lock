@@ -12,8 +12,8 @@ FORGE
     deric-zookeeper (0.4.1)
       puppetlabs-stdlib (>= 2.3.3)
       richardc-datacat (>= 0)
-    garethr-docker (4.1.1)
-      puppetlabs-apt (<= 3.0.0, >= 1.1.0)
+    garethr-docker (5.0.0)
+      puppetlabs-apt (<= 3.0.0, >= 1.8.0)
       puppetlabs-stdlib (>= 4.1.0)
       stahnma-epel (>= 0.0.6)
     gdhbashton-consul_template (0.2.4)
@@ -29,9 +29,21 @@ FORGE
     richardc-datacat (0.6.2)
     stahnma-epel (1.2.2)
       puppetlabs-stdlib (>= 3.0.0)
-    stankevich-python (1.10.0)
-      puppetlabs-stdlib (< 6.0.0, >= 4.6.0)
-      stahnma-epel (< 2.0.0, >= 1.0.1)
+
+GIT
+  remote: https://github.com/praekeltfoundation/puppet-seed_stack
+  ref: 0.1.0
+  sha: 0017334286d2917652ba0448d7fa3fb453119dad
+  specs:
+    praekeltfoundation-seed_stack (0.1.0)
+      KyleAnderson-consul (>= 1.0.4)
+      deric-mesos (>= 0.6.4)
+      deric-zookeeper (>= 0.4.0)
+      garethr-docker (>= 4.1.0)
+      gdhbashton-consul_template (>= 0.2.4)
+      praekeltfoundation-consular (= 0.1.0)
+      praekeltfoundation-marathon (= 0.1.0)
+      praekeltfoundation-webupd8_oracle_java (= 0.1.1)
 
 GITHUBTARBALL
   remote: praekeltfoundation/puppet-consular
@@ -49,14 +61,6 @@ GITHUBTARBALL
     praekeltfoundation-webupd8_oracle_java (0.1.1)
 
 DEPENDENCIES
-  KyleAnderson-consul (>= 1.0.4)
   camptocamp-openssl (>= 1.5.0)
-  deric-mesos (>= 0.6.4)
-  deric-zookeeper (>= 0.4.0)
-  garethr-docker (>= 4.1.0)
-  gdhbashton-consul_template (>= 0.2.4)
-  praekeltfoundation-consular (= 0.1.0)
-  praekeltfoundation-marathon (= 0.1.0)
-  praekeltfoundation-webupd8_oracle_java (= 0.1.1)
-  stankevich-python (>= 1.10.0)
+  praekeltfoundation-seed_stack (>= 0)
 
