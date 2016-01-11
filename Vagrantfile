@@ -14,30 +14,31 @@ Vagrant.configure(2) do |config|
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "ubuntu/trusty64"
 
-  # Give our box a name, because "default" is confusing.
-  config.vm.define "seed-stack"
-  config.vm.hostname = "controller01.seed-stack.local"
-
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
   # config.vm.box_check_update = false
 
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # Give our box a name, because "default" is confusing.
+  config.vm.define "standalone" do |standalone|
+    standalone.vm.hostname = "standalone.seed-stack.local"
 
-  config.vm.network "forwarded_port", guest: 8080, host: 8080
-  config.vm.network "forwarded_port", guest: 5050, host: 5050
-  config.vm.network "forwarded_port", guest: 5051, host: 5051
-  config.vm.network "forwarded_port", guest: 8500, host: 8500
-  config.vm.network "forwarded_port", guest: 80, host: 8000
+    # Create a forwarded port mapping which allows access to a specific port
+    # within the machine from a port on the host machine. In the example below,
+    # accessing "localhost:8080" will access port 80 on the guest machine.
 
-  # NOTE: these map the port resources advertised by the mesos-slave
-  #       uncomment these if you want to access them directly on the host
-  # for i in 10000..10050
-  #   config.vm.network "forwarded_port", guest: i, host: i
-  # end
+    standalone.vm.network "forwarded_port", guest: 8080, host: 8080
+    standalone.vm.network "forwarded_port", guest: 5050, host: 5050
+    standalone.vm.network "forwarded_port", guest: 5051, host: 5051
+    standalone.vm.network "forwarded_port", guest: 8500, host: 8500
+    standalone.vm.network "forwarded_port", guest: 80, host: 8000
+
+    # NOTE: these map the port resources advertised by the mesos-slave
+    #       uncomment these if you want to access them directly on the host
+    # for i in 10000..10050
+    #   standalone.vm.network "forwarded_port", guest: i, host: i
+    # end
+  end
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.

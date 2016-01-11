@@ -1,4 +1,4 @@
-node default {
+node 'standalone.seed-stack.local' {
 
   # NOTE: This cert wrangling is only good for a single machine. We need some
   # other mechanism to get our certs to the right place in a multi-node setup.
