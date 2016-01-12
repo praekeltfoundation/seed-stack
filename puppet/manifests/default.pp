@@ -2,10 +2,11 @@ node 'standalone.seed-stack.local' {
   class { 'seed_stack::controller':
     address              => $ipaddress_eth0,
     controller_addresses => [$ipaddress_eth0],
+    controller_worker    => true,
   }
   class { 'seed_stack::worker':
-    address    => $ipaddress_eth0,
-    controller => true,
+    address           => $ipaddress_eth0,
+    controller_worker => true,
   }
 
   class { 'seed_stack::load_balancer':
