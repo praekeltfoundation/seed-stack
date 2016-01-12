@@ -31,34 +31,45 @@ FORGE
       puppetlabs-stdlib (>= 3.0.0)
 
 GIT
-  remote: https://github.com/praekeltfoundation/puppet-seed_stack
+  remote: https://github.com/praekeltfoundation/puppet-consular.git
   ref: 0.1.0
-  sha: 0017334286d2917652ba0448d7fa3fb453119dad
+  sha: 10328fc74cabbd244bed8f3c1d10be6894781620
   specs:
-    praekeltfoundation-seed_stack (0.1.0)
+    praekeltfoundation-consular (0.1.0)
+      puppetlabs-apt (>= 0)
+
+GIT
+  remote: https://github.com/praekeltfoundation/puppet-marathon.git
+  ref: 0.1.0
+  sha: ddee98ab35174b19f8080f451340f5fb1fefaa92
+  specs:
+    praekeltfoundation-marathon (0.1.0)
+      deric-mesos (>= 0.6.4)
+      puppetlabs-apt (>= 2.1.0)
+      puppetlabs-stdlib (>= 4.2.0)
+
+GIT
+  remote: https://github.com/praekeltfoundation/puppet-seed_stack
+  ref: 0.2.0
+  sha: 642a19033d2f545c86d65d25cfbc342eab700620
+  specs:
+    praekeltfoundation-seed_stack (0.2.0)
       KyleAnderson-consul (>= 1.0.4)
       deric-mesos (>= 0.6.4)
       deric-zookeeper (>= 0.4.0)
       garethr-docker (>= 4.1.0)
       gdhbashton-consul_template (>= 0.2.4)
-      praekeltfoundation-consular (= 0.1.0)
-      praekeltfoundation-marathon (= 0.1.0)
-      praekeltfoundation-webupd8_oracle_java (= 0.1.1)
+      praekeltfoundation-consular (>= 0)
+      praekeltfoundation-marathon (>= 0)
+      praekeltfoundation-webupd8_oracle_java (>= 0)
 
-GITHUBTARBALL
-  remote: praekeltfoundation/puppet-consular
-  specs:
-    praekeltfoundation-consular (0.1.0)
-
-GITHUBTARBALL
-  remote: praekeltfoundation/puppet-marathon
-  specs:
-    praekeltfoundation-marathon (0.1.0)
-
-GITHUBTARBALL
-  remote: praekeltfoundation/puppet-webupd8_oracle_java
+GIT
+  remote: https://github.com/praekeltfoundation/puppet-webupd8_oracle_java.git
+  ref: 0.1.1
+  sha: d24276f9b554c0465ed5df2611da7fc01b860390
   specs:
     praekeltfoundation-webupd8_oracle_java (0.1.1)
+      puppetlabs-apt (>= 0)
 
 DEPENDENCIES
   camptocamp-openssl (>= 1.5.0)

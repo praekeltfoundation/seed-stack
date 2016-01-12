@@ -2,7 +2,7 @@ forge "https://forgeapi.puppetlabs.com"
 
 mod 'praekeltfoundation/seed_stack',
  :git => 'https://github.com/praekeltfoundation/puppet-seed_stack',
- :ref => '0.1.0'
+ :ref => '0.2.0'
 
 # 3rd party modules
 mod 'camptocamp/openssl', '>= 1.5.0'

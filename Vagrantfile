@@ -40,9 +40,23 @@ Vagrant.configure(2) do |config|
     # end
   end
 
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.define "controller" do |controller|
+    controller.vm.hostname = "controller.seed-stack.local"
+
+    # Create a private network, which allows host-only access to the machine
+    # using a specific IP.
+    controller.vm.network "private_network", ip: "192.168.0.2"
+    controller.vm.network "forwarded_port", guest: 8080, host: 8080
+    controller.vm.network "forwarded_port", guest: 5050, host: 5050
+    controller.vm.network "forwarded_port", guest: 8500, host: 8500
+  end
+
+  config.vm.define "worker" do |worker|
+    worker.vm.hostname = "worker.seed-stack.local"
+
+    worker.vm.network "private_network", ip: "192.168.0.3"
+    worker.vm.network "forwarded_port", guest: 5051, host: 5051
+  end
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
