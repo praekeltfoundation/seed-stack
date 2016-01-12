@@ -5,7 +5,7 @@ Install Vagrant_ and then::
 
     $ git clone git://github.com/praekelt/seed-stack.git
     $ cd seed-stack
-    $ vagrant up
+    $ vagrant up standalone
 
 This will result in a stack running:
 
