@@ -1,7 +1,7 @@
 # Puppet provisioning
 The Vagrant box is provisioned using [Puppet](http://docs.puppetlabs.com/puppet/3/reference/).
 
-The primary module used to provision the box is [`praekeltfoundation/seed_stack`](https://github.com/praekeltfoundation/puppet-seed_stack). See the documentation for the module for more information.
+The primary module used to provision the box is [`praekeltfoundation/seed_stack`](https://forge.puppetlabs.com/praekeltfoundation/seed_stack). See the documentation for the module for more information.
 
 ### Notes
 * We use the system version of Puppet (3.4.3) that is installed by default on the [`ubuntu/trusty64`](https://atlas.hashicorp.com/ubuntu/boxes/trusty64) base box.
