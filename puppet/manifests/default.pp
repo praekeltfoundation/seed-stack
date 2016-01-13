@@ -19,19 +19,44 @@ node 'standalone.seed-stack.local' {
   include docker_registry
 }
 
+# Keep track of node IP addresses across the cluster
+# FIXME: A better, more automatic way to do this
+class seed_stack_cluster {
+  $controller_ip = '192.168.0.2'
+  $worker_ip = '192.168.0.3'
+
+  class { 'hosts':
+    enable_fqdn_entry => false,
+    host_entries      => {
+      'controller.seed-stack.local' => {
+        ip           => $controller_ip,
+        host_aliases => ['controller']
+      },
+      'worker.seed-stack.local' => {
+        ip           => $worker_ip,
+        host_aliases => ['worker']
+      }
+    }
+  }
+}
+
 node 'controller.seed-stack.local' {
+  include seed_stack_cluster
+
   class { 'seed_stack::controller':
-    address              => $ipaddress_eth1,
-    controller_addresses => [$ipaddress_eth1],
+    address              => $seed_stack_cluster::controller_ip,
+    controller_addresses => [$seed_stack_cluster::controller_ip],
   }
 
   include seed_stack::load_balancer
 }
 
 node 'worker.seed-stack.local' {
+  include seed_stack_cluster
+
   class { 'seed_stack::worker':
-    address              => $ipaddress_eth1,
-    controller_addresses => ['192.168.0.2']
+    address              => $seed_stack_cluster::worker_ip,
+    controller_addresses => [$seed_stack_cluster::controller_ip]
   }
 
   include docker_registry
