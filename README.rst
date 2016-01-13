@@ -22,6 +22,13 @@ This will result in a stack running:
 
 All of this is installed and configured using Puppet_. For more information, see the `Puppet README`_.
 
+The available VMs defined in the Vagrantfile are as follows:
+- ``standalone`` - a Seed Stack combination controller/worker with a Docker Registry and load-balancer
+- ``controller`` - a Seed Stack controller with a load-balancer
+- ``worker`` - a Seed Stack worker with a Docker Registry
+
+You can run either the standalone VM or the controller and worker VMs but not both as their forwarded ports will conflict.
+
 Once running launch the sample ``python-server`` application::
 
     $ curl -XPOST \
