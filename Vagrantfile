@@ -49,6 +49,7 @@ Vagrant.configure(2) do |config|
     controller.vm.network "forwarded_port", guest: 8080, host: 8080
     controller.vm.network "forwarded_port", guest: 5050, host: 5050
     controller.vm.network "forwarded_port", guest: 8500, host: 8500
+    controller.vm.network "forwarded_port", guest: 80, host: 8000
   end
 
   config.vm.define "worker" do |worker|
