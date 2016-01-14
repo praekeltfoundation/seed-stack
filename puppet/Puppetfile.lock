@@ -9,7 +9,7 @@ FORGE
     deric-mesos (0.6.4)
       puppetlabs-apt (>= 2.1.0)
       puppetlabs-stdlib (>= 4.2.0)
-    deric-zookeeper (0.4.1)
+    deric-zookeeper (0.4.2)
       puppetlabs-stdlib (>= 2.3.3)
       richardc-datacat (>= 0)
     garethr-docker (5.0.0)
@@ -21,46 +21,33 @@ FORGE
       puppetlabs-concat (>= 1.1.0)
       puppetlabs-stdlib (>= 1.0.0)
     nanliu-staging (1.0.3)
-    puppetlabs-apt (2.2.1)
-      puppetlabs-stdlib (< 5.0.0, >= 4.5.0)
-    puppetlabs-concat (1.2.5)
-      puppetlabs-stdlib (< 5.0.0, >= 3.2.0)
-    puppetlabs-stdlib (4.10.0)
-    richardc-datacat (0.6.2)
-    stahnma-epel (1.2.2)
-      puppetlabs-stdlib (>= 3.0.0)
-
-GIT
-  remote: https://github.com/praekeltfoundation/puppet-seed_stack
-  ref: 0.1.0
-  sha: 0017334286d2917652ba0448d7fa3fb453119dad
-  specs:
-    praekeltfoundation-seed_stack (0.1.0)
+    praekeltfoundation-consular (0.1.1)
+      puppetlabs-apt (>= 0)
+    praekeltfoundation-marathon (0.2.0)
+      deric-mesos (>= 0.6.4)
+      puppetlabs-apt (>= 2.1.0)
+      puppetlabs-stdlib (>= 4.2.0)
+    praekeltfoundation-seed_stack (0.2.2)
       KyleAnderson-consul (>= 1.0.4)
       deric-mesos (>= 0.6.4)
       deric-zookeeper (>= 0.4.0)
       garethr-docker (>= 4.1.0)
       gdhbashton-consul_template (>= 0.2.4)
-      praekeltfoundation-consular (= 0.1.0)
-      praekeltfoundation-marathon (= 0.1.0)
-      praekeltfoundation-webupd8_oracle_java (= 0.1.1)
-
-GITHUBTARBALL
-  remote: praekeltfoundation/puppet-consular
-  specs:
-    praekeltfoundation-consular (0.1.0)
-
-GITHUBTARBALL
-  remote: praekeltfoundation/puppet-marathon
-  specs:
-    praekeltfoundation-marathon (0.1.0)
-
-GITHUBTARBALL
-  remote: praekeltfoundation/puppet-webupd8_oracle_java
-  specs:
-    praekeltfoundation-webupd8_oracle_java (0.1.1)
+      praekeltfoundation-consular (>= 0.1.1)
+      praekeltfoundation-marathon (>= 0.2.0)
+      praekeltfoundation-webupd8_oracle_java (>= 0.1.2)
+    praekeltfoundation-webupd8_oracle_java (0.1.2)
+      puppetlabs-apt (>= 0)
+    puppetlabs-apt (2.2.1)
+      puppetlabs-stdlib (< 5.0.0, >= 4.5.0)
+    puppetlabs-concat (1.2.5)
+      puppetlabs-stdlib (< 5.0.0, >= 3.2.0)
+    puppetlabs-stdlib (4.11.0)
+    richardc-datacat (0.6.2)
+    stahnma-epel (1.2.2)
+      puppetlabs-stdlib (>= 3.0.0)
 
 DEPENDENCIES
   camptocamp-openssl (>= 1.5.0)
-  praekeltfoundation-seed_stack (>= 0)
+  praekeltfoundation-seed_stack (>= 0.2.2)
 
