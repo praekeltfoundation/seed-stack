@@ -27,10 +27,10 @@ FORGE
       deric-mesos (>= 0.6.4)
       puppetlabs-apt (>= 2.1.0)
       puppetlabs-stdlib (>= 4.2.0)
-    praekeltfoundation-seed_stack (0.2.2)
+    praekeltfoundation-seed_stack (0.2.3)
       KyleAnderson-consul (>= 1.0.4)
       deric-mesos (>= 0.6.4)
-      deric-zookeeper (>= 0.4.0)
+      deric-zookeeper (>= 0.4.2)
       garethr-docker (>= 4.1.0)
       gdhbashton-consul_template (>= 0.2.4)
       praekeltfoundation-consular (>= 0.1.1)
@@ -49,5 +49,5 @@ FORGE
 
 DEPENDENCIES
   camptocamp-openssl (>= 1.5.0)
-  praekeltfoundation-seed_stack (>= 0.2.2)
+  praekeltfoundation-seed_stack (>= 0.2.3)
 
