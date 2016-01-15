@@ -1,5 +1,71 @@
-node default {
+node 'standalone.seed-stack.local' {
+  class { 'seed_stack::controller':
+    address              => $ipaddress_eth0,
+    controller_addresses => [$ipaddress_eth0],
+    controller_worker    => true,
+  }
+  class { 'seed_stack::worker':
+    address           => $ipaddress_eth0,
+    controller_worker => true,
+  }
 
+  class { 'seed_stack::load_balancer':
+    manage_nginx           => false,
+    nginx_service          => Service['nginx'],
+    manage_consul_template => false,
+    upstreams              => false,
+  }
+
+  include docker_registry
+}
+
+# Keep track of node IP addresses across the cluster
+# FIXME: A better, more automatic way to do this
+class seed_stack_cluster {
+  $controller_ip = '192.168.0.2'
+  $worker_ip = '192.168.0.3'
+
+  class { 'hosts':
+    enable_fqdn_entry => false,
+    host_entries      => {
+      'controller.seed-stack.local' => {
+        ip           => $controller_ip,
+        host_aliases => ['controller']
+      },
+      'worker.seed-stack.local' => {
+        ip           => $worker_ip,
+        host_aliases => ['worker']
+      }
+    }
+  }
+}
+
+node 'controller.seed-stack.local' {
+  include seed_stack_cluster
+
+  class { 'seed_stack::controller':
+    address              => $seed_stack_cluster::controller_ip,
+    controller_addresses => [$seed_stack_cluster::controller_ip],
+  }
+
+  include seed_stack::load_balancer
+}
+
+node 'worker.seed-stack.local' {
+  include seed_stack_cluster
+
+  class { 'seed_stack::worker':
+    address              => $seed_stack_cluster::worker_ip,
+    controller_addresses => [$seed_stack_cluster::controller_ip]
+  }
+
+  include docker_registry
+}
+
+# Standalone Docker registry for testing
+# TODO: Move this to the seed_stack module once we have a proper system for
+# distributing the CA cert.
+class docker_registry {
   # NOTE: This cert wrangling is only good for a single machine. We need some
   # other mechanism to get our certs to the right place in a multi-node setup.
   package { 'openssl': }
@@ -24,27 +90,6 @@ node default {
     notify => [Service['docker']],
   }
 
-  class { 'seed_stack::controller':
-    address              => $ipaddress_eth0,
-    controller_addresses => [$ipaddress_eth0],
-    controller_worker    => true,
-  }
-  class { 'seed_stack::worker':
-    address           => $ipaddress_eth0,
-    controller_worker => true,
-  }
-
-  file { '/etc/consul-template/nginx-websites.ctmpl':
-    source => 'puppet:///modules/seed_stack/nginx-websites.ctmpl',
-  }
-  ~>
-  consul_template::watch { 'nginx-websites':
-    source      => '/etc/consul-template/nginx-websites.ctmpl',
-    destination => '/etc/nginx/sites-enabled/seed-websites.conf',
-    command     => '/etc/init.d/nginx reload',
-    require     => Service['nginx'],
-  }
-
   docker::run { 'registry':
     image => 'registry:2',
     ports => ['5000:5000'],
@@ -60,5 +105,4 @@ node default {
     require => [Service['docker']],
     subscribe => [Openssl::Certificate::X509['docker-registry']],
   }
-
 }
