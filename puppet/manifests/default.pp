@@ -25,8 +25,14 @@ class seed_stack_cluster {
   $controller_ip = '192.168.0.2'
   $worker_ip = '192.168.0.3'
 
-  host { 'controller.seed-stack.local': ip => $controller_ip }
-  host { 'worker.seed-stack.local': ip => $worker_ip }
+  host { 'controller.seed-stack.local':
+    ip           => $controller_ip,
+    host_aliases => ['controller'],
+  }
+  host { 'worker.seed-stack.local':
+    ip           => $worker_ip,
+    host_aliases => ['worker'],
+  }
 }
 
 node 'controller.seed-stack.local' {
