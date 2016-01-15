@@ -25,18 +25,13 @@ class seed_stack_cluster {
   $controller_ip = '192.168.0.2'
   $worker_ip = '192.168.0.3'
 
-  class { 'hosts':
-    enable_fqdn_entry => false,
-    host_entries      => {
-      'controller.seed-stack.local' => {
-        ip           => $controller_ip,
-        host_aliases => ['controller']
-      },
-      'worker.seed-stack.local' => {
-        ip           => $worker_ip,
-        host_aliases => ['worker']
-      }
-    }
+  host { 'controller.seed-stack.local':
+    ip           => $controller_ip,
+    host_aliases => ['controller'],
+  }
+  host { 'worker.seed-stack.local':
+    ip           => $worker_ip,
+    host_aliases => ['worker'],
   }
 }
 
