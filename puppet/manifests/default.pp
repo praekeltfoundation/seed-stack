@@ -66,6 +66,8 @@ node 'standalone.seed-stack.local' {
     require => File['/data'],
   }
 
+  # `force => true` allows the bricks to live on the root filesystem. In the
+  # single-node setup, it also allows both replicas to live on the same node.
   gluster::volume { 'data1':
     replica => 2,
     force   => true,
@@ -107,6 +109,7 @@ class gluster_cluster {
     require => Package['glusterfs-server'],
   }
 
+  # `force => true` allows the bricks to live on the root filesystem.
   gluster::volume { 'data1':
     replica => 2,
     force   => true,
