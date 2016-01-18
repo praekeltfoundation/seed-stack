@@ -1,4 +1,4 @@
-#### [← Software components](docs/software-components/README.md)
+#### [← Software components](../../README.md)
 ## Mesos
 * [Homepage](http://mesos.apache.org)
 * [Source](https://github.com/apache/mesos) (mirror)

@@ -1,2 +1,2 @@
-#### [← Documentation home](docs/README.md)
+#### [← Documentation home](README.md)
 ## Roadmap

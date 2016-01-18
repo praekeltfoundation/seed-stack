@@ -1,4 +1,4 @@
-#### [← Software components](docs/software-components/README.md)
+#### [← Software components](../../README.md)
 ## Zookeeper
 * [Homepage](https://zookeeper.apache.org)
 * [Source](https://github.com/apache/zookeeper) (mirror)

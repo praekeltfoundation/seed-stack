@@ -1,4 +1,4 @@
-#### [← Software components](docs/software-components/README.md)
+#### [← Software components](../../README.md)
 ## Docker
 * [Homepage](https://www.docker.com/docker-engine)
 * [Source](https://github.com/docker/docker)

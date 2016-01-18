@@ -1,4 +1,4 @@
-#### [← Software components](docs/software-components/README.md)
+#### [← Software components](../../README.md)
 ## Consul Template
 * [Homepage/source](https://github.com/hashicorp/consul-template)
 
