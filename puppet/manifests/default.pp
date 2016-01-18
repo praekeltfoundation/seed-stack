@@ -28,9 +28,9 @@ exit \$CODE"
     require => [Apt::Ppa['ppa:gluster/glusterfs-3.7'], Class['apt::update']],
   }
 
-  file { '/data': ensure => 'directory' }
-  ->
-  file { '/data/brick1': ensure => 'directory' }
+  file { ['/data', '/data/brick1']:
+    ensure => 'directory'
+  }
 }
 
 node 'standalone.seed-stack.local' {
