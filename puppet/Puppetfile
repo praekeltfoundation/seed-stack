@@ -4,3 +4,4 @@ mod 'praekeltfoundation/seed_stack', '>= 0.2.3'
 
 # 3rd party modules
 mod 'camptocamp/openssl', '>= 1.5.0'
+mod 'covermymeds/gluster', '>= 999.999.999'

@@ -98,15 +98,24 @@ Vagrant.configure(2) do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
+
   # Install librarian-puppet dependencies
   config.vm.provision :shell, inline: "apt-get -y install git ruby-dev"
   # Download Puppet modules using librarian-puppet
   config.vm.provision :shell do |shell|
     shell.inline = "cd /vagrant/puppet && ./install-modules.sh"
   end
+
   # Provision the VM using Puppet
   config.vm.provision :puppet do |puppet|
     puppet.module_path = ["puppet/modules"]
     puppet.manifests_path = "puppet/manifests"
   end
+  # Run the puppet provisioner a second time to finish glusterfs setup.
+  config.vm.provision :puppet do |puppet|
+    puppet.module_path = ["puppet/modules"]
+    puppet.manifests_path = "puppet/manifests"
+  end
+
+
 end
