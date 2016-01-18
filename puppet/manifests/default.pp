@@ -98,8 +98,33 @@ class seed_stack_cluster {
   }
 }
 
+# This needs to be on exactly two nodes.
+class gluster_cluster {
+  include glusterfs_common
+
+  gluster::peer { ['controller.seed-stack.local',
+                   'worker.seed-stack.local']:
+    require => Package['glusterfs-server'],
+  }
+
+  gluster::volume { 'data1':
+    replica => 2,
+    force   => true,
+    bricks  => [
+      'controller.seed-stack.local:/data/brick1/data1',
+      'worker.seed-stack.local:/data/brick1/data1',
+    ],
+    require => [
+      Gluster::Peer['controller.seed-stack.local'],
+      Gluster::Peer['worker.seed-stack.local'],
+      File['/data/brick1'],
+    ],
+  }
+}
+
 node 'controller.seed-stack.local' {
   include seed_stack_cluster
+  include gluster_cluster
 
   class { 'seed_stack::controller':
     address              => $seed_stack_cluster::controller_ip,
@@ -111,6 +136,7 @@ node 'controller.seed-stack.local' {
 
 node 'worker.seed-stack.local' {
   include seed_stack_cluster
+  include gluster_cluster
 
   class { 'seed_stack::worker':
     address              => $seed_stack_cluster::worker_ip,
