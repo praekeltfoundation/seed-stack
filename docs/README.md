@@ -2,7 +2,7 @@
 
 ## Index
  1. [Introduction](introduction.md)
- 2. [Software components](software-components.md)
+ 2. [Software components](software-components/README.md)
    1. [Mesos](software-components/mesos.md)
    2. [Marathon](software-components/marathon.md)
    3. [Zookeeper](software-components/zookeeper.md)

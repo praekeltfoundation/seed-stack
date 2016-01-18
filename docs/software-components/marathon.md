@@ -1,4 +1,4 @@
-#### [← Software components](../../README.md)
+#### [← Software components](README.md)
 ## Marathon
 * [Homepage](https://mesosphere.github.io/marathon/)
 * [Source](https://github.com/mesosphere/marathon)

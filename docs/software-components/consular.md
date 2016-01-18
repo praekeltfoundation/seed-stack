@@ -1,4 +1,4 @@
-#### [← Software components](../../README.md)
+#### [← Software components](README.md)
 ## Consular
 * [Homepage](http://consular.readthedocs.org/en/latest/)
 * [Source](https://github.com/universalcore/consular)
