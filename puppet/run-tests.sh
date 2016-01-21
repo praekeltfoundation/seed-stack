@@ -11,6 +11,7 @@ puppet-catalog-test -v \
     -m modules \
     -M manifests/default.pp \
     --fact osfamily=Debian \
+    --fact ipaddress_lo=127.0.0.1 \
     --fact ipaddress_eth0=10.2.3.4 \
     --fact architecture=amd64 \
     --fact operatingsystem=Ubuntu \
