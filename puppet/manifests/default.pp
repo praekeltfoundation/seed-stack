@@ -63,10 +63,10 @@ class docker_registry {
   file { '/var/docker-certs': ensure => directory }
   ->
   openssl::certificate::x509 { 'docker-registry':
-    country => 'NT',
+    country      => 'NT',
     organization => 'seed-stack',
-    commonname => 'docker-registry.service.consul',
-    base_dir => '/var/docker-certs',
+    commonname   => 'docker-registry.service.consul',
+    base_dir     => '/var/docker-certs',
   }
   ~>
   file { '/usr/local/share/ca-certificates/docker-registry.crt':
@@ -76,23 +76,23 @@ class docker_registry {
   ~>
   exec { 'update-ca-certificates':
     refreshonly => true,
-    command => '/usr/sbin/update-ca-certificates',
-    notify => [Service['docker']],
+    command     => '/usr/sbin/update-ca-certificates',
+    notify      => [Service['docker']],
   }
 
   docker::run { 'registry':
-    image => 'registry:2',
-    ports => ['5000:5000'],
-    volumes => [
+    image            => 'registry:2',
+    ports            => ['5000:5000'],
+    volumes          => [
       '/var/docker-registry:/var/lib/registry',
       '/var/docker-certs:/certs',
     ],
-    env => [
+    env              => [
       'REGISTRY_HTTP_TLS_CERTIFICATE=/certs/docker-registry.crt',
       'REGISTRY_HTTP_TLS_KEY=/certs/docker-registry.key',
     ],
     extra_parameters => ['--restart=always'],
-    require => [Service['docker']],
-    subscribe => [Openssl::Certificate::X509['docker-registry']],
+    require          => [Service['docker']],
+    subscribe        => [Openssl::Certificate::X509['docker-registry']],
   }
 }

@@ -12,6 +12,5 @@ The Puppet configuration has a few tests run on it using [Travis CI](https://tra
 ```shell
 cd puppet
 bundle install
-bundle exec ./install-modules.sh
-bundle exec ./run-tests.sh
+bundle exec rake
 ```

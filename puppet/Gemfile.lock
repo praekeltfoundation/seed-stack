@@ -42,8 +42,12 @@ GEM
       builder
       parallel
       puppet
+    puppet-lint (1.1.0)
+    puppet-syntax (2.1.0)
+      rake
     puppet_forge (1.0.5)
       her (~> 0.6.8)
+    rake (10.5.0)
     rgen (0.6.6)
     rsync (1.0.9)
     thor (0.19.1)
@@ -58,6 +62,9 @@ DEPENDENCIES
   librarian-puppet
   puppet (= 3.4.3)
   puppet-catalog-test
+  puppet-lint
+  puppet-syntax
+  rake
 
 BUNDLED WITH
    1.11.2

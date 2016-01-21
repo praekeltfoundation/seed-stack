@@ -3,9 +3,14 @@
 # the various gems.
 source 'https://rubygems.org'
 
+gem 'librarian-puppet'
+
 group :test do
-  ruby '1.9.3'
-  gem 'librarian-puppet'
+  gem 'rake'
+
   gem 'puppet', '3.4.3'
+
   gem 'puppet-catalog-test'
+  gem 'puppet-lint'
+  gem 'puppet-syntax'
 end
