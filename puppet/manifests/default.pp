@@ -9,12 +9,7 @@ node 'standalone.seed-stack.local' {
     controller_worker => true,
   }
 
-  class { 'seed_stack::load_balancer':
-    manage_nginx           => false,
-    nginx_service          => Service['nginx'],
-    manage_consul_template => false,
-    upstreams              => false,
-  }
+  include seed_stack::load_balancer
 
   include docker_registry
 }
