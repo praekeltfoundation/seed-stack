@@ -10,4 +10,4 @@ before_script:
   # All our build steps and tests are for Puppet at the moment
   - cd puppet
 
-# `bundle install` and `bundle exec rake` run automatically by Travis
+script: bundle exec rake
