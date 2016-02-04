@@ -1,7 +1,6 @@
+# This contains setup common to all gluster nodes. Peers and volumes need to be
+# configured on the individual nodes.
 class glusterfs_common {
-  # This contains setup common to all gluster nodes. Peers and volumes need to
-  # be configured on the individual nodes.
-
   # NOTE: If there are three gluster nodes, an extra puppet provisioning run
   # needs to happen after all nodes are up and running so that the existing
   # cluster can invite new nodes. I have no idea what happens with four or
