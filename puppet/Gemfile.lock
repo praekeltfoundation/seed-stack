@@ -65,6 +65,3 @@ DEPENDENCIES
   puppet-lint
   puppet-syntax
   rake
-
-BUNDLED WITH
-   1.11.2

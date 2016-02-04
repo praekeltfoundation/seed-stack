@@ -102,19 +102,9 @@ Vagrant.configure(2) do |config|
   config.vm.provision :shell do |shell|
     shell.inline = "cd /vagrant/puppet && ./puppet-bootstrap.sh"
   end
-
   # Provision the VM using Puppet
   config.vm.provision :puppet do |puppet|
     puppet.module_path = ["puppet/modules"]
     puppet.manifests_path = "puppet/manifests"
-    puppet.facter = { 'gluster_binary' => '/usr/local/bin/gluster_wrapper.sh' }
   end
-  # Run the puppet provisioner a second time to finish glusterfs setup.
-  config.vm.provision :puppet do |puppet|
-    puppet.module_path = ["puppet/modules"]
-    puppet.manifests_path = "puppet/manifests"
-    puppet.facter = { 'gluster_binary' => '/usr/local/bin/gluster_wrapper.sh' }
-  end
-
-
 end

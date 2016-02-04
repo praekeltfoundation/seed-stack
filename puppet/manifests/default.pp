@@ -7,20 +7,6 @@ class glusterfs_common {
   # cluster can invite new nodes. I have no idea what happens with four or
   # more.
 
-  # Vagrant gets very sad if gluster can't find the peer it's looking for, so
-  # we need to wrap the `gluster` command and pretend `gluster peer probe`
-  # succeeded even if it didn't.
-  $gluster_wrapper = "#!/bin/bash
-gluster \"$@\"
-CODE=$?
-if [ \"\$1 \$2\" = \"peer probe\" ]; then CODE=0; fi
-exit \$CODE"
-
-  file { '/usr/local/bin/gluster_wrapper.sh':
-    content => $gluster_wrapper,
-    mode    => '0755',
-  }
-
   apt::ppa { 'ppa:gluster/glusterfs-3.7': }
 
   package { 'glusterfs-server':
@@ -50,7 +36,7 @@ node 'standalone.seed-stack.local' {
 
   include glusterfs_common
 
-  gluster::peer { 'standalone.seed-stack.local':
+  gluster_peer { 'standalone.seed-stack.local':
     require => Package['glusterfs-server'],
   }
 
@@ -63,7 +49,7 @@ node 'standalone.seed-stack.local' {
 
   # `force => true` allows the bricks to live on the root filesystem. In the
   # single-node setup, it also allows both replicas to live on the same node.
-  gluster::volume { 'data1':
+  gluster_volume { 'data1':
     replica => 2,
     force   => true,
     bricks  => [
@@ -71,7 +57,6 @@ node 'standalone.seed-stack.local' {
       'standalone.seed-stack.local:/data/brick2/data1',
     ],
     require => [
-      Gluster::Peer['standalone.seed-stack.local'],
       File['/data/brick1'],
       File['/data/brick2'],
     ],
@@ -99,24 +84,17 @@ class seed_stack_cluster {
 class gluster_cluster {
   include glusterfs_common
 
-  gluster::peer { ['controller.seed-stack.local',
-                   'worker.seed-stack.local']:
-    require => Package['glusterfs-server'],
-  }
+  gluster_peer { ['controller.seed-stack.local', 'worker.seed-stack.local']: }
 
   # `force => true` allows the bricks to live on the root filesystem.
-  gluster::volume { 'data1':
+  gluster_volume { 'data1':
     replica => 2,
     force   => true,
     bricks  => [
       'controller.seed-stack.local:/data/brick1/data1',
       'worker.seed-stack.local:/data/brick1/data1',
     ],
-    require => [
-      Gluster::Peer['controller.seed-stack.local'],
-      Gluster::Peer['worker.seed-stack.local'],
-      File['/data/brick1'],
-    ],
+    require => File['/data/brick1'],
   }
 }
 
