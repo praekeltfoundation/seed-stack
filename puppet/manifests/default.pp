@@ -13,6 +13,11 @@ class glusterfs_common {
     require => [Apt::Ppa['ppa:gluster/glusterfs-3.7'], Class['apt::update']],
   }
 
+  service { 'glusterfs-server':
+    ensure  => 'running',
+    require => Package['glusterfs-server'],
+  }
+
   file { ['/data', '/data/brick1']: ensure => 'directory' }
 }
 
