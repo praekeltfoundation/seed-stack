@@ -1,6 +1,7 @@
 forge "https://forgeapi.puppetlabs.com"
 
 mod 'praekeltfoundation/seed_stack', '>= 0.3.0 < 0.4.0'
+mod 'praekeltfoundation/gluster', '>= 0.1.1 < 0.2.0'
 
 # 3rd party modules
 mod 'camptocamp/openssl', '>= 1.5.0'
