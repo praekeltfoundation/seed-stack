@@ -13,9 +13,7 @@ class glusterfs_common {
     require => [Apt::Ppa['ppa:gluster/glusterfs-3.7'], Class['apt::update']],
   }
 
-  file { ['/data', '/data/brick1']:
-    ensure => 'directory'
-  }
+  file { ['/data', '/data/brick1']: ensure => 'directory' }
 }
 
 node 'standalone.seed-stack.local' {
@@ -35,9 +33,7 @@ node 'standalone.seed-stack.local' {
 
   include glusterfs_common
 
-  gluster_peer { 'standalone.seed-stack.local':
-    require => Package['glusterfs-server'],
-  }
+  gluster_peer { 'standalone.seed-stack.local': }
 
   # We need at least two replicas, so they both have to live on the same node
   # in the single-machine setup.
@@ -93,7 +89,6 @@ class gluster_cluster {
       'controller.seed-stack.local:/data/brick1/data1',
       'worker.seed-stack.local:/data/brick1/data1',
     ],
-    require => File['/data/brick1'],
   }
 }
 
