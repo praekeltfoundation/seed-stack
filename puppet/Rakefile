@@ -11,11 +11,6 @@ Rake::Task['syntax:hiera'].clear # Not currently using Hiera
 Rake::Task[:lint].clear
 PuppetLint::RakeTask.new(:lint) do |config|
   config.fail_on_warnings = true
-  config.disable_checks = [
-      '80chars',
-      'class_inherits_from_params_class',
-      'autoloader_layout',
-  ]
   config.ignore_paths = exclude_paths
 end
 
