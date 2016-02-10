@@ -14,12 +14,13 @@ class glusterfs_common {
 
 node 'standalone.seed-stack.local' {
   class { 'seed_stack::controller':
-    address              => $ipaddress_eth0,
-    controller_addresses => [$ipaddress_eth0],
-    controller_worker    => true,
+    advertise_addr    => $ipaddress_eth0,
+    controller_addrs  => [$ipaddress_eth0],
+    controller_worker => true,
   }
   class { 'seed_stack::worker':
-    address           => $ipaddress_eth0,
+    advertise_addr    => $ipaddress_eth0,
+    controller_addrs  => [$ipaddress_eth0],
     controller_worker => true,
   }
 
@@ -93,8 +94,8 @@ node 'controller.seed-stack.local' {
   include gluster_cluster
 
   class { 'seed_stack::controller':
-    address              => $seed_stack_cluster::controller_ip,
-    controller_addresses => [$seed_stack_cluster::controller_ip],
+    advertise_addr   => $seed_stack_cluster::controller_ip,
+    controller_addrs => [$seed_stack_cluster::controller_ip],
   }
 
   include seed_stack::load_balancer
@@ -105,8 +106,8 @@ node 'worker.seed-stack.local' {
   include gluster_cluster
 
   class { 'seed_stack::worker':
-    address              => $seed_stack_cluster::worker_ip,
-    controller_addresses => [$seed_stack_cluster::controller_ip]
+    advertise_addr   => $seed_stack_cluster::worker_ip,
+    controller_addrs => [$seed_stack_cluster::controller_ip]
   }
 
   include docker_registry
