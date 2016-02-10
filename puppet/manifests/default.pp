@@ -7,7 +7,7 @@ class glusterfs_common {
   # more.
 
   # The default repo and version are suitable for our needs.
-  class { 'gluster': }
+  include gluster
 
   file { ['/data', '/data/brick1']: ensure => 'directory' }
 }
