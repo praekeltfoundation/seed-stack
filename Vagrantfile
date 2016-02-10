@@ -99,12 +99,16 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   # Set up librarian-puppet and install Puppet modules
+  @puppet_version = 3
   config.vm.provision :shell do |shell|
-    shell.inline = "cd /vagrant/puppet && ./puppet-bootstrap.sh"
+    shell.inline = "/vagrant/puppet/puppet-bootstrap.sh #{@puppet_version}"
   end
   # Provision the VM using Puppet
   config.vm.provision :puppet do |puppet|
-    puppet.module_path = ["puppet/modules"]
-    puppet.manifests_path = "puppet/manifests"
+    puppet.environment = "seed_stack"
+    puppet.environment_path = "puppet/environments"
+    if @puppet_version != 4
+      puppet.options = ["--no-stringify_facts", "--parser=future"]
+    end
   end
 end
