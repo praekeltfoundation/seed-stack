@@ -23,7 +23,7 @@ FORGE
     nanliu-staging (1.0.3)
     praekeltfoundation-consular (0.2.0)
       puppetlabs-apt (>= 0)
-    praekeltfoundation-gluster (0.1.1)
+    praekeltfoundation-gluster (0.2.0)
       puppetlabs-apt (>= 0)
     praekeltfoundation-marathon (0.2.0)
       deric-mesos (>= 0.6.4)
@@ -51,6 +51,6 @@ FORGE
 
 DEPENDENCIES
   camptocamp-openssl (>= 1.5.0)
-  praekeltfoundation-gluster (< 0.2.0, >= 0.1.1)
+  praekeltfoundation-gluster (< 0.3.0, >= 0.2.0)
   praekeltfoundation-seed_stack (< 0.4.0, >= 0.3.0)
 

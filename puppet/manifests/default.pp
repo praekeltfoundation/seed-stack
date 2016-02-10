@@ -6,17 +6,8 @@ class glusterfs_common {
   # cluster can invite new nodes. I have no idea what happens with four or
   # more.
 
-  apt::ppa { 'ppa:gluster/glusterfs-3.7': }
-
-  package { 'glusterfs-server':
-    ensure  => '3.7.6*',
-    require => [Apt::Ppa['ppa:gluster/glusterfs-3.7'], Class['apt::update']],
-  }
-
-  service { 'glusterfs-server':
-    ensure  => 'running',
-    require => Package['glusterfs-server'],
-  }
+  # The default repo and version are suitable for our needs.
+  class { 'gluster': }
 
   file { ['/data', '/data/brick1']: ensure => 'directory' }
 }
