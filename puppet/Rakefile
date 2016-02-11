@@ -2,6 +2,8 @@ require 'puppet-catalog-test'
 require 'puppet-lint/tasks/puppet-lint'
 require 'puppet-syntax/tasks/puppet-syntax'
 
+envdir = File.join("environments", "seed_stack")
+
 exclude_paths = ["vendor/**/*", "modules/**/*"]
 
 PuppetSyntax.fail_on_deprecation_notices = false
@@ -16,7 +18,7 @@ end
 
 desc "Install modules using librarian-puppet"
 task :module_install do
-  sh 'librarian-puppet install'
+  sh "librarian-puppet install --path=#{envdir}/modules"
 end
 
 PuppetCatalogTest::RakeTask.new(:catalog) do |t|
@@ -24,8 +26,8 @@ PuppetCatalogTest::RakeTask.new(:catalog) do |t|
   # like config being set twice. This clears the config if it's set.
   Puppet.settings.send(:clear_everything_for_tests)
 
-  t.module_paths = ["modules"]
-  t.manifest_path = File.join("manifests", "default.pp")
+  t.module_paths = [File.join(envdir, "modules")]
+  t.manifest_path = File.join(envdir, "manifests", "site.pp")
   t.facts = {
     "osfamily" => "Debian",
     "ipaddress_lo" => "127.0.0.1",
