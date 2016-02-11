@@ -22,12 +22,16 @@ wget -c https://apt.puppetlabs.com/${deb}
 dpkg -i ${deb}
 apt-get update
 
-# Upgrade to new puppet and install some dependencies.
+# Upgrade to new Puppet and install some dependencies.
 ${puppet_remove}
 ${puppet_install}
 apt-get autoremove -qy
 apt-get install -qy --no-install-recommends bundler git ruby-dev
 
+# If we're using Puppet 4.x, symlink it into /usr/sbin because sudo and $PATH.
+if [ -x /opt/puppetlabs/bin/puppet -a ! -e /sbin/puppet ]; then
+   ln -s /opt/puppetlabs/bin/puppet /sbin/puppet
+fi
 
 # Install puppet modules
 cd /vagrant/puppet
