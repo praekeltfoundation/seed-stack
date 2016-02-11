@@ -29,8 +29,8 @@ apt-get autoremove -qy
 apt-get install -qy --no-install-recommends bundler git ruby-dev
 
 # If we're using Puppet 4.x, symlink it into /usr/sbin because sudo and $PATH.
-if [ -x /opt/puppetlabs/bin/puppet -a ! -e /sbin/puppet ]; then
-   ln -s /opt/puppetlabs/bin/puppet /sbin/puppet
+if [ -x /opt/puppetlabs/bin/puppet -a ! -e /usr/sbin/puppet ]; then
+   ln -s /opt/puppetlabs/bin/puppet /usr/sbin/puppet
 fi
 
 # Install puppet modules
