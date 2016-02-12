@@ -98,13 +98,25 @@ Vagrant.configure(2) do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  # Set up librarian-puppet and install Puppet modules
+
+  # Upgrade Puppet, set up librarian-puppet, and install Puppet modules
+  # Valid versions are '3.4', '3.8', and '4'.
+  @puppet_version = ENV['PUPPET_VERSION'] || '4'
   config.vm.provision :shell do |shell|
-    shell.inline = "cd /vagrant/puppet && ./puppet-bootstrap.sh"
+    shell.inline = "/vagrant/puppet/puppet-bootstrap.sh #{@puppet_version}"
   end
   # Provision the VM using Puppet
   config.vm.provision :puppet do |puppet|
-    puppet.module_path = ["puppet/modules"]
-    puppet.manifests_path = "puppet/manifests"
+    if @puppet_version.to_f < 3.8
+      puppet.module_path = ["puppet/environments/seed_stack/modules"]
+      puppet.manifests_path = "puppet/environments/seed_stack/manifests"
+      puppet.manifest_file = "site.pp"
+    else
+      puppet.environment = "seed_stack"
+      puppet.environment_path = "puppet/environments"
+    end
+    if @puppet_version == '3.8'
+      puppet.options = ['--no-stringify_facts', '--parser=future']
+    end
   end
 end
