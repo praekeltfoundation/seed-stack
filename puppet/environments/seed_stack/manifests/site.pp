@@ -15,8 +15,9 @@ class glusterfs_common {
 
 # FIXME: This should be somewhere else.
 class xylem_common {
+  include apt
 
-  apt::source{'seed':
+  apt::source{ 'seed':
     location => 'https://praekeltfoundation.github.io/packages/',
     repos    => 'main',
     release  => inline_template('<%= @lsbdistcodename.downcase %>'),
@@ -26,7 +27,7 @@ class xylem_common {
     },
   }
 
-  contain apt::update
+  contain 'apt::update'
 }
 
 # FIXME: This should be somewhere else.
