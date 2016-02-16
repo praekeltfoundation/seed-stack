@@ -17,11 +17,13 @@ class glusterfs_common {
 class xylem_common {
 
   apt::source{'seed':
-    location    => 'https://praekeltfoundation.github.io/packages/',
-    repos       => 'main',
-    release     => inline_template('<%= @lsbdistcodename.downcase %>'),
-    key_source  => 'https://praekeltfoundation.github.io/packages/conf/seed.gpg.key',
-    include_src => false
+    location => 'https://praekeltfoundation.github.io/packages/',
+    repos    => 'main',
+    release  => inline_template('<%= @lsbdistcodename.downcase %>'),
+    key      => {
+      id     => '864DC0AA3139DFA3C332B9527EAFC9B3F996C16C',
+      source => 'https://praekeltfoundation.github.io/packages/conf/seed.gpg.key',
+    },
   }
 
   contain apt::update
