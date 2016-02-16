@@ -28,10 +28,7 @@ if [ -n "${deb}" ]; then
     wget -c https://apt.puppetlabs.com/${deb}
     dpkg -i ${deb}
     sourcelist=$(echo /etc/apt/sources.list.d/puppetlabs*.list)
-    apt-get update \
-            -o Dir::Etc::sourcelist="${sourcelist}" \
-            -o Dir::Etc::sourceparts="-" \
-            -o APT::Get::List-Cleanup="0"
+    apt-get update
     ${puppet_remove}
     ${puppet_install}
     apt-get autoremove -qy
