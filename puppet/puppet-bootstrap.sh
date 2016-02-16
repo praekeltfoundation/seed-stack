@@ -25,7 +25,7 @@ esac
 
 # Set up puppetlabs repos and upgrade puppet if necessary.
 if [ -n "${deb}" ]; then
-    wget -c https://apt.puppetlabs.com/${deb}
+    wget -nv -c https://apt.puppetlabs.com/${deb}
     dpkg -i ${deb}
     sourcelist=$(echo /etc/apt/sources.list.d/puppetlabs*.list)
     apt-get update
