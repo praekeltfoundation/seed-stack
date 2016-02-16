@@ -9,7 +9,105 @@ class glusterfs_common {
   # The default repo and version are suitable for our needs.
   include gluster
 
-  file { ['/data', '/data/brick1']: ensure => 'directory' }
+  file { ['/data', '/data/brick1', '/data/brick2']: ensure => 'directory' }
+
+}
+
+# FIXME: This should be somewhere else.
+class xylem_common {
+
+  apt::source{'seed':
+    location    => 'https://praekeltfoundation.github.io/packages/',
+    repos       => 'main',
+    release     => inline_template('<%= @lsbdistcodename.downcase %>'),
+    key_source  => 'https://praekeltfoundation.github.io/packages/conf/seed.gpg.key',
+    include_src => false
+  }
+
+  contain apt::update
+}
+
+# FIXME: This should be somewhere else.
+class xylem_gluster($mounts=[], $nodes=[], $replica=false, $stripe=false) {
+  include xylem_common
+
+  $xylem_gluster_template = @(END)
+  queues:
+    - name: gluster
+      plugin: seed.xylem.gluster
+      gluster_mounts:
+        <%- @mounts.each do |mp| -%>
+        - <%= mp %>
+        <%- end -%>
+      gluster_nodes:
+        <%- @nodes.each do |node| -%>
+        - <%= node %>
+        <%- end -%>
+      <%- if @replica then -%>
+      gluster_replica: <%= @replica %>
+      <%- end -%>
+      <%- if @stripe then -%>
+      gluster_stripe: <%= @stripe %>
+      <%- end -%>
+  END
+
+  package { 'seed-xylem':
+    ensure          => latest,
+    install_options => ['--force-yes'],
+    require         => Apt::Source['seed'],
+  }
+  ->
+  file {'/etc/xylem/xylem.yml':
+    ensure  => present,
+    content => inline_template($xylem_gluster_template),
+    mode    => '0644',
+  }
+  ~>
+  service { 'xylem':
+    ensure    => running,
+    require   => Package['seed-xylem'],
+    subscribe => File['/etc/xylem/xylem.yml'],
+  }
+
+}
+
+# FIXME: This should be somewhere else.
+class xylem_docker($server) {
+  include xylem_common
+
+  file { '/run/docker/plugins':
+    ensure => directory,
+    mode   => '0755',
+  }
+
+  $xylem_plugin_template = @(END)
+  host: <%= @server %>
+  port: 7701
+  mount_path: /var/lib/docker/volumes
+  socket: /run/docker/plugins/xylem.sock
+  END
+
+  package { 'docker-xylem':
+    ensure          => latest,
+    install_options => ['--force-yes'],
+    require         => Apt::Source['seed'],
+  }
+  ->
+  file { '/etc/docker/xylem-plugin.yml':
+    ensure  => present,
+    content => inline_template($xylem_plugin_template),
+    mode    => '0644',
+  }
+  ~>
+  service {'docker-xylem':
+    ensure    => running,
+    subscribe => File['/etc/docker/xylem-plugin.yml'],
+    require   => [
+      Package['docker-xylem'],
+      File['/run/docker/plugins'],
+    ],
+  }
+
 }
 
 node 'standalone.seed-stack.local' {
@@ -32,26 +130,30 @@ node 'standalone.seed-stack.local' {
 
   gluster_peer { 'standalone.seed-stack.local': }
 
-  # We need at least two replicas, so they both have to live on the same node
-  # in the single-machine setup.
-  file { '/data/brick2':
-    ensure  => 'directory',
-    require => File['/data'],
+  # # `force => true` allows the bricks to live on the root filesystem. In the
+  # # single-node setup, it also allows both replicas to live on the same node.
+  # gluster_volume { 'data1':
+  #   replica => 2,
+  #   force   => true,
+  #   bricks  => [
+  #     'standalone.seed-stack.local:/data/brick1/data1',
+  #     'standalone.seed-stack.local:/data/brick2/data1',
+  #   ],
+  #   require => [
+  #     File['/data/brick1'],
+  #     File['/data/brick2'],
+  #   ],
+  # }
+
+  class { 'xylem_docker':
+    server => $::fqdn,
+    require => Class['docker'],
   }
 
-  # `force => true` allows the bricks to live on the root filesystem. In the
-  # single-node setup, it also allows both replicas to live on the same node.
-  gluster_volume { 'data1':
-    replica => 2,
-    force   => true,
-    bricks  => [
-      'standalone.seed-stack.local:/data/brick1/data1',
-      'standalone.seed-stack.local:/data/brick2/data1',
-    ],
-    require => [
-      File['/data/brick1'],
-      File['/data/brick2'],
-    ],
+  class { 'xylem_gluster':
+    mounts => ['/data/brick1', '/data/brick2'],
+    nodes  => [$::fqdn],
+    stripe => 2,
   }
 
 }
@@ -78,15 +180,16 @@ class gluster_cluster {
 
   gluster_peer { ['controller.seed-stack.local', 'worker.seed-stack.local']: }
 
-  # `force => true` allows the bricks to live on the root filesystem.
-  gluster_volume { 'data1':
-    replica => 2,
-    force   => true,
-    bricks  => [
-      'controller.seed-stack.local:/data/brick1/data1',
-      'worker.seed-stack.local:/data/brick1/data1',
-    ],
-  }
+  # # `force => true` allows the bricks to live on the root filesystem.
+  # gluster_volume { 'data1':
+  #   replica => 2,
+  #   force   => true,
+  #   bricks  => [
+  #     'controller.seed-stack.local:/data/brick1/data1',
+  #     'worker.seed-stack.local:/data/brick1/data1',
+  #   ],
+  # }
+
 }
 
 node 'controller.seed-stack.local' {
@@ -96,6 +199,13 @@ node 'controller.seed-stack.local' {
   class { 'seed_stack::controller':
     advertise_addr   => $seed_stack_cluster::controller_ip,
     controller_addrs => [$seed_stack_cluster::controller_ip],
+  }
+
+  class { 'xylem_gluster':
+    mounts  => ['/data/brick1', '/data/brick2'],
+    nodes   => ['controller.seed-stack.local', 'worker.seed-stack.local'],
+    stripe  => 2,
+    replica => 2,
   }
 
   include seed_stack::load_balancer
@@ -108,6 +218,11 @@ node 'worker.seed-stack.local' {
   class { 'seed_stack::worker':
     advertise_addr   => $seed_stack_cluster::worker_ip,
     controller_addrs => [$seed_stack_cluster::controller_ip]
+  }
+
+  class { 'xylem_docker':
+    server  => 'controller.seed-stack.local',
+    require => Class['docker'],
   }
 
   include docker_registry
