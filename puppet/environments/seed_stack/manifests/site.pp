@@ -62,9 +62,8 @@ class xylem_gluster($mounts=[], $nodes=[], $replica=false, $stripe=false) {
   }
 
   package { 'seed-xylem':
-    ensure          => latest,
-    install_options => ['--force-yes'],
-    require         => Apt::Source['seed'],
+    ensure  => latest,
+    require => Apt::Source['seed'],
   }
   ->
   file {'/etc/xylem/xylem.yml':
@@ -98,9 +97,8 @@ class xylem_docker($server) {
   END
 
   package { 'docker-xylem':
-    ensure          => latest,
-    install_options => ['--force-yes'],
-    require         => Apt::Source['seed'],
+    ensure  => latest,
+    require => Apt::Source['seed'],
   }
   ->
   file { '/etc/docker/xylem-plugin.yml':
