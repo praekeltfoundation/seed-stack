@@ -53,6 +53,14 @@ class xylem_gluster($mounts=[], $nodes=[], $replica=false, $stripe=false) {
       <%- end -%>
   END
 
+  package {'redis-server':
+    ensure => installed
+  }
+  ->
+  service {'redis-server':
+    ensure => running
+  }
+
   package { 'seed-xylem':
     ensure          => latest,
     install_options => ['--force-yes'],
@@ -67,7 +75,7 @@ class xylem_gluster($mounts=[], $nodes=[], $replica=false, $stripe=false) {
   ~>
   service { 'xylem':
     ensure    => running,
-    require   => Package['seed-xylem'],
+    require   => [Package['seed-xylem'], Service['redis-server']],
     subscribe => File['/etc/xylem/xylem.yml'],
   }
 
