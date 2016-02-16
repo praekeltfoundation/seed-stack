@@ -139,21 +139,6 @@ node 'standalone.seed-stack.local' {
 
   gluster_peer { 'standalone.seed-stack.local': }
 
-  # # `force => true` allows the bricks to live on the root filesystem. In the
-  # # single-node setup, it also allows both replicas to live on the same node.
-  # gluster_volume { 'data1':
-  #   replica => 2,
-  #   force   => true,
-  #   bricks  => [
-  #     'standalone.seed-stack.local:/data/brick1/data1',
-  #     'standalone.seed-stack.local:/data/brick2/data1',
-  #   ],
-  #   require => [
-  #     File['/data/brick1'],
-  #     File['/data/brick2'],
-  #   ],
-  # }
-
   class { 'xylem_docker':
     server => $::fqdn,
     require => Class['docker'],
@@ -188,16 +173,6 @@ class gluster_cluster {
   include glusterfs_common
 
   gluster_peer { ['controller.seed-stack.local', 'worker.seed-stack.local']: }
-
-  # # `force => true` allows the bricks to live on the root filesystem.
-  # gluster_volume { 'data1':
-  #   replica => 2,
-  #   force   => true,
-  #   bricks  => [
-  #     'controller.seed-stack.local:/data/brick1/data1',
-  #     'worker.seed-stack.local:/data/brick1/data1',
-  #   ],
-  # }
 
 }
 
