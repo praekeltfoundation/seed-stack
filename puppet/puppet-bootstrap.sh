@@ -27,7 +27,6 @@ esac
 if [ -n "${deb}" ]; then
     wget -nv -c https://apt.puppetlabs.com/${deb}
     dpkg -i ${deb}
-    sourcelist=$(echo /etc/apt/sources.list.d/puppetlabs*.list)
     apt-get update
     ${puppet_remove}
     ${puppet_install}
