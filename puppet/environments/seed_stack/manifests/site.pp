@@ -31,27 +31,28 @@ node 'standalone.seed-stack.local' {
 
   include glusterfs_common
 
-  gluster_peer { 'standalone.seed-stack.local': }
-
-  package {'redis-server':
-    ensure => installed
-  }
+  package {'redis-server': ensure => installed }
   ->
-  service {'redis-server':
-    ensure => running
-  }
+  service {'redis-server': ensure => running }
+
+  gluster_peer { 'standalone.seed-stack.local': }
   ->
   class { 'xylem::node':
     gluster        => true,
     gluster_mounts => ['/data/brick1', '/data/brick2'],
     gluster_nodes  => [$::fqdn],
     gluster_stripe => 2,
+    require        => Service['redis-server'],
   }
 
+  file { '/run/docker/plugins':
+    ensure  => 'directory',
+    require => Class['docker'],
+  }
+  ->
   class { 'xylem::docker':
     backend     => $::fqdn,
     repo_manage => false,
-    require     => Class['docker'],
   }
 
 }
@@ -89,14 +90,10 @@ node 'controller.seed-stack.local' {
     controller_addrs => [$seed_stack_cluster::controller_ip],
   }
 
-  package {'redis-server':
-    ensure => installed
-  }
+  package {'redis-server': ensure => installed }
   ->
-  service {'redis-server':
-    ensure => running
-  }
-  ->
+  service {'redis-server': ensure => running }
+
   class { 'xylem::node':
     gluster         => true,
     gluster_mounts  => ['/data/brick1', '/data/brick2'],
@@ -106,6 +103,7 @@ node 'controller.seed-stack.local' {
     ],
     gluster_stripe  => 2,
     gluster_replica => 2,
+    require         => [Service['redis-server'], Class['gluster_cluster']],
   }
 
   include seed_stack::load_balancer
@@ -120,9 +118,13 @@ node 'worker.seed-stack.local' {
     controller_addrs => [$seed_stack_cluster::controller_ip]
   }
 
+  file { '/run/docker/plugins':
+    ensure  => 'directory',
+    require => Class['docker'],
+  }
+  ->
   class { 'xylem::docker':
     server  => 'controller.seed-stack.local',
-    require => Class['docker'],
   }
 
   include docker_registry
