@@ -13,112 +13,6 @@ class glusterfs_common {
 
 }
 
-# FIXME: This should be somewhere else.
-class xylem_common {
-  include apt
-
-  apt::source{ 'seed':
-    location => 'https://praekeltfoundation.github.io/packages/',
-    repos    => 'main',
-    release  => inline_template('<%= @lsbdistcodename.downcase %>'),
-    key      => {
-      id     => '864DC0AA3139DFA3C332B9527EAFC9B3F996C16C',
-      source => 'https://praekeltfoundation.github.io/packages/conf/seed.gpg.key',
-    },
-  }
-
-  contain 'apt::update'
-}
-
-# FIXME: This should be somewhere else.
-class xylem_gluster($mounts=[], $nodes=[], $replica=false, $stripe=false) {
-  include xylem_common
-
-  $xylem_gluster_template = @(END)
-  queues:
-    - name: gluster
-      plugin: seed.xylem.gluster
-      gluster_mounts:
-        <%- @mounts.each do |mp| -%>
-        - <%= mp %>
-        <%- end -%>
-      gluster_nodes:
-        <%- @nodes.each do |node| -%>
-        - <%= node %>
-        <%- end -%>
-      <%- if @replica then -%>
-      gluster_replica: <%= @replica %>
-      <%- end -%>
-      <%- if @stripe then -%>
-      gluster_stripe: <%= @stripe %>
-      <%- end -%>
-  END
-
-  package {'redis-server':
-    ensure => installed
-  }
-  ->
-  service {'redis-server':
-    ensure => running
-  }
-
-  package { 'seed-xylem':
-    ensure  => latest,
-    require => Class['xylem_common'],
-  }
-  ->
-  file {'/etc/xylem/xylem.yml':
-    ensure  => present,
-    content => inline_template($xylem_gluster_template),
-    mode    => '0644',
-  }
-  ~>
-  service { 'xylem':
-    ensure    => running,
-    require   => [Package['seed-xylem'], Service['redis-server']],
-    subscribe => File['/etc/xylem/xylem.yml'],
-  }
-
-}
-
-# FIXME: This should be somewhere else.
-class xylem_docker($server) {
-  include xylem_common
-
-  file { '/run/docker/plugins':
-    ensure => directory,
-    mode   => '0755',
-  }
-
-  $xylem_plugin_template = @(END)
-  host: <%= @server %>
-  port: 7701
-  mount_path: /var/lib/docker/volumes
-  socket: /run/docker/plugins/xylem.sock
-  END
-
-  package { 'docker-xylem':
-    ensure  => latest,
-    require => Class['xylem_common'],
-  }
-  ->
-  file { '/etc/docker/xylem-plugin.yml':
-    ensure  => present,
-    content => inline_template($xylem_plugin_template),
-    mode    => '0644',
-  }
-  ~>
-  service {'docker-xylem':
-    ensure    => running,
-    subscribe => File['/etc/docker/xylem-plugin.yml'],
-    require   => [
-      Package['docker-xylem'],
-      File['/run/docker/plugins'],
-    ],
-  }
-
-}
-
 node 'standalone.seed-stack.local' {
   class { 'seed_stack::controller':
     advertise_addr    => $ipaddress_eth0,
@@ -139,15 +33,25 @@ node 'standalone.seed-stack.local' {
 
   gluster_peer { 'standalone.seed-stack.local': }
 
-  class { 'xylem_docker':
-    server => $::fqdn,
-    require => Class['docker'],
+  package {'redis-server':
+    ensure => installed
+  }
+  ->
+  service {'redis-server':
+    ensure => running
+  }
+  ->
+  class { 'xylem::node':
+    gluster        => true,
+    gluster_mounts => ['/data/brick1', '/data/brick2'],
+    gluster_nodes  => [$::fqdn],
+    gluster_stripe => 2,
   }
 
-  class { 'xylem_gluster':
-    mounts => ['/data/brick1', '/data/brick2'],
-    nodes  => [$::fqdn],
-    stripe => 2,
+  class { 'xylem::docker':
+    backend     => $::fqdn,
+    repo_manage => false,
+    require     => Class['docker'],
   }
 
 }
@@ -185,11 +89,23 @@ node 'controller.seed-stack.local' {
     controller_addrs => [$seed_stack_cluster::controller_ip],
   }
 
-  class { 'xylem_gluster':
-    mounts  => ['/data/brick1', '/data/brick2'],
-    nodes   => ['controller.seed-stack.local', 'worker.seed-stack.local'],
-    stripe  => 2,
-    replica => 2,
+  package {'redis-server':
+    ensure => installed
+  }
+  ->
+  service {'redis-server':
+    ensure => running
+  }
+  ->
+  class { 'xylem::node':
+    gluster         => true,
+    gluster_mounts  => ['/data/brick1', '/data/brick2'],
+    gluster_nodes   => [
+      'controller.seed-stack.local',
+      'worker.seed-stack.local',
+    ],
+    gluster_stripe  => 2,
+    gluster_replica => 2,
   }
 
   include seed_stack::load_balancer
@@ -204,7 +120,7 @@ node 'worker.seed-stack.local' {
     controller_addrs => [$seed_stack_cluster::controller_ip]
   }
 
-  class { 'xylem_docker':
+  class { 'xylem::docker':
     server  => 'controller.seed-stack.local',
     require => Class['docker'],
   }
