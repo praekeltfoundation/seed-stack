@@ -124,7 +124,7 @@ node 'worker.seed-stack.local' {
   }
   ->
   class { 'xylem::docker':
-    server  => 'controller.seed-stack.local',
+    backend => 'controller.seed-stack.local',
   }
 
   include docker_registry
