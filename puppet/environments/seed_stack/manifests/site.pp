@@ -45,14 +45,10 @@ node 'standalone.seed-stack.local' {
     require        => Service['redis-server'],
   }
 
-  file { '/run/docker/plugins':
-    ensure  => 'directory',
-    require => Class['docker'],
-  }
-  ->
   class { 'xylem::docker':
     backend     => $::fqdn,
     repo_manage => false,
+    require     => Class['docker'],
   }
 
 }
@@ -118,13 +114,9 @@ node 'worker.seed-stack.local' {
     controller_addrs => [$seed_stack_cluster::controller_ip]
   }
 
-  file { '/run/docker/plugins':
-    ensure  => 'directory',
-    require => Class['docker'],
-  }
-  ->
   class { 'xylem::docker':
     backend => 'controller.seed-stack.local',
+    require => Class['docker'],
   }
 
   include docker_registry
