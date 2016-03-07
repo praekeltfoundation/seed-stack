@@ -36,6 +36,7 @@ PuppetCatalogTest::RakeTask.new(:catalog) do |t|
     "operatingsystem" => "Ubuntu",
     "operatingsystemrelease" => "14.04",
     "lsbdistid" => "Ubuntu",
+    "lsbdistrelease" => "14.04",
     "lsbdistcodename" => "trusty",
     "concat_basedir" => "/tmp/puppetconcat",
   }
