@@ -1,17 +1,3 @@
-# This contains setup common to all gluster nodes. Peers and volumes need to be
-# configured on the individual nodes.
-class glusterfs_common {
-  # NOTE: If there are three gluster nodes, an extra puppet provisioning run
-  # needs to happen after all nodes are up and running so that the existing
-  # cluster can invite new nodes. I have no idea what happens with four or
-  # more.
-
-  # The default repo and version are suitable for our needs.
-  include gluster
-
-  file { ['/data', '/data/brick1']: ensure => 'directory' }
-}
-
 node 'standalone.seed-stack.local' {
   class { 'seed_stack::controller':
     advertise_addr    => $ipaddress_eth0,
@@ -19,40 +5,32 @@ node 'standalone.seed-stack.local' {
     controller_worker => true,
   }
   class { 'seed_stack::worker':
-    advertise_addr    => $ipaddress_eth0,
-    controller_addrs  => [$ipaddress_eth0],
-    controller_worker => true,
+    advertise_addr        => $ipaddress_eth0,
+    controller_addrs      => [$ipaddress_eth0],
+    controller_worker     => true,
+    xylem_backend         => 'standalone.seed-stack.local',
+    gluster_client_manage => false,
+  }
+
+  # We need at least two replicas, so they both have to live on the same node
+  # in the single-machine setup.
+  file { ['/data/', '/data/brick1/', '/data/brick2']:
+    ensure  => 'directory',
+  }
+
+  package { 'redis-server': ensure => 'installed' }
+  ->
+  service { 'redis-server': ensure => 'running' }
+  ->
+  class { 'seed_stack::xylem':
+    gluster_mounts  => ['/data/brick1/', '/data/brick2'],
+    gluster_hosts   => ['standalone.seed-stack.local'],
+    gluster_replica => 2,
   }
 
   include seed_stack::load_balancer
 
   include docker_registry
-
-  include glusterfs_common
-
-  gluster_peer { 'standalone.seed-stack.local': }
-
-  # We need at least two replicas, so they both have to live on the same node
-  # in the single-machine setup.
-  file { '/data/brick2':
-    ensure  => 'directory',
-    require => File['/data'],
-  }
-
-  # `force => true` allows the bricks to live on the root filesystem. In the
-  # single-node setup, it also allows both replicas to live on the same node.
-  gluster_volume { 'data1':
-    replica => 2,
-    force   => true,
-    bricks  => [
-      'standalone.seed-stack.local:/data/brick1/data1',
-      'standalone.seed-stack.local:/data/brick2/data1',
-    ],
-    require => [
-      File['/data/brick1'],
-      File['/data/brick2'],
-    ],
-  }
 
 }
 
@@ -72,26 +50,18 @@ class seed_stack_cluster {
   }
 }
 
-# This needs to be on exactly two nodes.
-class gluster_cluster {
-  include glusterfs_common
-
-  gluster_peer { ['controller.seed-stack.local', 'worker.seed-stack.local']: }
-
-  # `force => true` allows the bricks to live on the root filesystem.
-  gluster_volume { 'data1':
-    replica => 2,
-    force   => true,
-    bricks  => [
-      'controller.seed-stack.local:/data/brick1/data1',
-      'worker.seed-stack.local:/data/brick1/data1',
-    ],
-  }
-}
-
 node 'controller.seed-stack.local' {
   include seed_stack_cluster
-  include gluster_cluster
+
+  package { 'redis-server': ensure => 'installed' }
+  ->
+  service { 'redis-server': ensure => 'running' }
+  ->
+  class { 'seed_stack::xylem':
+    gluster_mounts  => ['/data/brick1/', '/data/brick2'],
+    gluster_hosts   => ['controller.seed-stack.local'],
+    gluster_replica => 2,
+  }
 
   class { 'seed_stack::controller':
     advertise_addr   => $seed_stack_cluster::controller_ip,
@@ -103,11 +73,11 @@ node 'controller.seed-stack.local' {
 
 node 'worker.seed-stack.local' {
   include seed_stack_cluster
-  include gluster_cluster
 
   class { 'seed_stack::worker':
     advertise_addr   => $seed_stack_cluster::worker_ip,
-    controller_addrs => [$seed_stack_cluster::controller_ip]
+    controller_addrs => [$seed_stack_cluster::controller_ip],
+    xylem_backend    => 'controller.seed-stack.local',
   }
 
   include docker_registry

@@ -4,7 +4,14 @@ cache:
   - directories:
     - $HOME/librarian-puppet
 gemfile: puppet/Gemfile
-env: LIBRARIAN_PUPPET_TMP="$HOME/librarian-puppet"
+
+env:
+  global:
+    - LIBRARIAN_PUPPET_TMP="$HOME/librarian-puppet"
+  matrix:
+    - PUPPET_VERSION="3.4"
+    - PUPPET_VERSION="3.8"
+    - PUPPET_VERSION="4"
 
 before_script:
   # All our build steps and tests are for Puppet at the moment
