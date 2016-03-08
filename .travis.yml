@@ -9,9 +9,9 @@ env:
   global:
     - LIBRARIAN_PUPPET_TMP="$HOME/librarian-puppet"
   matrix:
-    - PUPPET_VERSION="3.4.3"    # Version installed on Trusty
-    - PUPPET_VERSION="~> 3.8.0" # Latest 3.x version
-    - PUPPET_VERSION="~> 4.3.0" # Latest 4.x version
+    - PUPPET_VERSION="3.4"
+    - PUPPET_VERSION="3.8"
+    - PUPPET_VERSION="4"
 
 before_script:
   # All our build steps and tests are for Puppet at the moment

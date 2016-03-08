@@ -2,6 +2,7 @@
 /.bundle/
 /vendor/bundle
 /bin/
+Gemfile.lock
 
 # librarian-puppet
 /.tmp
