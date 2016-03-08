@@ -8,7 +8,8 @@ gem 'librarian-puppet'
 group :test do
   gem 'rake'
 
-  gem 'puppet', '3.4.3'
+  puppetversion = ENV['PUPPET_VERSION'] || ['>= 3.4.0', '< 4.0.0']
+  gem 'puppet', puppetversion
 
   gem 'puppet-catalog-test'
   gem 'puppet-lint'

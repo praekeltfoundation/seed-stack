@@ -4,7 +4,7 @@ require 'puppet-syntax/tasks/puppet-syntax'
 
 envdir = File.join("environments", "seed_stack")
 
-exclude_paths = ["vendor/**/*", "modules/**/*"]
+exclude_paths = ["vendor/**/*", "**/modules/**/*"]
 
 PuppetSyntax.fail_on_deprecation_notices = false
 PuppetSyntax.exclude_paths = exclude_paths
@@ -39,6 +39,7 @@ PuppetCatalogTest::RakeTask.new(:catalog) do |t|
     "lsbdistrelease" => "14.04",
     "lsbdistcodename" => "trusty",
     "concat_basedir" => "/tmp/puppetconcat",
+    "puppetversion" => Puppet.version,
   }
 end
 
