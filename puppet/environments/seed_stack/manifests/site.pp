@@ -48,6 +48,11 @@ class seed_stack_cluster {
     ip           => $worker_ip,
     host_aliases => ['worker'],
   }
+
+  class { 'seed_stack::globals':
+    advertise_addr => $::ipaddress_eth1,
+    controller_addrs => [$controller_ip],
+  }
 }
 
 node 'controller.seed-stack.local' {
@@ -63,11 +68,7 @@ node 'controller.seed-stack.local' {
     gluster_replica => 2,
   }
 
-  class { 'seed_stack::controller':
-    advertise_addr   => $seed_stack_cluster::controller_ip,
-    controller_addrs => [$seed_stack_cluster::controller_ip],
-  }
-
+  include seed_stack::controller
   include seed_stack::load_balancer
 }
 
@@ -75,8 +76,6 @@ node 'worker.seed-stack.local' {
   include seed_stack_cluster
 
   class { 'seed_stack::worker':
-    advertise_addr   => $seed_stack_cluster::worker_ip,
-    controller_addrs => [$seed_stack_cluster::controller_ip],
     xylem_backend    => 'controller.seed-stack.local',
   }
 
