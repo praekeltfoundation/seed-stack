@@ -7,7 +7,7 @@ gem 'librarian-puppet'
 gem 'inifile'  # Required by camptocamp-openssl module after the first run.
 
 group :test do
-  gem 'rake'
+  gem 'rake', '<11.0.0'  # See https://github.com/invadersmustdie/puppet-catalog-test/pull/29
 
   puppet_version = case ENV['PUPPET_VERSION'] || '4'
                    when '3.4'; '3.4.3'
