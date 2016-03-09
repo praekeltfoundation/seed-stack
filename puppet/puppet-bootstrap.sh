@@ -35,7 +35,9 @@ fi
 
 # If we're using Puppet 4.x, symlink it into /usr/sbin because sudo and $PATH.
 if [ -x /opt/puppetlabs/bin/puppet -a ! -e /usr/sbin/puppet ]; then
-   ln -s /opt/puppetlabs/bin/puppet /usr/sbin/puppet
+    ln -s /opt/puppetlabs/bin/puppet /usr/sbin/puppet
+    # We need to install this where puppet's ruby can find it.
+    /opt/puppetlabs/puppet/bin/gem install --no-ri --no-rdoc inifile
 fi
 
 # Install some dependencies.
