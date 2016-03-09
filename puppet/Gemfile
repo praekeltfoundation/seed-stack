@@ -4,6 +4,7 @@
 source 'https://rubygems.org'
 
 gem 'librarian-puppet'
+gem 'inifile'  # Required by camptocamp-openssl module after the first run.
 
 group :test do
   gem 'rake'
