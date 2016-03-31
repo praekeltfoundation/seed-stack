@@ -28,10 +28,19 @@ node 'standalone.seed-stack.local' {
     gluster_replica => 2,
   }
 
-  include seed_stack::load_balancer
+  # If this is sharing with seed_stack::worker, we need to add listen_addr so
+  # that seed_stack::router doesn't mask our server blocks.
+  class { 'seed_stack::load_balancer':
+    listen_addr => $ipaddress_eth0,
+  }
 
   include docker_registry
 
+  class { 'seed_stack::mc2':
+    infr_domain   => 'infr.standalone.seed-stack.local',
+    hub_domain    => 'hub.standalone.seed-stack.local',
+    marathon_host => $ipaddress_lo,
+  }
 }
 
 # Keep track of node IP addresses across the cluster
@@ -69,6 +78,12 @@ node 'controller.seed-stack.local' {
   }
 
   include seed_stack::load_balancer
+
+  class { 'seed_stack::mc2':
+    infr_domain   => 'infr.controller.seed-stack.local',
+    hub_domain    => 'hub.controller.seed-stack.local',
+    marathon_host => $ipaddress_lo,
+  }
 }
 
 node 'worker.seed-stack.local' {
