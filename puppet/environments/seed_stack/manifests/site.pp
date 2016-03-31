@@ -12,10 +12,6 @@ node 'standalone.seed-stack.local' {
     gluster_client_manage => false,
   }
 
-  # Try hack some ordering stuff to avoid mesos-slave dying so fast that
-  # upstart buries it.
-  Service['docker'] -> Service['mesos-slave']
-
   # We need at least two replicas, so they both have to live on the same node
   # in the single-machine setup.
   file { ['/data/', '/data/brick1/', '/data/brick2']:
@@ -98,10 +94,6 @@ node 'worker.seed-stack.local' {
     controller_addrs => [$seed_stack_cluster::controller_ip],
     xylem_backend    => 'controller.seed-stack.local',
   }
-
-  # Try hack some ordering stuff to avoid mesos-slave dying so fast that
-  # upstart buries it.
-  Service['docker'] -> Service['mesos-slave']
 
   include docker_registry
 }
