@@ -44,6 +44,10 @@ Vagrant.configure(2) do |config|
     # for i in 10000..10050
     #   standalone.vm.network "forwarded_port", guest: i, host: i
     # end
+
+    config.vm.provider "virtualbox" do |vb|
+      vb.memory = "1536"
+    end
   end
 
   config.vm.define "controller" do |controller|
@@ -81,7 +85,7 @@ Vagrant.configure(2) do |config|
   # Example for VirtualBox:
   #
   config.vm.provider "virtualbox" do |vb|
-    vb.memory = "1536"
+    vb.memory = "1024"
     vb.cpus = 1
   end
   #
