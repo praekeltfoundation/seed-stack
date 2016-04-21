@@ -22,6 +22,16 @@ MACHINES = {
 Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
 
+  unless Vagrant.has_plugin?("vagrant-hostmanager")
+    STDERR.puts "The 'vagrant-hostmanager' plugin is required. Install it with 'vagrant plugin install vagrant-hostmanager'"
+    exit(1)
+  end
+
+  # configure vagrant-hostmanager plugin
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.hostmanager.ignore_private_ip = false
+
   if Vagrant.has_plugin?("vagrant-cachier")
     # Configure cached packages to be shared between instances of the same base
     # box. More info on http://fgrehm.viewdocs.io/vagrant-cachier/usage
@@ -54,14 +64,15 @@ Vagrant.configure(2) do |config|
         machine.vm.provision :shell do |shell|
           shell.inline = "/vagrant/puppet/puppetmaster-bootstrap.sh"
         end
+
+        # TODO: Figure out which machines need puppet runs.
+        machine.vm.provision :shell do |shell|
+          machines = ['controller', 'worker'].map { |m| "#{m}.#{DOMAIN}" }.join(' ')
+          shell.inline = "/vagrant/puppet/runpuppet.sh #{machines}"
+        end
       end
 
     end
   end
 
-  # # Provision the VM using Puppet
-  # config.vm.provision :puppet do |puppet|
-  #   puppet.environment = "seed_stack"
-  #   puppet.environment_path = "puppet/environments"
-  # end
 end
