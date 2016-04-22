@@ -28,7 +28,7 @@ else
 
     # We're a little VM, no need for gigs of reserved memory.
     sed -i \
-        -e 's/-Xm\([sx]\)\w\+/-Xm\1256m/g' \
+        -e 's/-Xm\([sx]\)\w\+/-Xm\1192m/g' \
         /etc/default/puppetserver
 
     echo '*.seed-stack.local' > /etc/puppetlabs/puppet/autosign.conf
