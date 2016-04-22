@@ -2,19 +2,23 @@
 # vi: set ft=ruby :
 
 require_relative 'lib/vagrant-dcos'
+require_relative 'lib/vagrant-seed'
 
 DOMAIN = "seed-stack.local"
 
 MACHINES = {
   "boot" => {
     :ip => "192.168.55.2",
+    :machine_type => "bootstrap",
     :memory => "512",
   },
   "controller" => {
     :ip => "192.168.55.11",
+    :machine_type => "controller",
   },
   "worker" => {
     :ip => "192.168.55.21",
+    :machine_type => "worker",
   },
 }
 
@@ -51,25 +55,21 @@ Vagrant.configure(2) do |config|
 
       # Provision a shared SSH key using the DC/OS installer's plugin.
       machine.vm.provision(
-        :dcos_ssh,
-        name: 'Shared SSH Key',
-        preserve_order: true
-      )
+        :dcos_ssh, preserve_order: true,
+        name: 'Shared SSH Key')
 
-      machine.vm.provision :shell do |shell|
-        shell.inline = "/vagrant/puppet/puppet-bootstrap.sh"
-      end
+      machine.vm.provision(
+        :shell, preserve_order: true,
+        path: "puppet/puppet-bootstrap.sh")
 
       if name == "boot"
-        machine.vm.provision :shell do |shell|
-          shell.inline = "/vagrant/puppet/puppetmaster-bootstrap.sh"
-        end
+        machine.vm.provision(
+          :shell, preserve_order: true,
+          path: "puppet/puppetmaster-bootstrap.sh")
 
-        # TODO: Figure out which machines need puppet runs.
-        machine.vm.provision :shell do |shell|
-          machines = ['controller', 'worker'].map { |m| "#{m}.#{DOMAIN}" }.join(' ')
-          shell.inline = "/vagrant/puppet/runpuppet.sh #{machines}"
-        end
+        machine.vm.provision(
+          :seed_install, preserve_order: true,
+          machines: MACHINES)
       end
 
     end
