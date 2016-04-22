@@ -1,6 +1,16 @@
 Seed Stack
 ==========
 
+TODO: Update this to reflect the new way of doing things in this branch.
+
+The vagrant plugin in `lib/vagrant-dcos` is from
+https://github.com/dcos/dcos-vagrant and licensed under the Apache 2 license
+that covers that repository.
+
+
+Older stuff that may be inaccurate:
+
+
 Install Vagrant_ and then::
 
     $ git clone git://github.com/praekelt/seed-stack.git
