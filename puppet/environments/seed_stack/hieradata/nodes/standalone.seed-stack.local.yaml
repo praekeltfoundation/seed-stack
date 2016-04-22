@@ -1,0 +1,41 @@
+classes:
+  - brick_dirs
+  - redis
+  - seed_stack::controller
+  - seed_stack::worker
+  - seed_stack::xylem
+  - seed_stack::load_balancer
+  - seed_stack::mc2
+  - docker_registry
+  - showthing
+
+
+brick_dirs::dirs:
+  - "/data/"
+  - "/data/brick1/"
+  - "/data/brick2/"
+
+seed_stack::controller::advertise_addr: "%{::ipaddress_eth0}"
+seed_stack::controller::controller_addrs:
+  "%{alias('standalone.controller_addrs')}"
+seed_stack::controller::controller_worker: true
+
+seed_stack::worker::advertise_addr: "%{::ipaddress_eth0}"
+seed_stack::worker::controller_addrs:
+  "%{alias('standalone.controller_addrs')}"
+seed_stack::worker::controller_worker: true
+seed_stack::worker::xylem_backend: "standalone.seed-stack.local"
+seed_stack::worker::gluster_client_manage: false
+
+seed_stack::xylem::gluster_mounts:
+  - "/data/brick1"
+  - "/data/brick2"
+seed_stack::xylem::gluster_hosts:
+  - "standalone.seed-stack.local"
+seed_stack::xylem::gluster_replica: 2
+
+seed_stack::load_balancer::listen_addr: "%{::ipaddress_eth0}"
+
+seed_stack::mc2::infr_domain: "infr.standalone.seed-stack.local"
+seed_stack::mc2::hub_domain: "hub.standalone.seed-stack.local"
+seed_stack::mc2::marathon_host: "%{::ipaddress_lo}"

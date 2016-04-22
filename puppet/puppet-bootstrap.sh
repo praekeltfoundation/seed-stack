@@ -1,13 +1,23 @@
 #!/bin/bash -e
 
-deb='puppetlabs-release-pc1-trusty.deb'
+if [ -f /etc/apt/sources.list.d/puppetlabs-pc1.list ]; then
+    echo "Found puppetlabs repo."
+else
+    echo "Setting up puppetlabs repo."
+    deb='puppetlabs-release-pc1-trusty.deb'
+    wget -c https://apt.puppetlabs.com/${deb}
+    dpkg -i ${deb}
+fi
 
-wget -c https://apt.puppetlabs.com/${deb}
-dpkg -i ${deb}
-apt-get update
-apt-get remove -qy puppet
-apt-get install -qy puppet-agent
-apt-get autoremove -qy
+if dpkg-query -l puppet-agent > /dev/null; then
+    echo "Found puppet-agent package."
+else
+    echo "Installing puppet-agent package."
+    apt-get update
+    apt-get remove -qy puppet
+    apt-get autoremove -qy
+    apt-get install -qy puppet-agent
+fi
 
 # Symlink puppet into /usr/sbin because sudo and $PATH.
 if [ -x /opt/puppetlabs/bin/puppet -a ! -e /usr/sbin/puppet ]; then
