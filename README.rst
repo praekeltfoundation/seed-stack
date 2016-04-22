@@ -7,6 +7,9 @@ The vagrant plugin in `lib/vagrant-dcos` is from
 https://github.com/dcos/dcos-vagrant and licensed under the Apache 2 license
 that covers that repository.
 
+To provision, run `vagrant up controller worker boot`. It's important that
+`boot` is at the end of the list.
+
 
 Older stuff that may be inaccurate:
 
