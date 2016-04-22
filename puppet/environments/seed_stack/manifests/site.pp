@@ -64,6 +64,10 @@ class seed_stack_cluster {
 node 'controller.seed-stack.local' {
   include seed_stack_cluster
 
+  file { ['/data/', '/data/brick1/', '/data/brick2']:
+    ensure  => 'directory',
+  }
+
   package { 'redis-server': ensure => 'installed' }
   ->
   service { 'redis-server': ensure => 'running' }
