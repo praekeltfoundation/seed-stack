@@ -7,11 +7,21 @@ require_relative 'lib/vagrant-seed'
 DOMAIN = "seed-stack.local"
 
 MACHINES = {
+  # Bootstrap machine. This must always be provisioned last.
   "boot" => {
     :ip => "192.168.55.2",
     :machine_type => "bootstrap",
     :memory => "512",
   },
+
+  # Standalone controller+worker.
+  "standalone" => {
+    :ip => "192.168.55.9",
+    :machine_type => "controller",  # It's a worker as well.
+    :memory => "1536"
+  },
+
+  # Separate controller and worker.
   "controller" => {
     :ip => "192.168.55.11",
     :machine_type => "controller",
