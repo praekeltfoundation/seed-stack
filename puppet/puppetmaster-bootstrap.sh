@@ -19,7 +19,6 @@ if service puppetserver status > /dev/null; then
     echo "Found running puppetserver, not configuring or installing modules."
 else
     echo "Configuring puppetserver and installing modules."
-    cp /vagrant/puppet/hiera.yaml ${PUPDIR}/
 
     # Install puppet modules.
     cd /vagrant/puppet

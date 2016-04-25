@@ -1,3 +1,0 @@
-standalone:
-  controller_addrs:
-    - "%{::ipaddress_eth0}"

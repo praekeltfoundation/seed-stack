@@ -1,7 +1,0 @@
-:backends:
-  - yaml
-:yaml:
-  :datadir: "environments/%{::environment}/hieradata"
-:hierarchy:
-  - "nodes/%{::trusted.certname}"
-  - common
