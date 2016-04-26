@@ -17,13 +17,15 @@ MACHINES = {
   "standalone" => {
     :ip => "192.168.55.9",
     :machine_type => "controller",  # It's a worker as well.
-    :memory => "1536"
+    :aliases => ["mc2.infr.standalone.seed-stack.local"],
+    :memory => "1536",
   },
 
   # Separate controller and worker.
   "controller" => {
     :ip => "192.168.55.11",
     :machine_type => "controller",
+    :aliases => ["mc2.infr.controller.seed-stack.local"],
   },
   "worker" => {
     :ip => "192.168.55.21",
@@ -56,6 +58,7 @@ Vagrant.configure(2) do |config|
 
       machine.vm.hostname = "#{name}.#{DOMAIN}"
       machine.vm.network "private_network", ip: "#{mcfg[:ip]}"
+      machine.hostmanager.aliases = mcfg.fetch(:aliases, [])
 
       machine.vm.provider "virtualbox" do |vb|
         vb.memory = mcfg.fetch(:memory, "1024")
