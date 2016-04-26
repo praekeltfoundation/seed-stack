@@ -5,7 +5,8 @@ Install Vagrant_ and then::
 
     $ git clone git://github.com/praekelt/seed-stack.git
     $ cd seed-stack
-    $ vagrant up standalone
+    $ vagrant plugin install vagrant-hostmanager
+    $ vagrant up standalone boot
 
 This will result in a stack running:
 
@@ -19,39 +20,57 @@ This will result in a stack running:
 8. Consular_
 9. Consul-Template_
 10. Nginx_
+11. Mission Control
 
-All of this is installed and configured using Puppet_. For more information, see the `Puppet README`_.
+All of this is installed and configured using Puppet_. For more information,
+see the `Puppet README`_.
 
 The available VMs defined in the Vagrantfile are as follows:
-- ``standalone`` - a Seed Stack combination controller/worker with a Docker Registry and load-balancer
+- ``standalone`` - a Seed Stack combination controller/worker with a Docker
+  Registry and load-balancer
 - ``controller`` - a Seed Stack controller with a load-balancer
 - ``worker`` - a Seed Stack worker with a Docker Registry
+- ``boot`` - a bootstrap machine Puppet server used for provisioning other VMs
+  (*must* be provisioned last)
 
-You can run either the standalone VM or the controller and worker VMs but not both as their forwarded ports will conflict.
 
-Once running launch the sample ``python-server`` application::
+You can probably run the standalone VM and controller/worker VMs at the same
+time, but there shouldn't be any need to do so.
+
+Once running, you can manually launch the sample ``python-server`` application
+through marathon::
 
     $ curl -XPOST \
         -d @python-server.json \
         -H 'Content-Type: application/json' \
-        http://localhost:8080/v2/apps
+        http://standalone.seed-stack.local:8080/v2/apps
 
-Then you should be able to use the application in your web browser at http://python-server.127.0.0.1.xip.io:8000
+You can watch the deployment progress in the Marathon web UI (see below).
+Deploying for the first time on a newly provisioned VM may take a while because
+it has to download the docker image first.
 
-The following services have port forwarding configured and are available
-on the host:
+Then you should be able to use the application in your web browser at
+http://python-server.192.168.55.9.xip.io
+
+(For the controller/worker setup, use ``controller.seed-stack.local`` and
+``192.168.55.11`` instead.)
+
+The following services are available on the standalone or controller VM:
 
 Marathon
-    http://localhost:8080
+    http://standalone.seed-stack.local:8080
 
 Mesos
-    http://localhost:5050
+    http://standalone.seed-stack.local:5050
 
 Consul
-    http://localhost:8500/ui/
+    http://standalone.seed-stack.local:8500/ui/
 
-Nginx
-    http://localhost:8000
+Mission Control (log in with admin/pass)
+    http://mc2.infr.standalone.seed-stack.local
+
+In order to access apps running in Mission Control, you may need to add
+``/etc/hosts`` entries for their domains.
 
 
 .. _Vagrant: http://www.vagrantup.com
@@ -66,3 +85,10 @@ Nginx
 .. _Zookeeper: https://zookeeper.apache.org/
 .. _Puppet: http://docs.puppetlabs.com/puppet/3/reference/
 .. _Puppet README: puppet/README.md
+
+
+Acknowledgements
+----------------
+
+The vagrant plugin used for provisioning with a bootstrap machine is heavily
+inspired by the one in https://github.com/dcos/dcos-vagrant
