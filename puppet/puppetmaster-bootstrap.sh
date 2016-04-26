@@ -34,8 +34,3 @@ else
 
     service puppetserver start
 fi
-
-# Get our hands on the key to all the machines.
-cd $HOME
-cp /vagrant/.vagrant/dcos/private_key_vagrant ssh_key
-chmod 600 ssh_key
