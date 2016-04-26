@@ -1,18 +1,49 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
-Vagrant.configure(2) do |config|
-  # The most common configuration options are documented and commented below.
-  # For a complete reference, please see the online documentation at
-  # https://docs.vagrantup.com.
+require_relative 'lib/vagrant-seed'
 
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://atlas.hashicorp.com/search.
+DOMAIN = "seed-stack.local"
+
+MACHINES = {
+  # Bootstrap machine. This must always be provisioned last.
+  "boot" => {
+    :ip => "192.168.55.2",
+    :machine_type => "bootstrap",
+    :memory => "512",
+  },
+
+  # Standalone controller+worker.
+  "standalone" => {
+    :ip => "192.168.55.9",
+    :machine_type => "controller",  # It's a worker as well.
+    :memory => "1536"
+  },
+
+  # Separate controller and worker.
+  "controller" => {
+    :ip => "192.168.55.11",
+    :machine_type => "controller",
+  },
+  "worker" => {
+    :ip => "192.168.55.21",
+    :machine_type => "worker",
+  },
+}
+
+
+Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
+
+  unless Vagrant.has_plugin?("vagrant-hostmanager")
+    STDERR.puts "The 'vagrant-hostmanager' plugin is required. Install it with 'vagrant plugin install vagrant-hostmanager'"
+    exit(1)
+  end
+
+  # configure vagrant-hostmanager plugin
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.hostmanager.ignore_private_ip = false
 
   if Vagrant.has_plugin?("vagrant-cachier")
     # Configure cached packages to be shared between instances of the same base
@@ -20,107 +51,32 @@ Vagrant.configure(2) do |config|
     config.cache.scope = :box
   end
 
-  # Disable automatic box update checking. If you disable this, then
-  # boxes will only be checked for updates when the user runs
-  # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
+  MACHINES.each do |name, mcfg|
+    config.vm.define name do |machine|
 
-  # Give our box a name, because "default" is confusing.
-  config.vm.define "standalone" do |standalone|
-    standalone.vm.hostname = "standalone.seed-stack.local"
+      machine.vm.hostname = "#{name}.#{DOMAIN}"
+      machine.vm.network "private_network", ip: "#{mcfg[:ip]}"
 
-    # Create a forwarded port mapping which allows access to a specific port
-    # within the machine from a port on the host machine. In the example below,
-    # accessing "localhost:8080" will access port 80 on the guest machine.
+      machine.vm.provider "virtualbox" do |vb|
+        vb.memory = mcfg.fetch(:memory, "1024")
+        vb.cpus = 1
+      end
 
-    standalone.vm.network "forwarded_port", guest: 8080, host: 8080
-    standalone.vm.network "forwarded_port", guest: 5050, host: 5050
-    standalone.vm.network "forwarded_port", guest: 5051, host: 5051
-    standalone.vm.network "forwarded_port", guest: 8500, host: 8500
-    standalone.vm.network "forwarded_port", guest: 80, host: 8000
+      machine.vm.provision(
+        :shell, preserve_order: true,
+        path: "puppet/puppet-bootstrap.sh")
 
-    # NOTE: these map the port resources advertised by the mesos-slave
-    #       uncomment these if you want to access them directly on the host
-    # for i in 10000..10050
-    #   standalone.vm.network "forwarded_port", guest: i, host: i
-    # end
+      if name == "boot"
+        machine.vm.provision(
+          :shell, preserve_order: true,
+          path: "puppet/puppetmaster-bootstrap.sh")
 
-    config.vm.provider "virtualbox" do |vb|
-      vb.memory = "1536"
+        machine.vm.provision(
+          :seed_install, preserve_order: true,
+          machines: MACHINES)
+      end
+
     end
   end
 
-  config.vm.define "controller" do |controller|
-    controller.vm.hostname = "controller.seed-stack.local"
-
-    # Create a private network, which allows host-only access to the machine
-    # using a specific IP.
-    controller.vm.network "private_network", ip: "192.168.0.2"
-    controller.vm.network "forwarded_port", guest: 8080, host: 8080
-    controller.vm.network "forwarded_port", guest: 5050, host: 5050
-    controller.vm.network "forwarded_port", guest: 8500, host: 8500
-    controller.vm.network "forwarded_port", guest: 80, host: 8000
-  end
-
-  config.vm.define "worker" do |worker|
-    worker.vm.hostname = "worker.seed-stack.local"
-
-    worker.vm.network "private_network", ip: "192.168.0.3"
-    worker.vm.network "forwarded_port", guest: 5051, host: 5051
-  end
-
-  # Create a public network, which generally matched to bridged network.
-  # Bridged networks make the machine appear as another physical device on
-  # your network.
-  # config.vm.network "public_network"
-
-  # Share an additional folder to the guest VM. The first argument is
-  # the path on the host to the actual folder. The second argument is
-  # the path on the guest to mount the folder. And the optional third
-  # argument is a set of non-required options.
-  # config.vm.synced_folder "../data", "/vagrant_data"
-
-  # Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
-  # Example for VirtualBox:
-  #
-  config.vm.provider "virtualbox" do |vb|
-    vb.memory = "1024"
-    vb.cpus = 1
-  end
-  #
-  # View the documentation for the provider you are using for more
-  # information on available options.
-
-  # Define a Vagrant Push strategy for pushing to Atlas. Other push strategies
-  # such as FTP and Heroku are also available. See the documentation at
-  # https://docs.vagrantup.com/v2/push/atlas.html for more information.
-  # config.push.define "atlas" do |push|
-  #   push.app = "YOUR_ATLAS_USERNAME/YOUR_APPLICATION_NAME"
-  # end
-
-  # Enable provisioning with a shell script. Additional provisioners such as
-  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
-  # documentation for more information about their specific syntax and use.
-
-  # Upgrade Puppet, set up librarian-puppet, and install Puppet modules
-  # Valid versions are '3.4', '3.8', and '4'.
-  @puppet_version = ENV['PUPPET_VERSION'] || '4'
-  config.vm.provision :shell do |shell|
-    shell.inline = "/vagrant/puppet/puppet-bootstrap.sh #{@puppet_version}"
-  end
-  # Provision the VM using Puppet
-  config.vm.provision :puppet do |puppet|
-    if @puppet_version.to_f < 3.8
-      puppet.module_path = ["puppet/environments/seed_stack/modules"]
-      puppet.manifests_path = "puppet/environments/seed_stack/manifests"
-      puppet.manifest_file = "site.pp"
-    else
-      puppet.environment = "seed_stack"
-      puppet.environment_path = "puppet/environments"
-    end
-    if @puppet_version == '3.8'
-      puppet.options = ['--no-stringify_facts', '--parser=future']
-    end
-  end
 end

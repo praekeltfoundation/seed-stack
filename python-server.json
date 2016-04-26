@@ -4,7 +4,7 @@
   "cpus": 0.5,
   "mem": 32.0,
   "labels": {
-    "domain": "python-server.127.0.0.1.xip.io",
+    "domain": "python-server.192.168.55.11.xip.io python-server.192.168.55.9.xip.io",
     "country": "South Africa",
     "project_type": "foo"
   },

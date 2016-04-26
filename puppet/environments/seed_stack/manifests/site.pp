@@ -46,21 +46,27 @@ node 'standalone.seed-stack.local' {
 # Keep track of node IP addresses across the cluster
 # FIXME: A better, more automatic way to do this
 class seed_stack_cluster {
-  $controller_ip = '192.168.0.2'
-  $worker_ip = '192.168.0.3'
+  $controller_ip = '192.168.55.11'
+  $worker_ip = '192.168.55.21'
 
-  host { 'controller.seed-stack.local':
-    ip           => $controller_ip,
-    host_aliases => ['controller'],
-  }
-  host { 'worker.seed-stack.local':
-    ip           => $worker_ip,
-    host_aliases => ['worker'],
-  }
+  # The hostmanager vagrant plugin manages the hosts entries for us.
+
+  # host { 'controller.seed-stack.local':
+  #   ip           => $controller_ip,
+  #   host_aliases => ['controller'],
+  # }
+  # host { 'worker.seed-stack.local':
+  #   ip           => $worker_ip,
+  #   host_aliases => ['worker'],
+  # }
 }
 
 node 'controller.seed-stack.local' {
   include seed_stack_cluster
+
+  file { ['/data/', '/data/brick1/', '/data/brick2']:
+    ensure  => 'directory',
+  }
 
   package { 'redis-server': ensure => 'installed' }
   ->
