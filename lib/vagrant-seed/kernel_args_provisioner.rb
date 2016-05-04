@@ -13,7 +13,7 @@ module VagrantPlugins
         unless @machine.communicate.test("grep '#{kargs}' /etc/default/grub")
           sedcmd = "s/\\(GRUB_CMDLINE_LINUX\\)=\"\\(.*\\)\"/\\1=\"\\2 #{kargs}\"/"
           @machine.communicate.sudo([
-              'apt-get -t jessie-backports install -qy linux-image-amd64 linux-headers-amd64',
+              'apt-get -t jessie-backports install --no-install-recommends -qy linux-image-amd64 linux-headers-amd64 virtualbox-guest-modules',
               "sed -i '#{sedcmd}' /etc/default/grub",
               'update-grub',
               # 'shutdown -h now',
