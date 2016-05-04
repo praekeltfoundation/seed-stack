@@ -60,5 +60,7 @@ FORGE
 
 DEPENDENCIES
   camptocamp-openssl (>= 1.5.0)
+  praekeltfoundation-gluster (< 0.3.0, >= 0.2.2)
   praekeltfoundation-seed_stack (< 0.10.0, >= 0.9.3)
+  puppetlabs-apt (>= 2.2.0)
 

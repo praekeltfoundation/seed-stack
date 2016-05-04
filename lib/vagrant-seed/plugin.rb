@@ -19,6 +19,11 @@ module VagrantPlugins
         require_relative 'provisioner'
         Provisioner
       end
+
+      provisioner :set_kernel_args do
+        require_relative 'kernel_args_provisioner'
+        KernelArgsProvisioner
+      end
     end
 
   end
