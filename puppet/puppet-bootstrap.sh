@@ -17,6 +17,7 @@ if [ "$distid" = "jessie" ]; then
         echo "Found jessie backports repo."
     else
         echo "Adding jessie backports repo."
+        apt-get install apt-transport-https
         echo 'deb http://httpredir.debian.org/debian jessie-backports main contrib non-free' > /etc/apt/sources.list.d/backports.list
     fi
 fi

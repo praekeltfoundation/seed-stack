@@ -15,7 +15,7 @@ module VagrantPlugins
       end
 
       def provision
-        dcos_installer_setup
+        # dcos_installer_setup
         install_machines_of_type("controller")
         install_machines_of_type("misc")
         install_machines_of_type("worker")
@@ -64,6 +64,12 @@ module VagrantPlugins
           'mkdir /tmp/dcos || true',
           'cd /tmp/dcos',
           'curl -O http://boot.seed-stack.local:9012/dcos_install.sh',
+          # Subvert the docker storage check.
+          # We can't use aufs because our kernel is too new. We can't use
+          # overlay because our kernel has a bug. We can't use btrfs or
+          # non-loopback devmapper because that requires a bunch of setup.
+          # Loopback devmapper is fine for our purposes, though.
+          'sed -i "s/devicemapper/deceivemapper/" dcos_install.sh',
         ]
         if role == "controller"
           commands += ['bash dcos_install.sh master']

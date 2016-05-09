@@ -27,16 +27,17 @@ MACHINES = {
     :machine_type => "controller",
     :aliases => ["mc2.infr.controller.seed-stack.local"],
   },
-  "xylem" => {
-    :ip => "192.168.55.241",
-    :machine_type => "misc",
-    :box => "ubuntu/trusty64",
-  },
   "worker" => {
     :ip => "192.168.55.21",
     :machine_type => "worker",
   },
 }
+
+
+def prov(machine, name, options={})
+  options = options.merge({ preserve_order: true })
+  machine.vm.provision(name, options)
+end
 
 
 Vagrant.configure(2) do |config|
@@ -80,20 +81,14 @@ Vagrant.configure(2) do |config|
         vb.cpus = 2
       end
 
-      machine.vm.provision(
-        :shell, preserve_order: true,
-        path: "puppet/puppet-bootstrap.sh")
+      prov(machine, :shell, path: "puppet/puppet-bootstrap.sh")
 
-      if name == "boot"
-        machine.vm.provision(
-          :shell, preserve_order: true,
-          path: "puppet/puppetmaster-bootstrap.sh")
-
-        machine.vm.provision(
-          :seed_install, preserve_order: true,
-          machines: MACHINES)
-      else
+      case name
+      when "controller", "worker"
         machine.vm.provision(:set_kernel_args, preserve_order: true)
+      when "boot"
+        prov(machine, :shell, path: "puppet/puppetmaster-bootstrap.sh")
+        prov(machine, :seed_install, machines: MACHINES)
       end
 
     end
