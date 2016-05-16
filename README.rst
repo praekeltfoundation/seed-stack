@@ -1,41 +1,36 @@
 Seed Stack
 ==========
 
+This version builds a seed cluster (with a minimum of three machines plus a
+smaller bootstrap VM) on top of DC/OS.
+
 Install Vagrant_ and then::
 
     $ git clone git://github.com/praekelt/seed-stack.git
     $ cd seed-stack
     $ vagrant plugin install vagrant-hostmanager
-    $ vagrant up standalone boot
+
+At this point, download the DC/OS installer linked from
+https://dcos.io/docs/1.7/administration/installing/local/ (The filename should
+be `dcos_generate_config.sh`) and put it in the root of your repo (next to
+`Vagrantfile`). Then::
+
+    $ vagrant up controller worker public boot
 
 This will result in a stack running:
 
-1. Zookeeper_
-2. Mesos_ Master
-3. Mesos_ Slave
-4. Marathon_
-5. Docker_
-6. `Docker Registry`_
-7. Consul_
-8. Consular_
-9. Consul-Template_
-10. Nginx_
-11. Mission Control
+1. DC/OS and all its components
+2. Mission Control
 
-All of this is installed and configured using Puppet_. For more information,
-see the `Puppet README`_.
+All of this is installed and configured using Puppet_ and a custom Vagrant
+provisioner plugin. For more information, see the `Puppet README`_.
 
 The available VMs defined in the Vagrantfile are as follows:
-- ``standalone`` - a Seed Stack combination controller/worker with a Docker
-  Registry and load-balancer
-- ``controller`` - a Seed Stack controller with a load-balancer
-- ``worker`` - a Seed Stack worker with a Docker Registry
+- ``controller`` - a DC/OS master node
+- ``worker`` - a DC/OS private agent node
+- ``public`` - a DC/OS public agent node running a marathon-lb endpoint
 - ``boot`` - a bootstrap machine Puppet server used for provisioning other VMs
   (*must* be provisioned last)
-
-
-You can probably run the standalone VM and controller/worker VMs at the same
-time, but there shouldn't be any need to do so.
 
 Once running, you can manually launch the sample ``python-server`` application
 through marathon::
@@ -57,17 +52,18 @@ http://python-server.192.168.55.9.xip.io
 
 The following services are available on the standalone or controller VM:
 
+DC/OS console:
+    http://controller.seed-stack.local
+
 Marathon
-    http://standalone.seed-stack.local:8080
+    http://controller.seed-stack.local:8080
 
 Mesos
-    http://standalone.seed-stack.local:5050
-
-Consul
-    http://standalone.seed-stack.local:8500/ui/
+    http://controller.seed-stack.local:5050
 
 Mission Control (log in with admin/pass)
-    http://mc2.infr.standalone.seed-stack.local
+    http://mc2.infr.controller.seed-stack.local (This actually points to the
+    public agent node despite the `controller` in the hostname.)
 
 In order to access apps running in Mission Control, you may need to add
 ``/etc/hosts`` entries for their domains.
