@@ -25,11 +25,16 @@ MACHINES = {
   "controller" => {
     :ip => "192.168.55.11",
     :machine_type => "controller",
-    :aliases => ["mc2.infr.controller.seed-stack.local"],
   },
   "worker" => {
     :ip => "192.168.55.21",
     :machine_type => "worker",
+  },
+  "public" => {
+    :ip => "192.168.55.20",
+    :machine_type => "worker",
+    :public_worker => true,
+    :aliases => ["mc2.infr.controller.seed-stack.local"],
   },
 }
 
@@ -84,7 +89,7 @@ Vagrant.configure(2) do |config|
       prov(machine, :shell, path: "puppet/puppet-bootstrap.sh")
 
       case name
-      when "controller", "worker"
+      when "controller", "worker", "public"
         machine.vm.provision(:set_kernel_args, preserve_order: true)
       when "boot"
         prov(machine, :shell, path: "puppet/puppetmaster-bootstrap.sh")

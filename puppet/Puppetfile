@@ -1,7 +1,7 @@
 forge "https://forgeapi.puppetlabs.com"
 
 mod 'praekeltfoundation-gluster', '>=0.2.2 <0.3.0'
-mod 'praekeltfoundation-seed_stack', '>= 0.9.3 < 0.10.0'
+mod 'praekeltfoundation-seed_stack', '>= 0.10.0 < 0.11.0'
 
 # 3rd party modules
 mod 'puppetlabs-apt', '>= 2.2.0'

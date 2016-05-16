@@ -40,6 +40,10 @@ else
     apt-get install -qy --auto-remove puppet-agent
 fi
 
+# We don't want the agent running on its own.
+systemctl disable puppet.service
+systemctl stop puppet.service
+
 # Symlink puppet into /usr/sbin because sudo and $PATH.
 if [ -x /opt/puppetlabs/bin/puppet -a ! -e /usr/sbin/puppet ]; then
     ln -s /opt/puppetlabs/bin/puppet /usr/sbin/puppet

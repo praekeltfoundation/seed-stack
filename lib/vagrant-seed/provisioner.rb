@@ -1,10 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# require_relative 'executor'
-# require 'thread'
-# require 'yaml'
-
 # This is mostly borrowed from vagrant-dcos.
 
 module VagrantPlugins
@@ -15,10 +11,10 @@ module VagrantPlugins
       end
 
       def provision
-        # dcos_installer_setup
+        dcos_installer_setup
         install_machines_of_type("controller")
-        install_machines_of_type("misc")
         install_machines_of_type("worker")
+        dcos_cli_setup
       end
 
       protected
@@ -59,7 +55,13 @@ module VagrantPlugins
       end
 
       def install_docs(machine, role)
+        if role.nil?
+          machine.ui.success "Not installing DC/OS on #{machine.name}."
+          return
+        end
         machine.ui.success "Installing DC/OS on #{machine.name}..."
+        # /usr/bin/curl doesn't like mesosphere libraries.
+        sedcmd = 's@/usr/bin/curl@/opt/mesosphere/bin/curl@'
         commands = [
           'mkdir /tmp/dcos || true',
           'cd /tmp/dcos',
@@ -70,28 +72,32 @@ module VagrantPlugins
           # non-loopback devmapper because that requires a bunch of setup.
           # Loopback devmapper is fine for our purposes, though.
           'sed -i "s/devicemapper/deceivemapper/" dcos_install.sh',
-        ]
-        if role == "controller"
-          commands += ['bash dcos_install.sh master']
-        else
-          commands += ['bash dcos_install.sh slave']
-        end
-        # /usr/bin/curl doesn't like mesosphere libraries.
-        sedcmd = 's@/usr/bin/curl@/opt/mesosphere/bin/curl@'
-        commands += [
+          "bash dcos_install.sh #{role}",
           "sed -i '#{sedcmd}' /etc/systemd/system/dcos-*.service",
           'systemctl daemon-reload',
         ]
         remote_sudo(machine, commands.join("\n"))
       end
 
+      def dcos_role(machine)
+        mcfg = @config.machines[machine.name.to_s]
+        if mcfg[:machine_type] == 'controller'
+          'master'
+        elsif mcfg[:machine_type] == 'worker'
+          if mcfg[:public_worker]
+            'slave_public'
+          else
+            'slave'
+          end
+        else
+          nil
+        end
+      end
+
       def install_machine(machine)
         @machine.ui.success "Installing #{machine.name}..."
         run_puppet(machine)
-        dcos_role = @config.machines[machine.name.to_s][:machine_type]
-        if ['controller', 'worker'].include? dcos_role
-          install_docs(machine, dcos_role)
-        end
+        install_docs(machine, dcos_role(machine))
       end
 
       def install_machines_of_type(machine_type)
@@ -136,6 +142,31 @@ module VagrantPlugins
             'docker kill dcos-install',
             'docker rm dcos-install',
             'docker run --name dcos-install -d -p 9012:80 -v $PWD/genconf/serve:/usr/share/nginx/html:ro nginx',
+          ].join("\n"))
+      end
+
+      def dcos_cli_setup
+        marathon_lb_opts = {
+          'marathon-lb' => {
+            'mem' => 256,
+            'cpus' => 1,
+          }
+        }
+        sudo([
+            'apt-get install -qy --no-install-recommends virtualenv',
+            'cd /root',
+            'rm -rf dcos-cli-bootstrap',
+            'virtualenv dcos-cli-bootstrap',
+            'source dcos-cli-bootstrap/bin/activate',
+            'which pip',
+            'pip install -U pip virtualenv',
+            'mkdir -p dcos',
+            'cd dcos',
+            'curl -O https://downloads.dcos.io/dcos-cli/install-optout.sh',
+            'bash ./install-optout.sh . https://controller.seed-stack.local --add-path yes',
+            'source ./bin/env-setup',
+            "cat <<'EOF' > options.json\n#{marathon_lb_opts.to_json}\nEOF",
+            'dcos package install --options=options.json --yes marathon-lb',
           ].join("\n"))
       end
 

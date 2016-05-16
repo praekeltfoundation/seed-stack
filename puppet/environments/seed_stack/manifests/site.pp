@@ -173,14 +173,37 @@ node 'controller.seed-stack.local' {
 
   # include seed_stack::load_balancer
 
-  # class { 'seed_stack::mc2':
-  #   infr_domain   => 'infr.controller.seed-stack.local',
-  #   hub_domain    => 'hub.controller.seed-stack.local',
-  #   marathon_host => $ipaddress_lo,
-  # }
+  class { 'seed_stack::mc2':
+    infr_domain      => 'infr.controller.seed-stack.local',
+    hub_domain       => 'hub.controller.seed-stack.local',
+    marathon_host    => 'http://marathon.mesos:8080',
+    container_params => {
+      'add-host' => 'servicehost:172.17.0.1',
+    },
+    app_labels       => {
+      'HAPROXY_GROUP'   => 'external',
+      'HAPROXY_0_VHOST' => 'mc2.infr.controller.seed-stack.local',
+    },
+    notify           => Service['xylem'],
+  }
 }
 
 node 'worker.seed-stack.local' {
+  include common
+  include seed_stack_cluster
+
+  class { 'dcos_node': gluster_nodes => $seed_stack_cluster::gluster_nodes }
+
+  # class { 'seed_stack::worker':
+  #   advertise_addr   => $seed_stack_cluster::worker_ip,
+  #   controller_addrs => [$seed_stack_cluster::controller_ip],
+  #   xylem_backend    => 'controller.seed-stack.local',
+  # }
+
+  # include docker_registry
+}
+
+node 'public.seed-stack.local' {
   include common
   include seed_stack_cluster
 
