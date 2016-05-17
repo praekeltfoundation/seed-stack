@@ -13,28 +13,23 @@ MACHINES = {
     :memory => "768",
   },
 
-  # Standalone controller+worker.
-  "standalone" => {
-    :ip => "192.168.55.9",
-    :machine_type => "controller",  # It's a worker as well.
-    :aliases => ["mc2.infr.standalone.seed-stack.local"],
-    :memory => "1536",
-  },
-
-  # Separate controller and worker.
+  # Cluster machines
   "controller" => {
     :ip => "192.168.55.11",
     :machine_type => "controller",
+    :memory => "1280",
   },
   "worker" => {
     :ip => "192.168.55.21",
     :machine_type => "worker",
+    :memory => "1280",
   },
   "public" => {
     :ip => "192.168.55.20",
     :machine_type => "worker",
     :public_worker => true,
     :aliases => ["mc2.infr.controller.seed-stack.local"],
+    :memory => "1024",
   },
 }
 

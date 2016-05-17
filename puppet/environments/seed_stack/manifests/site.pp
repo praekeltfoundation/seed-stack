@@ -153,6 +153,7 @@ class seed_stack_cluster {
   # The hostmanager vagrant plugin manages the hosts entries for us, but
   # various things still need the IPs. Bleh.
   $controller_ip = '192.168.55.11'
+  $public_ip = '192.168.55.20'
   $worker_ip = '192.168.55.21'
 
   $gluster_nodes = ['controller.seed-stack.local']
@@ -175,7 +176,7 @@ node 'controller.seed-stack.local' {
 
   class { 'seed_stack::mc2':
     infr_domain      => 'infr.controller.seed-stack.local',
-    hub_domain       => 'hub.controller.seed-stack.local',
+    hub_domain       => "${seed_stack_cluster::public_ip}.xip.io",
     marathon_host    => 'http://marathon.mesos:8080',
     container_params => {
       'add-host' => 'servicehost:172.17.0.1',
