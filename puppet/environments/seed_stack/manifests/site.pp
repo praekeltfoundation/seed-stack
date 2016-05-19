@@ -15,7 +15,6 @@ class repos {
       server => 'keyserver.ubuntu.com',
     },
   }
-
 }
 
 # Stuff for all nodes.
@@ -26,7 +25,6 @@ class common {
     ensure         => $seed_stack::params::docker_ensure,
     storage_driver => 'devicemapper',
   }
-
 }
 
 
@@ -59,12 +57,10 @@ class dcos_node($gluster_nodes) {
       File['/etc/docker'],
     ],
   }
-
 }
 
 # Stuff for xylem/gluster
 class xylem_node($gluster_nodes) {
-
   file { ['/data/', '/data/brick1/', '/data/brick2']:
     ensure  => 'directory',
   }
@@ -95,57 +91,12 @@ class xylem_node($gluster_nodes) {
   }
 
   Class['apt::update'] -> Package['seed-xylem']
-
 }
 
 node 'boot.seed-stack.local' {
   include common
 }
 
-# node 'standalone.seed-stack.local' {
-#   class { 'seed_stack::controller':
-#     advertise_addr    => $ipaddress_eth0,
-#     controller_addrs  => [$ipaddress_eth0],
-#     controller_worker => true,
-#   }
-#   class { 'seed_stack::worker':
-#     advertise_addr        => $ipaddress_eth0,
-#     controller_addrs      => [$ipaddress_eth0],
-#     controller_worker     => true,
-#     xylem_backend         => 'standalone.seed-stack.local',
-#     gluster_client_manage => false,
-#   }
-
-#   # We need at least two replicas, so they both have to live on the same node
-#   # in the single-machine setup.
-#   file { ['/data/', '/data/brick1/', '/data/brick2']:
-#     ensure  => 'directory',
-#   }
-
-#   package { 'redis-server': ensure => 'installed' }
-#   ->
-#   service { 'redis-server': ensure => 'running' }
-#   ->
-#   class { 'seed_stack::xylem':
-#     gluster_mounts  => ['/data/brick1/', '/data/brick2'],
-#     gluster_hosts   => ['standalone.seed-stack.local'],
-#     gluster_replica => 2,
-#   }
-
-#   # If this is sharing with seed_stack::worker, we need to add listen_addr so
-#   # that seed_stack::router doesn't mask our server blocks.
-#   class { 'seed_stack::load_balancer':
-#     listen_addr => $ipaddress_eth0,
-#   }
-
-#   include docker_registry
-
-#   class { 'seed_stack::mc2':
-#     infr_domain   => 'infr.standalone.seed-stack.local',
-#     hub_domain    => 'hub.standalone.seed-stack.local',
-#     marathon_host => $ipaddress_lo,
-#   }
-# }
 
 # Keep track of node IP addresses across the cluster
 # FIXME: A better, more automatic way to do this
@@ -159,6 +110,7 @@ class seed_stack_cluster {
   $gluster_nodes = ['controller.seed-stack.local']
 }
 
+
 node 'controller.seed-stack.local' {
   include common
   include seed_stack_cluster
@@ -166,13 +118,6 @@ node 'controller.seed-stack.local' {
   class { 'dcos_node': gluster_nodes => $seed_stack_cluster::gluster_nodes }
 
   class { 'xylem_node': gluster_nodes => $seed_stack_cluster::gluster_nodes }
-
-  # class { 'seed_stack::controller':
-  #   advertise_addr   => $seed_stack_cluster::controller_ip,
-  #   controller_addrs => [$seed_stack_cluster::controller_ip],
-  # }
-
-  # include seed_stack::load_balancer
 
   class { 'seed_stack::mc2':
     infr_domain      => 'infr.controller.seed-stack.local',
@@ -194,14 +139,6 @@ node 'worker.seed-stack.local' {
   include seed_stack_cluster
 
   class { 'dcos_node': gluster_nodes => $seed_stack_cluster::gluster_nodes }
-
-  # class { 'seed_stack::worker':
-  #   advertise_addr   => $seed_stack_cluster::worker_ip,
-  #   controller_addrs => [$seed_stack_cluster::controller_ip],
-  #   xylem_backend    => 'controller.seed-stack.local',
-  # }
-
-  # include docker_registry
 }
 
 node 'public.seed-stack.local' {
@@ -209,14 +146,6 @@ node 'public.seed-stack.local' {
   include seed_stack_cluster
 
   class { 'dcos_node': gluster_nodes => $seed_stack_cluster::gluster_nodes }
-
-  # class { 'seed_stack::worker':
-  #   advertise_addr   => $seed_stack_cluster::worker_ip,
-  #   controller_addrs => [$seed_stack_cluster::controller_ip],
-  #   xylem_backend    => 'controller.seed-stack.local',
-  # }
-
-  # include docker_registry
 }
 
 # # Standalone Docker registry for testing
