@@ -1,10 +1,9 @@
-clusterparams:
-  controller_ip: 192.168.55.11
-  public_ip: 192.168.55.20
-  worker_ip: 192.168.55.21
+clusterparams:controller_ip: 192.168.55.11
+clusterparams:public_ip: 192.168.55.20
+clusterparams:worker_ip: 192.168.55.21
 
-  gluster_nodes:
-    - controller.seed-stack.local
+clusterparams:gluster_nodes:
+  - controller.seed-stack.local
 
-  infr_domain: infr.controller.seed-stack.local
-  hub_domain: "%{'clusterparams.public_ip'}.xip.io"
+clusterparams:infr_domain: infr.controller.seed-stack.local
+clusterparams:hub_domain: "%{hiera('clusterparams:public_ip')}.xip.io"
