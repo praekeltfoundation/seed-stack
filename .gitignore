@@ -1,2 +1,4 @@
 .vagrant/
 .ruby-version
+
+/dcos_generate_config.sh

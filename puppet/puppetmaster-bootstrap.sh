@@ -3,6 +3,7 @@
 PUPDIR=/etc/puppetlabs/code
 ENVDIR=${PUPDIR}/environments/production
 VGRDIR=/vagrant/puppet
+ENVSRCDIR=${VGRDIR}/environments/seed_stack
 
 if dpkg-query -l puppetserver > /dev/null; then
     echo "Found puppetserver package."
@@ -13,7 +14,8 @@ else
 fi
 
 # Copy our puppet configs over.
-cp -a ${VGRDIR}/environments/seed_stack/{environment.conf,manifests} ${ENVDIR}/
+cp ${VGRDIR}/hiera.yaml ${PUPDIR}/
+cp -a ${ENVSRCDIR}/{environment.conf,manifests,hieradata} ${ENVDIR}/
 
 # This is a bit expensive, so only do it if the server isn't already running.
 if service puppetserver status > /dev/null; then

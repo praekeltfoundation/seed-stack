@@ -77,6 +77,9 @@ module VagrantPlugins
           'systemctl daemon-reload',
         ]
         remote_sudo(machine, commands.join("\n"))
+        # Restart xylem if it's running, because it gets sad if it hasn't been
+        # able to talk to marathon.
+        remote_sudo(machine, 'systemctl restart xylem.service || true')
       end
 
       def dcos_role(machine)

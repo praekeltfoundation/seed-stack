@@ -1,3 +1,5 @@
+hiera_include('classes')
+
 # Repos
 class repos {
   include apt
@@ -59,8 +61,17 @@ class dcos_node($gluster_nodes) {
   }
 }
 
+# Stuff for redis
+class redis_node {
+  package { 'redis-server': ensure => 'installed' }
+  ->
+  service { 'redis-server': ensure => 'running' }
+}
+
 # Stuff for xylem/gluster
 class xylem_node($gluster_nodes) {
+  include redis_node
+
   file { ['/data/', '/data/brick1/', '/data/brick2']:
     ensure  => 'directory',
   }
@@ -71,10 +82,6 @@ class xylem_node($gluster_nodes) {
   }
   ->
   service { 'glusterfs-server': ensure => 'running' }
-
-  package { 'redis-server': ensure => 'installed' }
-  ->
-  service { 'redis-server': ensure => 'running' }
 
   class { 'xylem::node':
     gluster         => true,
@@ -94,7 +101,7 @@ class xylem_node($gluster_nodes) {
 }
 
 node 'boot.seed-stack.local' {
-  include common
+  # Nothing to see here.
 }
 
 
@@ -111,41 +118,36 @@ class seed_stack_cluster {
 }
 
 
-node 'controller.seed-stack.local' {
-  include common
-  include seed_stack_cluster
-
-  class { 'dcos_node': gluster_nodes => $seed_stack_cluster::gluster_nodes }
-
-  class { 'xylem_node': gluster_nodes => $seed_stack_cluster::gluster_nodes }
+# Thing for MC2 manager.
+class mc2_manager($infr_domain, $hub_domain) {
+  include redis_node
 
   class { 'seed_stack::mc2':
-    infr_domain      => 'infr.controller.seed-stack.local',
-    hub_domain       => "${seed_stack_cluster::public_ip}.xip.io",
+    infr_domain      => $infr_domain,
+    hub_domain       => $hub_domain,
     marathon_host    => 'http://marathon.mesos:8080',
     container_params => {
       'add-host' => 'servicehost:172.17.0.1',
     },
     app_labels       => {
       'HAPROXY_GROUP'   => 'external',
-      'HAPROXY_0_VHOST' => 'mc2.infr.controller.seed-stack.local',
+      'HAPROXY_0_VHOST' => "mc2.${infr_domain}",
     },
-    notify           => Service['xylem'],
   }
 }
 
-node 'worker.seed-stack.local' {
-  include common
-  include seed_stack_cluster
+node 'controller.seed-stack.local' {
+  include dcos_node
+  include xylem_node
+  include mc2_manager
+}
 
-  class { 'dcos_node': gluster_nodes => $seed_stack_cluster::gluster_nodes }
+node 'worker.seed-stack.local' {
+  include dcos_node
 }
 
 node 'public.seed-stack.local' {
-  include common
-  include seed_stack_cluster
-
-  class { 'dcos_node': gluster_nodes => $seed_stack_cluster::gluster_nodes }
+  include dcos_node
 }
 
 # # Standalone Docker registry for testing
