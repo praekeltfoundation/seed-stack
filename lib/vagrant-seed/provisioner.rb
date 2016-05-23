@@ -169,6 +169,9 @@ module VagrantPlugins
             'bash ./install-optout.sh . https://controller.seed-stack.local --add-path yes',
             'source ./bin/env-setup',
             "cat <<'EOF' > options.json\n#{marathon_lb_opts.to_json}\nEOF",
+            # We do this twice because it sometimes fails "due to concurrent
+            # access".
+            'dcos package install --options=options.json --yes marathon-lb',
             'dcos package install --options=options.json --yes marathon-lb',
           ].join("\n"))
       end
