@@ -39,9 +39,11 @@ file { "/tmp/dcos":
 class dcos_installation { 
 exec { 'change-dir':
   command => 'cd /tmp/dcos'
+  path    => '/bin/',
   }
 exec { 'dcos-installer':                    
   command => 'curl -O http://boot.seed-stack.local:9012/dcos_install.sh'
+  path    => '/bin/',
   #refreshonly => true
   }
 
