@@ -27,10 +27,19 @@ class common {
   }
 }
 
+#Nelson Classes
+class dcos_install {
+
+file { "/tmp/dcos":
+    ensure => 'present',
+    #ensure => 'directory',
+  }
+}
 
 # Stuff for dcos nodes.
 class dcos_node($gluster_nodes) {
   include common
+  include dcos_install
 
   package { ['selinux-utils', 'ipset', 'unzip', 'gawk', 'glusterfs-client']:
     ensure  => 'present',
