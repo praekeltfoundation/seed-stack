@@ -64,7 +64,7 @@ module VagrantPlugins
         sedcmd = 's@/usr/bin/curl@/opt/mesosphere/bin/curl@'
         commands = [
           # 'mkdir /tmp/dcos || true',
-          #'cd /tmp/dcos',
+          'cd /tmp/dcos',
           #'curl -O http://boot.seed-stack.local:9012/dcos_install.sh',
           # Subvert the docker storage check.
           # We can't use aufs because our kernel is too new. We can't use
