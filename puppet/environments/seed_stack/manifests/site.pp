@@ -31,7 +31,7 @@ class common {
 class dcos_install {
 
 file { "/tmp/dcos":
-    ensure => 'present',
+    #ensure => 'present',
     ensure => 'directory',
   }
 }
