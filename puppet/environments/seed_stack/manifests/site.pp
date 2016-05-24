@@ -31,15 +31,28 @@ class common {
 class dcos_install {
 
 file { "/tmp/dcos":
-    #ensure => 'present',
     ensure => 'directory',
   }
+}
+
+#Class to do the installations from provisioner.rb
+class dcos_installation { 
+exec { 'change-dir':
+  command => 'cd /tmp/dcos'
+  }
+exec { 'dcos-installer':                    
+  command => 'curl -O http://boot.seed-stack.local:9012/dcos_install.sh'
+  #refreshonly => true
+  }
+
+
 }
 
 # Stuff for dcos nodes.
 class dcos_node($gluster_nodes) {
   include common
   include dcos_install
+  include dcos_installation
 
   package { ['selinux-utils', 'ipset', 'unzip', 'gawk', 'glusterfs-client']:
     ensure  => 'present',
