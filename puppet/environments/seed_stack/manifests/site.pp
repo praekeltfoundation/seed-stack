@@ -32,7 +32,7 @@ class dcos_install {
 
 file { "/tmp/dcos":
     ensure => 'present',
-    #ensure => 'directory',
+    ensure => 'directory',
   }
 }
 

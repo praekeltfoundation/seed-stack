@@ -63,7 +63,7 @@ module VagrantPlugins
         # /usr/bin/curl doesn't like mesosphere libraries.
         sedcmd = 's@/usr/bin/curl@/opt/mesosphere/bin/curl@'
         commands = [
-          'mkdir /tmp/dcos || true',
+          # 'mkdir /tmp/dcos || true',
           'cd /tmp/dcos',
           'curl -O http://boot.seed-stack.local:9012/dcos_install.sh',
           # Subvert the docker storage check.
