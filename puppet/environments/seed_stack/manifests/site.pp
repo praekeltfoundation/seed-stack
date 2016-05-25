@@ -37,7 +37,7 @@ $sedcmd = 's@/usr/bin/curl@/opt/mesosphere/bin/curl@'
 
   exec { 'get-dcos-installer':
     command => 'curl -O http://boot.seed-stack.local:9012/dcos_install.sh',
-    cwd     => 'tmp/dcos/',
+    cwd     => '/tmp/dcos/',
     creates => '/tmp/dcos/dcos_install.sh',
     require => File['/tmp/dcos'],
   }
