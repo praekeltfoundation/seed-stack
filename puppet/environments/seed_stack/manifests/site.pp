@@ -27,8 +27,9 @@ class common {
   }
 }
 
-#Stuff to install dcos
+#Class to download and install dcos
 class dcos_install {
+$sedcmd = "s@/usr/bin/curl@/opt/mesosphere/bin/curl@"
 
 file { "/tmp/dcos":
     ensure => 'directory',
@@ -42,11 +43,11 @@ exec { 'get-dcos-installer':
   }
 
 exec { 'run-dcos-installer':                    
-  command => 'sed -i "s/devicemapper/deceivemapper/" dcos_install.sh \
-              bash dcos_install.sh #{role}\
-              sed -i "#{sedcmd}" /etc/systemd/system/dcos-*.service \
+  command => "sed -i 's/devicemapper/deceivemapper/' dcos_install.sh \
+              bash dcos_install.sh ${dcos_node::role:} \
+              sed -i '${sedcmd}' /etc/systemd/system/dcos-*.service \
               systemctl daemon-reload \
-              touch /tmp/dcos/already-installed',
+              touch /tmp/dcos/already-installed",
   cwd     => "/tmp/dcos"
   creates => "/tmp/dcos/already-installed",
   require => Exec['get-dcos-installer'],
@@ -54,7 +55,7 @@ exec { 'run-dcos-installer':
 }
 
 # Stuff for dcos nodes.
-class dcos_node($gluster_nodes) {
+class dcos_node($gluster_nodes, $role) {
   include common
   include dcos_install
 
