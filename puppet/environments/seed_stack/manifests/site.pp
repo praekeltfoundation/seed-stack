@@ -1,5 +1,3 @@
-hiera_include('classes')
-
 # Repos
 class repos {
   include apt
@@ -101,7 +99,7 @@ class xylem_node($gluster_nodes) {
 }
 
 node 'boot.seed-stack.local' {
-  # Nothing to see here.
+  hiera_include('classes')
 }
 
 
@@ -137,17 +135,18 @@ class mc2_manager($infr_domain, $hub_domain) {
 }
 
 node 'controller.seed-stack.local' {
-  include dcos_node
-  include xylem_node
-  include mc2_manager
+  $role = 'controller'
+  hiera_include('classes')
 }
 
 node 'worker.seed-stack.local' {
-  include dcos_node
+  $role = 'worker'
+  hiera_include('classes')
 }
 
 node 'public.seed-stack.local' {
-  include dcos_node
+  $role = 'public'
+  hiera_include('classes')
 }
 
 # # Standalone Docker registry for testing

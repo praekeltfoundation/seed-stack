@@ -2,6 +2,7 @@ classes:
   - common
 
 dcos_node::gluster_nodes: "%{alias('clusterparams:gluster_nodes')}"
+dcos_node::dcos_role: "%{hiera('dcos_role')}"
 
 xylem_node::gluster_nodes: "%{alias('clusterparams:gluster_nodes')}"
 

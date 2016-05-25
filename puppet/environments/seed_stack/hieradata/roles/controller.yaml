@@ -1,0 +1,6 @@
+classes:
+  - dcos_node
+  - xylem_node
+  - mc2_manager
+
+dcos_role: master

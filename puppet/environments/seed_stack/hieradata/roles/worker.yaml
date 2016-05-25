@@ -1,0 +1,4 @@
+classes:
+  - dcos_node
+
+dcos_role: slave
