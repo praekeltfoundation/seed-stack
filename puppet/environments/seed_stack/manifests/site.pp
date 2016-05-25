@@ -49,6 +49,7 @@ $sedcmd = 's@/usr/bin/curl@/opt/mesosphere/bin/curl@'
                 sed -i '${sedcmd}' /etc/systemd/system/dcos-*.service \
                 systemctl daemon-reload \
                 touch /tmp/dcos/already-installed",
+    path    => ['/usr/bin', '/usr/sbin',],
     cwd     => '/tmp/dcos',
     creates => '/tmp/dcos/already-installed',
     require => Exec['get-dcos-installer'],
