@@ -57,7 +57,7 @@ $sedcmd = 's@/usr/bin/curl@/opt/mesosphere/bin/curl@'
 # Stuff for dcos nodes.
 class dcos_node($gluster_nodes, $dcos_role) {
   include common
-  include dcos_install
+  class { 'dcos_install': dcos_role => $dcos_role }
 
   package { ['selinux-utils', 'ipset', 'unzip', 'gawk', 'glusterfs-client']:
     ensure  => 'present',
