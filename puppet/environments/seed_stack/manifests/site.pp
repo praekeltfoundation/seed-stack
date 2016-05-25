@@ -31,24 +31,26 @@ class common {
 class dcos_install(String $dcos_role) {
 $sedcmd = 's@/usr/bin/curl@/opt/mesosphere/bin/curl@'
 
-file { '/tmp/dcos':
+  file { '/tmp/dcos':
     ensure => 'directory',
   }
-exec { 'get-dcos-installer':                    
-  command => 'curl -O http://boot.seed-stack.local:9012/dcos_install.sh',
-  cwd     => 'tmp/dcos/',
-  creates => '/tmp/dcos/dcos_install.sh',
-  require => File['/tmp/dcos'],
+
+  exec { 'get-dcos-installer':
+    command => 'curl -O http://boot.seed-stack.local:9012/dcos_install.sh',
+    cwd     => 'tmp/dcos/',
+    creates => '/tmp/dcos/dcos_install.sh',
+    require => File['/tmp/dcos'],
   }
-exec { 'run-dcos-installer':                    
-  command => "sed -i 's/devicemapper/deceivemapper/' dcos_install.sh \
-              bash dcos_install.sh ${dcos_role} \
-              sed -i '${sedcmd}' /etc/systemd/system/dcos-*.service \
-              systemctl daemon-reload \
-              touch /tmp/dcos/already-installed",
-  cwd     => '/tmp/dcos',
-  creates => '/tmp/dcos/already-installed',
-  require => Exec['get-dcos-installer'],
+
+  exec { 'run-dcos-installer':
+    command => "sed -i 's/devicemapper/deceivemapper/' dcos_install.sh \
+                bash dcos_install.sh ${dcos_role} \
+                sed -i '${sedcmd}' /etc/systemd/system/dcos-*.service \
+                systemctl daemon-reload \
+                touch /tmp/dcos/already-installed",
+    cwd     => '/tmp/dcos',
+    creates => '/tmp/dcos/already-installed',
+    require => Exec['get-dcos-installer'],
   }
 }
 
