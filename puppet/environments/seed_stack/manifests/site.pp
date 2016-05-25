@@ -29,9 +29,9 @@ class common {
 
 #Class to download and install dcos
 class dcos_install(String $dcos_role) {
-$sedcmd = "s@/usr/bin/curl@/opt/mesosphere/bin/curl@"
+$sedcmd = 's@/usr/bin/curl@/opt/mesosphere/bin/curl@'
 
-file { "/tmp/dcos":
+file { '/tmp/dcos':
     ensure => 'directory',
   }
 
@@ -48,8 +48,8 @@ exec { 'run-dcos-installer':
               sed -i '${sedcmd}' /etc/systemd/system/dcos-*.service \
               systemctl daemon-reload \
               touch /tmp/dcos/already-installed",
-  cwd     => "/tmp/dcos"
-  creates => "/tmp/dcos/already-installed",
+  cwd     => '/tmp/dcos',
+  creates => '/tmp/dcos/already-installed',
   require => Exec['get-dcos-installer'],
   }
 }
