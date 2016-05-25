@@ -71,10 +71,10 @@ module VagrantPlugins
           # overlay because our kernel has a bug. We can't use btrfs or
           # non-loopback devmapper because that requires a bunch of setup.
           # Loopback devmapper is fine for our purposes, though.
-          'sed -i "s/devicemapper/deceivemapper/" dcos_install.sh',
-          "bash dcos_install.sh #{role}",
-          "sed -i '#{sedcmd}' /etc/systemd/system/dcos-*.service",
-          'systemctl daemon-reload',
+          #'sed -i "s/devicemapper/deceivemapper/" dcos_install.sh',
+          #{}"bash dcos_install.sh #{role}",
+          #{}"sed -i '#{sedcmd}' /etc/systemd/system/dcos-*.service",
+          #'systemctl daemon-reload',
         ]
         remote_sudo(machine, commands.join("\n"))
         # Restart xylem if it's running, because it gets sad if it hasn't been

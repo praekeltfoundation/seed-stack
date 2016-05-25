@@ -27,16 +27,29 @@ class common {
   }
 }
 
-#Nelson Classes
+#Stuff to install dcos
 class dcos_install {
 
 file { "/tmp/dcos":
     ensure => 'directory',
   }
-exec { 'dcos-installer':                    
-  command => '/usr/bin/curl -o /tmp/dcos/dcos_install.sh http://boot.seed-stack.local:9012/dcos_install.sh',
+
+exec { 'get-dcos-installer':                    
+  command => 'curl -O http://boot.seed-stack.local:9012/dcos_install.sh',
+  cwd     => 'tmp/dcos/',
   creates => '/tmp/dcos/dcos_install.sh',
   require => File['/tmp/dcos'],
+  }
+
+exec { 'run-dcos-installer':                    
+  command => 'sed -i "s/devicemapper/deceivemapper/" dcos_install.sh \
+              bash dcos_install.sh #{role}\
+              sed -i "#{sedcmd}" /etc/systemd/system/dcos-*.service \
+              systemctl daemon-reload \
+              touch /tmp/dcos/already-installed',
+  cwd     => "/tmp/dcos"
+  creates => "/tmp/dcos/already-installed",
+  require => Exec['get-dcos-installer'],
   }
 }
 
