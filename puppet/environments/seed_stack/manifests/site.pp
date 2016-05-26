@@ -66,7 +66,7 @@ class dcos_install(String $dcos_role) {
 
   exec { 'run-dcos-script':
     command => 'bash -e run_dcos_installer.sh',
-    path    => ['/usr/bin', '/usr/sbin',],
+    path    => ['/bin', '/usr/bin', '/usr/sbin',],
     cwd     => '/tmp/dcos',
     creates => '/tmp/dcos/already-installed',
     require => [Exec['get-dcos-installer'], File['/tmp/dcos/run_dcos_installer.sh']],
