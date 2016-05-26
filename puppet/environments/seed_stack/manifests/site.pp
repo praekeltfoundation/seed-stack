@@ -56,7 +56,6 @@ class dcos_install(String $dcos_role) {
     path    => ['/usr/bin', '/usr/sbin',],
     cwd     => '/tmp/dcos/',
     creates => '/tmp/dcos/dcos_install.sh',
-    require => Class['dcos_prepare'],
   }
 
   exec { 'run-dcos-installer':
@@ -75,8 +74,8 @@ class dcos_install(String $dcos_role) {
 # Stuff for dcos nodes.
 class dcos_node($gluster_nodes, $dcos_role) {
   include common
-  include dcos_prepare
-  class { 'dcos_install': dcos_role => $dcos_role }
+  contain dcos_prepare
+  class { 'dcos_install': dcos_role => $dcos_role, require => Class['dcos_prepare']}
 
   file { '/etc/docker':
     ensure => 'directory',
