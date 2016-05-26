@@ -66,7 +66,8 @@ class dcos_node($gluster_nodes, $dcos_role) {
     require => [Class['apt::update'], Class['apt::backports']],
   }
 
-  ['mkdir', 'ln', 'tar'].each |$cmd| {
+  ['mkdir', 'ln', 'tar'].each |$cmd_arg| {
+    $cmd = $cmd_arg # Hack to avoid linter warning.
     file { "/usr/bin/${cmd}":
       ensure => 'link',
       target => "/bin/${cmd}",
