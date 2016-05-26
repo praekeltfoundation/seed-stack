@@ -26,21 +26,37 @@ class common {
     storage_driver => 'devicemapper',
   }
 }
-
-#Class to download and install dcos
-class dcos_install(String $dcos_role) {
-$sedcmd = 's@/usr/bin/curl@/opt/mesosphere/bin/curl@'
-
+#Class to prepare Dcos and packages
+class dcos_prepare {
+  
   file { '/tmp/dcos':
     ensure => 'directory',
   }
+
+  package { ['selinux-utils', 'ipset', 'unzip', 'gawk', 'glusterfs-client']:
+    ensure  => 'present',
+    require => [Class['apt::update'], Class['apt::backports']],
+  }
+
+  ['mkdir', 'ln', 'tar'].each |$cmd| {
+    file { "/usr/bin/${cmd}":
+      ensure => 'link',
+      target => "/bin/${cmd}",
+    }
+  }
+
+}
+
+#Class to download and install dcos
+class dcos_install(String $dcos_role) {
+  $sedcmd = 's@/usr/bin/curl@/opt/mesosphere/bin/curl@'
 
   exec { 'get-dcos-installer':
     command => 'curl -O http://boot.seed-stack.local:9012/dcos_install.sh',
     path    => ['/usr/bin', '/usr/sbin',],
     cwd     => '/tmp/dcos/',
     creates => '/tmp/dcos/dcos_install.sh',
-    require => File['/tmp/dcos'],
+    require => Class['dcos_prepare'],
   }
 
   exec { 'run-dcos-installer':
@@ -59,20 +75,8 @@ $sedcmd = 's@/usr/bin/curl@/opt/mesosphere/bin/curl@'
 # Stuff for dcos nodes.
 class dcos_node($gluster_nodes, $dcos_role) {
   include common
+  include dcos_prepare
   class { 'dcos_install': dcos_role => $dcos_role }
-
-  package { ['selinux-utils', 'ipset', 'unzip', 'gawk', 'glusterfs-client']:
-    ensure  => 'present',
-    require => [Class['apt::update'], Class['apt::backports']],
-  }
-
-  ['mkdir', 'ln', 'tar'].each |$cmd_arg| {
-    $cmd = $cmd_arg # Hack to avoid linter warning.
-    file { "/usr/bin/${cmd}":
-      ensure => 'link',
-      target => "/bin/${cmd}",
-    }
-  }
 
   file { '/etc/docker':
     ensure => 'directory',
@@ -88,7 +92,6 @@ class dcos_node($gluster_nodes, $dcos_role) {
     ],
   }
 }
-
 # Stuff for redis
 class redis_node {
   package { 'redis-server': ensure => 'installed' }
