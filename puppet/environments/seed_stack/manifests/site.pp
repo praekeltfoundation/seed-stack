@@ -78,7 +78,7 @@ class dcos_install(String $dcos_role) {
 class dcos_node($gluster_nodes, $dcos_role) {
   include common
   contain dcos_prepare
-  class {'dcos_install': dcos_role => $dcos_role, require => Class['dcos_prepare'], require => Service['docker']}
+  class {'dcos_install': dcos_role => $dcos_role, require => [Class['dcos_prepare'], Service['docker']]}
 
   file { '/etc/docker':
     ensure => 'directory',
