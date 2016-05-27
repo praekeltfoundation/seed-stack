@@ -54,53 +54,9 @@ module VagrantPlugins
           {good_exit: [0, 2]})
       end
 
-      def install_docs(machine, role)
-        if role.nil?
-          machine.ui.success "Not installing DC/OS on #{machine.name}."
-          return
-        end
-        machine.ui.success "Installing DC/OS on #{machine.name}..."
-        # /usr/bin/curl doesn't like mesosphere libraries.
-        sedcmd = 's@/usr/bin/curl@/opt/mesosphere/bin/curl@'
-        commands = [
-          # 'mkdir /tmp/dcos || true',
-          'cd /tmp/dcos',
-          #'curl -O http://boot.seed-stack.local:9012/dcos_install.sh',
-          # Subvert the docker storage check.
-          # We can't use aufs because our kernel is too new. We can't use
-          # overlay because our kernel has a bug. We can't use btrfs or
-          # non-loopback devmapper because that requires a bunch of setup.
-          # Loopback devmapper is fine for our purposes, though.
-          #'sed -i "s/devicemapper/deceivemapper/" dcos_install.sh',
-          #{}"bash dcos_install.sh #{role}",
-          #{}"sed -i '#{sedcmd}' /etc/systemd/system/dcos-*.service",
-          #'systemctl daemon-reload',
-        ]
-        remote_sudo(machine, commands.join("\n"))
-        # Restart xylem if it's running, because it gets sad if it hasn't been
-        # able to talk to marathon.
-        remote_sudo(machine, 'systemctl restart xylem.service || true')
-      end
-
-      def dcos_role(machine)
-        mcfg = @config.machines[machine.name.to_s]
-        if mcfg[:machine_type] == 'controller'
-          'master'
-        elsif mcfg[:machine_type] == 'worker'
-          if mcfg[:public_worker]
-            'slave_public'
-          else
-            'slave'
-          end
-        else
-          nil
-        end
-      end
-
       def install_machine(machine)
         @machine.ui.success "Installing #{machine.name}..."
         run_puppet(machine)
-        #install_docs(machine, dcos_role(machine))
       end
 
       def install_machines_of_type(machine_type)
