@@ -90,8 +90,6 @@ class bootstrap_prepare {
                "echo $('$ip_route' | grep -Eo '$grep_match' | tail -1)",
               ]
 
-  ]
-
   file { ['/root/', '/root/dcos', '/root/dcos/genconf']:
     ensure  => directory,
   }
