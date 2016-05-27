@@ -52,7 +52,7 @@ class dcos_install(String $dcos_role) {
   $sedcmd = 's@/usr/bin/curl@/opt/mesosphere/bin/curl@'
   $script_commands = [
                       "sed -i 's/devicemapper/deceivemapper/' dcos_install.sh",
-                      'bash dcos_install.sh ${dcos_role}',
+                      "bash dcos_install.sh ${dcos_role}",
                       "sed -i '${sedcmd}' /etc/systemd/system/dcos-*.service",
                       'systemctl daemon-reload',
                       'touch /tmp/dcos/already-installed',]
