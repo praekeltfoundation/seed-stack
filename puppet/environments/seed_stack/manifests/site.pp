@@ -159,6 +159,7 @@ class mc2_manager($infr_domain, $hub_domain) {
     infr_domain      => $infr_domain,
     hub_domain       => $hub_domain,
     marathon_host    => 'http://marathon.mesos:8080',
+    require          => Class['dcos_install'],
     container_params => {
       'add-host' => 'servicehost:172.17.0.1',
     },
