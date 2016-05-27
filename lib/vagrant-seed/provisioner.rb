@@ -100,7 +100,7 @@ module VagrantPlugins
       def install_machine(machine)
         @machine.ui.success "Installing #{machine.name}..."
         run_puppet(machine)
-        install_docs(machine, dcos_role(machine))
+        #install_docs(machine, dcos_role(machine))
       end
 
       def install_machines_of_type(machine_type)
