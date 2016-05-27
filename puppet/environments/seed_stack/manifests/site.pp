@@ -53,7 +53,7 @@ class dcos_install(String $dcos_role) {
   $commands_sequence = "sed -i 's/devicemapper/deceivemapper/' dcos_install.sh; bash dcos_install.sh ${dcos_role}; sed -i '${sedcmd}' /etc/systemd/system/dcos-*.service; systemctl daemon-reload; touch /tmp/dcos/already-installed"
 
   file { '/tmp/dcos/run_dcos_installer.sh':
-    ensure => present,
+    ensure  => present,
     content => $commands_sequence,
   }
 
