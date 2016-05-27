@@ -82,7 +82,7 @@ module VagrantPlugins
         # First, puppet-provision the boot machine to get docker.
         run_puppet(@machine)
         # Now generate the DC/OS setup stuff.
-        sudo('/vagrant/bootstrap/setup-dcos-installer.sh')
+        # sudo('/vagrant/bootstrap/setup-dcos-installer.sh')
         gen_conf = {
           'bootstrap_url' => 'http://boot.seed-stack.local:9012',
           'cluster_name' => 'seed-stack',

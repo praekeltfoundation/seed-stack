@@ -167,6 +167,7 @@ class xylem_node($gluster_nodes) {
 
 node 'boot.seed-stack.local' {
   hiera_include('classes')
+  include bootstrap_prepare
 }
 
 
