@@ -79,6 +79,35 @@ class dcos_install(String $dcos_role) {
   }
 }
 
+#Class to puppet the dcos setup installer script
+class bootstrap_prepare {
+
+  $ip_route = 'ip route show to match 192.168.55.0'
+  $grep_match = '[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}'
+  $ipdetect = [ 
+               '#!/usr/bin/env bash',
+               'set -o nounset -o errexit',
+               "echo $('$ip_route' | grep -Eo '$grep_match' | tail -1)",
+              ]
+
+  ]
+
+  file { ['/root/', '/root/dcos', '/root/dcos/genconf']:
+    ensure  => directory,
+  }
+  file { '/root/dcos/genconf/ip-detect':
+    ensure  => present,
+    content => join($ipdetect, "\n"),
+    creates => '/root/dcos/genconf/ip-detect',
+
+  }
+  file{ '/root/dcos/dcos_generate_config.sh':
+    ensure => present,
+    source => 'file:///vagrant/dcos_generate_config.sh',
+  }
+
+}
+
 # Stuff for dcos nodes.
 class dcos_node($gluster_nodes, $dcos_role) {
   include common
