@@ -96,7 +96,7 @@ class bootstrap_prepare {
   file { '/root/dcos/genconf/ip-detect':
     ensure  => present,
     content => join($ipdetect, "\n"),
-    creates => '/root/dcos/genconf/ip-detect',
+    #creates => '/root/dcos/genconf/ip-detect',
 
   }
   file{ '/root/dcos/dcos_generate_config.sh':
