@@ -111,11 +111,11 @@ class bootstrap_prepare {
 
   $ip_route = 'ip route show to match 192.168.55.0'
   $grep_match = '[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}'
-  $ipdetect = [ 
-               '#!/usr/bin/env bash',
-               'set -o nounset -o errexit',
-               "echo $('$ip_route' | grep -Eo '$grep_match' | tail -1)",
-              ]
+  $ipdetect = [
+    '#!/usr/bin/env bash',
+    'set -o nounset -o errexit',
+    "echo $(${ip_route} | grep -Eo '${grep_match}' | tail -1)",
+  ]
 
   file { ['/root/', '/root/dcos', '/root/dcos/genconf']:
     ensure  => directory,
