@@ -79,33 +79,6 @@ class dcos_install(String $dcos_role) {
   }
 }
 
-#Class to build gen_conf 
-class dcos_puppet_setup {
-  gen_conf = {
-    'bootstrap_url' => 'http://boot.seed-stack.local:9012',
-    'cluster_name' => 'seed-stack',
-    'exhibitor_storage_backend' => 'static',
-    'ip_detect_filename' => '/genconf/ip-detect',
-    'master_list' => get_controller_ips,
-    'resolvers' => ['8.8.8.8', '8.8.4.4'],
-    'oauth_enabled' => 'false',
-    'telemetry_enabled' => 'false',
-  }
-
-  file { ['/etc/puppetlabs/', '/etc/puppetlabs/code/',
-          '/etc/puppetlabs/code/environments/',
-          '/etc/puppetlabs/code/environments/production/',
-          '/etc/puppetlabs/code/environments/production/hieradata/']:
-    ensure => directory,
-  }
-  file { '/etc/puppetlabs/code/environments/production/hieradata/clusterparams.yaml':
-    ensure  => present,
-    content => gen_conf.to_yaml,
-    creates => '/etc/puppetlabs/code/environments/production/hieradata/clusterparams.yaml',
-  }
-
-}
-
 #Class to puppet the dcos setup installer script
 class bootstrap_prepare {
 
@@ -289,3 +262,30 @@ node 'public.seed-stack.local' {
 #     subscribe        => [Openssl::Certificate::X509['docker-registry']],
 #   }
 # }
+#Class to build gen_conf 
+#class dcos_puppet_setup {
+#  gen_conf = {
+#    'bootstrap_url' => 'http://boot.seed-stack.local:9012',
+#    'cluster_name' => 'seed-stack',
+#    'exhibitor_storage_backend' => 'static',
+#    'ip_detect_filename' => '/genconf/ip-detect',
+#    'master_list' => get_controller_ips,
+#    'resolvers' => ['8.8.8.8', '8.8.4.4'],
+#    'oauth_enabled' => 'false',
+#    'telemetry_enabled' => 'false',
+#  }
+
+#  file { ['/etc/puppetlabs/', '/etc/puppetlabs/code/',
+#          '/etc/puppetlabs/code/environments/',
+#          '/etc/puppetlabs/code/environments/production/',
+#          '/etc/puppetlabs/code/environments/production/hieradata/']:
+#    ensure => directory,
+#  }
+#  file { '/etc/puppetlabs/code/environments/production/hieradata/clusterparams.yaml':
+#    ensure  => present,
+#    content => gen_conf.to_yaml,
+#    creates => '/etc/puppetlabs/code/environments/production/hieradata/clusterparams.yaml',
+#  }
+
+#}
+
