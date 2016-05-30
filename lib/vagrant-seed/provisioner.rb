@@ -110,7 +110,7 @@ module VagrantPlugins
           'clusterparams:controller_ip' => '192.168.55.11',
           'clusterparams:public_ip'     => '192.168.55.20',
           'clusterparams:worker_ip'     => '192.168.55.21',
-          'clusterparams:gluster_nodes' => 'controller.seed-stack.local',
+          'clusterparams:gluster_nodes' => ['controller.seed-stack.local',],
           'clusterparams:infr_domain'   => 'infr.controller.seed-stack.local',
           'clusterparams:hub_domain'    => "%{hiera('clusterparams:public_ip')}.xip.io",
         }
