@@ -80,6 +80,7 @@ module VagrantPlugins
 
       def dcos_installer_setup
         # First, puppet-provision the boot machine to get docker.
+        dcos_puppet_setup
         run_puppet(@machine)
         # Now generate the DC/OS setup stuff.
         # sudo('/vagrant/bootstrap/setup-dcos-installer.sh')
@@ -106,12 +107,12 @@ module VagrantPlugins
 
       def dcos_puppet_setup
         gen_conf = {
-          'clusterparams:controller_ip:' => '192.168.55.11'
-          'clusterparams:public_ip:'     => '192.168.55.20'
-          'clusterparams:worker_ip:'     => '192.168.55.21'
-          'clusterparams:gluster_nodes:' => 'controller.seed-stack.local'
-          'clusterparams:infr_domain:'   => 'infr.controller.seed-stack.local'
-          'clusterparams:hub_domain:'    => "%{hiera('clusterparams:public_ip')}.xip.io"
+          'clusterparams:controller_ip' => '192.168.55.11',
+          'clusterparams:public_ip'     => '192.168.55.20',
+          'clusterparams:worker_ip'     => '192.168.55.21',
+          'clusterparams:gluster_nodes' => 'controller.seed-stack.local',
+          'clusterparams:infr_domain'   => 'infr.controller.seed-stack.local',
+          'clusterparams:hub_domain'    => "%{hiera('clusterparams:public_ip')}.xip.io",
         }
         path = '/etc/puppetlabs/code/environments/production/hieradata/clusterparams.yaml'
         sudo("cat <<'EOF' > #{path}\n#{gen_conf.to_yaml}EOF")
