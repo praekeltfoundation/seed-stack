@@ -94,7 +94,7 @@ class bootstrap_prepare {
     '#!/usr/bin/env bash',
     'set -o nounset -o errexit',
     "echo $(${ip_route} | grep -Eo '${grep_match}' | tail -1)",
-   ]
+  ]
 
   $gen_conf = {
     'bootstrap_url' => 'http://boot.seed-stack.local:9012',
@@ -103,8 +103,8 @@ class bootstrap_prepare {
     'ip_detect_filename' => '/genconf/ip-detect',
     'master_list' => hiera('clusterparams:controller_ips'),
     'resolvers' => ['8.8.8.8', '8.8.4.4'],
-    'oauth_enabled' => 'false',
-    'telemetry_enabled' => 'false',
+    'oauth_enabled' => false,
+    'telemetry_enabled' => false,
   }
 
   file { ['/root/', '/root/dcos', '/root/dcos/genconf']:
@@ -124,7 +124,7 @@ class bootstrap_prepare {
     require => File['/root/dcos/genconf'],
   }
     file {'/root/dcos/docker_script.sh':
-    ensure => present,
+    ensure  => present,
     content => join($docker_sudo_commands, "\n"),
   }
   exec {'run_dcos_generate_config':
