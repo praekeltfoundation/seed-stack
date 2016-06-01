@@ -123,15 +123,12 @@ class dcos_installer_setup {
     'oauth_enabled' => 'false',
     'telemetry_enabled' => 'false',
   }
-  file { ['/etc/dcos/', '/etc/dcos/']:
-    ensure => directory,
-  }
   file { '/root/dcos/genconf/config.yaml':
     ensure  => present,
-    content => inline_template('<%= $gen_conf.to_yaml %>'),
+    content => inline_template('<%= @gen_conf.to_yaml %>'),
     require => File['/etc/dcos/genconf'],
   }
-  file {'/etc/dcos/docker_script.sh':
+  file {'/root/dcos/docker_script.sh':
     ensure => present,
     content => join($docker_sudo_commands, "\n"),
   }
@@ -139,7 +136,7 @@ class dcos_installer_setup {
     command => 'bash dcos_generate_config.sh; /etc/dcos/docker_script.sh',
     cwd     => '/root/dcos',
     path    => ['/bin', '/usr/bin', '/usr/sbin', '/sbin'],
-    require => [Class['bootstrap_prepare'], File['/root/dcos/genconf/config.yaml'], File['/etc/dcos/docker_script.sh']],
+    require => [Class['bootstrap_prepare'], File['/root/dcos/genconf/config.yaml'], File['/root/dcos/docker_script.sh']],
   }
 }
 
