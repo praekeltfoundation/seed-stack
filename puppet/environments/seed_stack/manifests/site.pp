@@ -85,11 +85,11 @@ class bootstrap_prepare {
   $ip_route = 'ip route show to match 192.168.55.0'
   $grep_match = '[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}'
   $docker_sudo_commands = [
-    'bash dcos_generate_config.sh',
     'docker kill dcos-install',
     'docker rm dcos-install',
     'docker run --name dcos-install -d -p 9012:80 -v $PWD/genconf/serve:/usr/share/nginx/html:ro nginx',
     ]
+
   $ipdetect = [
     '#!/usr/bin/env bash',
     'set -o nounset -o errexit',
@@ -110,29 +110,37 @@ class bootstrap_prepare {
   file { ['/root/', '/root/dcos', '/root/dcos/genconf']:
     ensure  => directory,
   }
+
   file { '/root/dcos/genconf/ip-detect':
     ensure  => present,
     content => join($ipdetect, "\n"),
   }
-  file{ '/root/dcos/dcos_generate_config.sh':
+
+  file { '/root/dcos/dcos_generate_config.sh':
     ensure => present,
     source => 'file:///vagrant/dcos_generate_config.sh',
   }
+
   file { '/root/dcos/genconf/config.yaml':
     ensure  => present,
     content => inline_template('<%= @gen_conf.to_yaml %>'),
     require => File['/root/dcos/genconf'],
   }
-    file {'/root/dcos/docker_script.sh':
+  file {'/root/dcos/docker_script.sh':
     ensure  => present,
     content => join($docker_sudo_commands, "\n"),
   }
+
+  exec {'generate_configs':
+    command => 'bash dcos_generate_config.sh',
+    timeout => 600,
+  }
+  
   exec {'run_dcos_generate_config':
     command => 'bash docker_script.sh',
     cwd     => '/root/dcos',
     path    => ['/bin', '/usr/bin', '/usr/sbin', '/sbin'],
-    timeout => 420,
-    require => [Class['docker'], File['/root/dcos/genconf/config.yaml'], File['/root/dcos/docker_script.sh']],
+    require => [Class['docker'], File['/root/dcos/genconf/config.yaml'], File['/root/dcos/docker_script.sh'], Exec['generate_configs']],
   }
 }
 
