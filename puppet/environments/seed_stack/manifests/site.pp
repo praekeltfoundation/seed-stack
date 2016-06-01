@@ -113,7 +113,7 @@ class dcos_installer_setup {
     'docker run --name dcos-install -d -p 9012:80 -v $PWD/genconf/serve:/usr/share/nginx/html:ro nginx',
     ]
 
-  gen_conf = {
+  $gen_conf = {
     'bootstrap_url' => 'http://boot.seed-stack.local:9012',
     'cluster_name' => 'seed-stack',
     'exhibitor_storage_backend' => 'static',
@@ -128,7 +128,7 @@ class dcos_installer_setup {
   }
   file { '/root/dcos/genconf/config.yaml':
     ensure  => present,
-    content => inline_template('<%= gen_conf.to_yaml %>'),
+    content => inline_template('<%= $gen_conf.to_yaml %>'),
     require => File['/etc/dcos/genconf'],
   }
   file {'/etc/dcos/docker_script.sh':
