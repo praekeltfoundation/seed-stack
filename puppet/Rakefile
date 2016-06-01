@@ -31,13 +31,29 @@ def write_yaml_file(filename, data)
 end
 
 # Build a hiera config by reading and modifying the real one:
+#  - the clusterparams source needs to be generated and pointed to
 #  - all heirarchy nodes need %{::trusted.certname} replaced with %{::fqdn}
 #  - the datadir needs to point to the right place
 def build_hiera_config(hiera_config_file)
   Dir.mkdir("test_config") unless Dir.exists?("test_config")
+
+  cparams = {
+    'clusterparams:controller_ip' => '192.168.55.11',
+    'clusterparams:public_ip' => '192.168.55.20',
+    'clusterparams:worker_ip' => '192.168.55.21',
+    'clusterparams:gluster_nodes' => ['controller.seed-stack.local',],
+    'clusterparams:infr_domain' => 'infr.controller.seed-stack.local',
+    'clusterparams:controller_ips' => ['192.168.55.11'],
+    'clusterparams:hub_domain' => "%{hiera('clusterparams:public_ip')}.xip.io",
+  }
+  write_yaml_file(File.join("test_config", "clusterparams.yaml"), cparams)
+
   cfg = YAML.load_file(hiera_config_file)
   cfg[:yaml][:datadir] = "environments/seed_stack/hieradata"
-  cfg[:hierarchy].map! { |l| l.gsub("%{::trusted.certname}", "%{::fqdn}") }
+  cfg[:hierarchy].map! do |l|
+    l.gsub("%{::trusted.certname}", "%{::fqdn}")
+      .gsub("clusterparams", "../../../test_config/clusterparams")
+  end
   write_yaml_file(File.join("test_config", "hiera.yaml"), cfg)
 end
 
