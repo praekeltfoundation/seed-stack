@@ -84,34 +84,16 @@ class bootstrap_prepare {
 
   $ip_route = 'ip route show to match 192.168.55.0'
   $grep_match = '[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}'
-  $ipdetect = [
-    '#!/usr/bin/env bash',
-    'set -o nounset -o errexit',
-    "echo $(${ip_route} | grep -Eo '${grep_match}' | tail -1)",
-  ]
-
-  file { ['/root/', '/root/dcos', '/root/dcos/genconf']:
-    ensure  => directory,
-  }
-  file { '/root/dcos/genconf/ip-detect':
-    ensure  => present,
-    content => join($ipdetect, "\n"),
-    #creates => '/root/dcos/genconf/ip-detect',
-
-  }
-  file{ '/root/dcos/dcos_generate_config.sh':
-    ensure => present,
-    source => 'file:///vagrant/dcos_generate_config.sh',
-  }
-
-}
-
-class dcos_installer_setup {
   $docker_sudo_commands = ([
     'docker kill dcos-install',
     'docker rm dcos-install',
     'docker run --name dcos-install -d -p 9012:80 -v $PWD/genconf/serve:/usr/share/nginx/html:ro nginx',
     ]
+  $ipdetect = [
+    '#!/usr/bin/env bash',
+    'set -o nounset -o errexit',
+    "echo $(${ip_route} | grep -Eo '${grep_match}' | tail -1)",
+   ]
 
   $gen_conf = {
     'bootstrap_url' => 'http://boot.seed-stack.local:9012',
@@ -123,17 +105,29 @@ class dcos_installer_setup {
     'oauth_enabled' => 'false',
     'telemetry_enabled' => 'false',
   }
+
+  file { ['/root/', '/root/dcos', '/root/dcos/genconf']:
+    ensure  => directory,
+  }
+  file { '/root/dcos/genconf/ip-detect':
+    ensure  => present,
+    content => join($ipdetect, "\n"),
+  }
+  file{ '/root/dcos/dcos_generate_config.sh':
+    ensure => present,
+    source => 'file:///vagrant/dcos_generate_config.sh',
+  }
   file { '/root/dcos/genconf/config.yaml':
     ensure  => present,
     content => inline_template('<%= @gen_conf.to_yaml %>'),
-    require => File['/etc/dcos/genconf'],
+    require => File['/root/dcos/genconf'],
   }
-  file {'/root/dcos/docker_script.sh':
+    file {'/root/dcos/docker_script.sh':
     ensure => present,
     content => join($docker_sudo_commands, "\n"),
   }
   exec {'run_dcos_generate_config':
-    command => 'bash dcos_generate_config.sh; /etc/dcos/docker_script.sh',
+    command => 'bash dcos_generate_config.sh; docker_script.sh',
     cwd     => '/root/dcos',
     path    => ['/bin', '/usr/bin', '/usr/sbin', '/sbin'],
     require => [Class['bootstrap_prepare'], File['/root/dcos/genconf/config.yaml'], File['/root/dcos/docker_script.sh']],
