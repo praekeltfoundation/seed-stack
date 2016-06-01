@@ -112,7 +112,7 @@ module VagrantPlugins
           'clusterparams:worker_ip'      => '192.168.55.21',
           'clusterparams:gluster_nodes'  => ['controller.seed-stack.local',],
           'clusterparams:infr_domain'    => 'infr.controller.seed-stack.local',
-          'clusterparams:controller_ips' => 'get_controller_ips',
+          'clusterparams:controller_ips' => get_controller_ips,
           'clusterparams:hub_domain'     => "%{hiera('clusterparams:public_ip')}.xip.io",
         }
         path = '/etc/puppetlabs/code/environments/production/hieradata/clusterparams.yaml'

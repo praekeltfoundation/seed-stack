@@ -108,41 +108,38 @@ class bootstrap_prepare {
 
 class dcos_installer_setup {
   $docker_sudo_commands = ([
-    'sudo -i',
-    'cd /root/dcos',
     'docker kill dcos-install',
     'docker rm dcos-install',
     'docker run --name dcos-install -d -p 9012:80 -v $PWD/genconf/serve:/usr/share/nginx/html:ro nginx',
-    ].join("\n"))
+    ]
 
   gen_conf = {
     'bootstrap_url' => 'http://boot.seed-stack.local:9012',
     'cluster_name' => 'seed-stack',
     'exhibitor_storage_backend' => 'static',
     'ip_detect_filename' => '/genconf/ip-detect',
-    'master_list' => 'get_controller_ips',
+    'master_list' => hiera('clusterparams:controller_ips'),
     'resolvers' => ['8.8.8.8', '8.8.4.4'],
     'oauth_enabled' => 'false',
     'telemetry_enabled' => 'false',
   }
-  file { ['/etc/dcos/', '/etc/dcos/genconf']:
+  file { ['/etc/dcos/', '/etc/dcos/']:
     ensure => directory,
   }
   file { '/root/dcos/genconf/config.yaml':
     ensure  => present,
-    content => inline_template('<%= @gen_conf.to_yaml %>'),
-    creates => '/root/dcos/genconf/config.yaml',
+    content => inline_template('<%= gen_conf.to_yaml %>'),
     require => File['/etc/dcos/genconf'],
   }
-  exec {'run_dcos_generate_config':
-    command => 'sudo -i; cd /root/dcos; bash dcos_generate_config.sh',
-    path    => ['/bin', '/usr/bin', '/usr/sbin', '/sbin'],
-    require => Class['bootstrap_prepare'],
+  file {'/etc/dcos/docker_script.sh':
+    ensure => present,
+    content => join($docker_sudo_commands, "\n"),
   }
-  exec { 'docker_commands':
-    command => $docker_sudo_commands
+  exec {'run_dcos_generate_config':
+    command => 'bash dcos_generate_config.sh; /etc/dcos/docker_script.sh',
+    cwd     => '/root/dcos',
     path    => ['/bin', '/usr/bin', '/usr/sbin', '/sbin'],
-    require => File['/root/dcos/genconf/config.yaml'],
+    require => [Class['bootstrap_prepare'], File['/root/dcos/genconf/config.yaml'], File['/etc/dcos/docker_script.sh']],
   }
 }
 
