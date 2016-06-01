@@ -85,7 +85,7 @@ class bootstrap_prepare {
   $ip_route = 'ip route show to match 192.168.55.0'
   $grep_match = '[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}'
   $docker_sudo_commands = [
-    'bash dcos_generate_config.sh'
+    'bash dcos_generate_config.sh',
     'docker kill dcos-install',
     'docker rm dcos-install',
     'docker run --name dcos-install -d -p 9012:80 -v $PWD/genconf/serve:/usr/share/nginx/html:ro nginx',
@@ -128,7 +128,7 @@ class bootstrap_prepare {
     content => join($docker_sudo_commands, "\n"),
   }
   exec {'run_dcos_generate_config':
-    command => 'docker_script.sh',
+    command => 'bash docker_script.sh',
     cwd     => '/root/dcos',
     path    => ['/bin', '/usr/bin', '/usr/sbin', '/sbin'],
     require => [Class['bootstrap_prepare'], File['/root/dcos/genconf/config.yaml'], File['/root/dcos/docker_script.sh']],
