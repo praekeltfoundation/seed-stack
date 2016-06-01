@@ -131,6 +131,7 @@ class bootstrap_prepare {
     command => 'bash docker_script.sh',
     cwd     => '/root/dcos',
     path    => ['/bin', '/usr/bin', '/usr/sbin', '/sbin'],
+    timeout => 600,
     require => [Class['docker'], File['/root/dcos/genconf/config.yaml'], File['/root/dcos/docker_script.sh']],
   }
 }
