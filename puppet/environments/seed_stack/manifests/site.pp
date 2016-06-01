@@ -133,14 +133,17 @@ class bootstrap_prepare {
 
   exec {'generate_configs':
     command => 'bash dcos_generate_config.sh',
+    cwd     => '/root/dcos',
+    path    => ['/bin', '/usr/bin', '/usr/sbin', '/sbin'],
     timeout => 600,
+    require => [Class['docker'], File['/root/dcos/genconf/config.yaml'], File['/root/dcos/docker_script.sh'],
   }
-  
+
   exec {'run_dcos_generate_config':
     command => 'bash docker_script.sh',
     cwd     => '/root/dcos',
     path    => ['/bin', '/usr/bin', '/usr/sbin', '/sbin'],
-    require => [Class['docker'], File['/root/dcos/genconf/config.yaml'], File['/root/dcos/docker_script.sh'], Exec['generate_configs']],
+    require => Exec['generate_configs'],
   }
 }
 
