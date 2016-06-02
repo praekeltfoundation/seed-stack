@@ -104,8 +104,8 @@ class bootstrap_prepare {
     'ip_detect_filename' => '/genconf/ip-detect',
     'master_list' => hiera('clusterparams:controller_ips'),
     'resolvers' => ['8.8.8.8', '8.8.4.4'],
-    'oauth_enabled' => false,
-    'telemetry_enabled' => false,
+    'oauth_enabled' => 'false',
+    'telemetry_enabled' => 'false',
   }
 
   file { ['/root/', '/root/dcos', '/root/dcos/genconf']:
