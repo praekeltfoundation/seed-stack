@@ -26,9 +26,10 @@ class common {
     storage_driver => 'devicemapper',
   }
 }
+
 #Class to prepare Dcos and packages
 class dcos_prepare {
-  
+
   file { '/tmp/dcos':
     ensure => 'directory',
   }
@@ -136,7 +137,11 @@ class bootstrap_prepare {
     cwd     => '/root/dcos',
     path    => ['/bin', '/usr/bin', '/usr/sbin', '/sbin'],
     timeout => 900,
-    require => [Class['docker'], File['/root/dcos/genconf/config.yaml'], File['/root/dcos/docker_script.sh']],
+    require => [
+      Class['docker'],
+      File['/root/dcos/genconf/config.yaml'],
+      File['/root/dcos/docker_script.sh'],
+    ],
   }
 
   exec {'run_dcos_generate_config':
@@ -151,7 +156,11 @@ class bootstrap_prepare {
 class dcos_node($gluster_nodes, $dcos_role) {
   include common
   contain dcos_prepare
-  class {'dcos_install': dcos_role => $dcos_role, require => [Class['dcos_prepare'], Service['docker']]}
+
+  class { 'dcos_install':
+    dcos_role => $dcos_role,
+    require   => [Class['dcos_prepare'], Service['docker']],
+  }
 
   file { '/etc/docker':
     ensure => 'directory',
