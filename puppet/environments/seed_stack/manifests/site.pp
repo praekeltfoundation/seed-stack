@@ -234,24 +234,24 @@ class seed_stack_cluster {
 }
 
 
-# Thing for MC2 manager.
-class mc2_manager($infr_domain, $hub_domain) {
-  include redis_node
+# # Thing for MC2 manager.
+# class mc2_manager($infr_domain, $hub_domain) {
+#   include redis_node
 
-  class { 'seed_stack::mc2':
-    infr_domain      => $infr_domain,
-    hub_domain       => $hub_domain,
-    marathon_host    => 'http://marathon.mesos:8080',
-    require          => Class['dcos_install'],
-    container_params => {
-      'add-host' => 'servicehost:172.17.0.1',
-    },
-    app_labels       => {
-      'HAPROXY_GROUP'   => 'external',
-      'HAPROXY_0_VHOST' => "mc2.${infr_domain}",
-    },
-  }
-}
+#   class { 'seed_stack::mc2':
+#     infr_domain      => $infr_domain,
+#     hub_domain       => $hub_domain,
+#     marathon_host    => 'http://marathon.mesos:8080',
+#     require          => Class['dcos_install'],
+#     container_params => {
+#       'add-host' => 'servicehost:172.17.0.1',
+#     },
+#     app_labels       => {
+#       'HAPROXY_GROUP'   => 'external',
+#       'HAPROXY_0_VHOST' => "mc2.${infr_domain}",
+#     },
+#   }
+# }
 
 node 'controller.seed-stack.local' {
   $role = 'controller'
