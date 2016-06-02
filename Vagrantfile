@@ -10,7 +10,7 @@ MACHINES = {
   "boot" => {
     :ip => "192.168.55.2",
     :machine_type => "bootstrap",
-    :memory => "768",
+    :memory => "1024",
   },
 
   # Cluster machines
