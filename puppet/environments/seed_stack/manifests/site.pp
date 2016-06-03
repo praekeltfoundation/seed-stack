@@ -85,6 +85,7 @@ class bootstrap_prepare {
 
   $ip_route = 'ip route show to match 192.168.55.0'
   $grep_match = '[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}'
+  $package_opts = hiera('clusterparams:dcos_package_opts')
   $docker_sudo_commands = [
     'docker kill dcos-install',
     'docker rm dcos-install',
@@ -127,6 +128,12 @@ class bootstrap_prepare {
     content => inline_template('<%= @gen_conf.to_yaml %>'),
     require => File['/root/dcos/genconf'],
   }
+
+  file { '/root/dcos/options.json':
+    ensure  => present,
+    content => inline_template('<%= @package_opts.to_json %>'),
+  }
+
   file {'/root/dcos/docker_script.sh':
     ensure  => present,
     content => join($docker_sudo_commands, "\n"),

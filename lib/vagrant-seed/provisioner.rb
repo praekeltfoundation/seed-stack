@@ -80,13 +80,19 @@ module VagrantPlugins
 
       def dcos_installer_setup
         gen_conf = {
-          'clusterparams:controller_ip'  => '192.168.55.11',
-          'clusterparams:public_ip'      => '192.168.55.20',
-          'clusterparams:worker_ip'      => '192.168.55.21',
-          'clusterparams:gluster_nodes'  => ['controller.seed-stack.local',],
-          'clusterparams:infr_domain'    => 'infr.controller.seed-stack.local',
-          'clusterparams:controller_ips' => get_controller_ips,
-          'clusterparams:hub_domain'     => "%{hiera('clusterparams:public_ip')}.xip.io",
+          'clusterparams:controller_ip'     => '192.168.55.11',
+          'clusterparams:public_ip'         => '192.168.55.20',
+          'clusterparams:worker_ip'         => '192.168.55.21',
+          'clusterparams:gluster_nodes'     => ['controller.seed-stack.local',],
+          'clusterparams:infr_domain'       => 'infr.controller.seed-stack.local',
+          'clusterparams:controller_ips'    => get_controller_ips,
+          'clusterparams:hub_domain'        => "%{hiera('clusterparams:public_ip')}.xip.io",
+          'clusterparams:dcos_package_opts' => "{
+            'marathon-lb' => {
+              'mem' => 256,
+              'cpus' => 1
+              }
+            }",
         }
         path = '/etc/puppetlabs/code/environments/production/hieradata/clusterparams.yaml'
         sudo("cat <<'EOF' > #{path}\n#{gen_conf.to_yaml}EOF")
