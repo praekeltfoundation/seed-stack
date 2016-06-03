@@ -107,28 +107,28 @@ module VagrantPlugins
             'cpus' => 1,
           }
         }
-        sudo([
-            'apt-get install -qy --no-install-recommends virtualenv',
-            'cd /root',
-            'rm -rf dcos-cli-bootstrap',
-            'virtualenv dcos-cli-bootstrap',
-            'source dcos-cli-bootstrap/bin/activate',
-            'which pip',
-            'pip install -U pip virtualenv',
-            'mkdir -p dcos',
-            'cd dcos',
-            'curl -O https://downloads.dcos.io/dcos-cli/install-optout.sh',
-            'bash ./install-optout.sh . https://controller.seed-stack.local --add-path yes',
-            'source ./bin/env-setup',
-            "dcos package repo add Seed #{universe_url}",
-            #{}"cat <<'EOF' > options.json\n#{marathon_lb_opts.to_json}\nEOF",
-            # We do this twice because it sometimes fails "due to concurrent
-            # access".
-            'dcos package install --options=options.json --yes marathon-lb',
-            'dcos package install --options=options.json --yes mc2',
-            'dcos package install --options=options.json --yes marathon-lb',
-            'dcos package install --options=options.json --yes mc2',
-          ].join("\n"))
+        #sudo([
+        #    'apt-get install -qy --no-install-recommends virtualenv',
+        #    'cd /root',
+        #    'rm -rf dcos-cli-bootstrap',
+        #    'virtualenv dcos-cli-bootstrap',
+        #    'source dcos-cli-bootstrap/bin/activate',
+        #    'which pip',
+        #    'pip install -U pip virtualenv',
+        #    'mkdir -p dcos',
+        #    'cd dcos',
+        #    'curl -O https://downloads.dcos.io/dcos-cli/install-optout.sh',
+        #    'bash ./install-optout.sh . https://controller.seed-stack.local --add-path yes',
+        #    'source ./bin/env-setup',
+        #    "dcos package repo add Seed #{universe_url}",
+        #    #{}"cat <<'EOF' > options.json\n#{marathon_lb_opts.to_json}\nEOF",
+        #    # We do this twice because it sometimes fails "due to concurrent
+        #    # access".
+        #    'dcos package install --options=options.json --yes marathon-lb',
+        #    'dcos package install --options=options.json --yes mc2',
+        #    'dcos package install --options=options.json --yes marathon-lb',
+        #    'dcos package install --options=options.json --yes mc2',
+        #  ].join("\n"))
       end
 
     end

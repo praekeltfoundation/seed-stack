@@ -92,6 +92,27 @@ class bootstrap_prepare {
     'docker run --name dcos-install -d -p 9012:80 -v $PWD/genconf/serve:/usr/share/nginx/html:ro nginx',
     ]
 
+  $dcos_installer_commands = [
+    'apt-get install -qy --no-install-recommends virtualenv',
+    'cd /root',
+    'rm -rf dcos-cli-bootstrap',
+    'virtualenv dcos-cli-bootstrap',
+    'source dcos-cli-bootstrap/bin/activate',
+    'which pip',
+    'pip install -U pip virtualenv',
+    'mkdir -p dcos',
+    'cd dcos',
+    'curl -O https://downloads.dcos.io/dcos-cli/install-optout.sh',
+    'bash ./install-optout.sh . https://controller.seed-stack.local --add-path yes',
+    'source ./bin/env-setup',
+    "dcos package repo add Seed #{universe_url}",
+    'dcos package install --options=options.json --yes marathon-lb',
+    'dcos package install --options=options.json --yes mc2',
+    'dcos package install --options=options.json --yes marathon-lb',
+    'dcos package install --options=options.json --yes mc2',
+    ]
+
+
   $ipdetect = [
     '#!/usr/bin/env bash',
     'set -o nounset -o errexit',
@@ -137,6 +158,11 @@ class bootstrap_prepare {
   file {'/root/dcos/docker_script.sh':
     ensure  => present,
     content => join($docker_sudo_commands, "\n"),
+  }
+
+  file{ '/root/dcos/dcos_cli_setup.sh':
+    ensure  => present,
+    content => join(dcos_installer_commands, "\n"),
   }
 
   exec {'generate_configs':
