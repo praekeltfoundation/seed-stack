@@ -162,7 +162,7 @@ class bootstrap_prepare {
 
   file{ '/root/dcos/dcos_cli_setup.sh':
     ensure  => present,
-    content => join(dcos_installer_commands, "\n"),
+    content => join($dcos_installer_commands, "\n"),
   }
 
   exec {'generate_configs':
