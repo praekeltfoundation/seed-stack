@@ -3,7 +3,7 @@
 # the various gems.
 source 'https://rubygems.org'
 
-gem 'librarian-puppet'
+gem 'librarian-puppet', '>=2.2.3'
 gem 'inifile'  # Required by camptocamp-openssl module after the first run.
 
 group :test do

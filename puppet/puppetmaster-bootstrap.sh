@@ -8,7 +8,7 @@ if dpkg-query -l puppetserver > /dev/null; then
 else
     echo "Installing puppetserver package and related things."
     apt-get install -qy --no-install-recommends \
-            puppetserver bundler git ruby-dev
+            puppetserver bundler git
 fi
 
 # Copy our puppet configs over.
