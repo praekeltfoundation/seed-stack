@@ -105,7 +105,7 @@ class bootstrap_prepare {
     'curl -O https://downloads.dcos.io/dcos-cli/install-optout.sh',
     'bash ./install-optout.sh . https://controller.seed-stack.local --add-path yes',
     'source ./bin/env-setup',
-    "dcos package repo add Seed #{universe_url}",
+    'dcos package repo add Seed #{universe_url}',
     'dcos package install --options=options.json --yes marathon-lb',
     'dcos package install --options=options.json --yes mc2',
     'dcos package install --options=options.json --yes marathon-lb',
@@ -158,6 +158,11 @@ class bootstrap_prepare {
   file {'/root/dcos/docker_script.sh':
     ensure  => present,
     content => join($docker_sudo_commands, "\n"),
+  }
+
+  package { 'virtualenv':
+    ensure => installed,
+    
   }
 
   file{ '/root/dcos/dcos_cli_setup.sh':
