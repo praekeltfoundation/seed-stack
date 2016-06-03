@@ -93,7 +93,6 @@ class bootstrap_prepare {
     ]
 
   $dcos_installer_commands = [
-    'apt-get install -qy --no-install-recommends virtualenv',
     'cd /root',
     'rm -rf dcos-cli-bootstrap',
     'virtualenv dcos-cli-bootstrap',
@@ -161,13 +160,13 @@ class bootstrap_prepare {
   }
 
   package { 'virtualenv':
-    ensure => installed,
-    
+    ensure => 'installed',
   }
 
   file{ '/root/dcos/dcos_cli_setup.sh':
     ensure  => present,
     content => join($dcos_installer_commands, "\n"),
+    require => Package['virtualenv'],
   }
 
   exec {'generate_configs':
@@ -330,3 +329,4 @@ node 'public.seed-stack.local' {
 #     subscribe        => [Openssl::Certificate::X509['docker-registry']],
 #   }
 # }
+#'apt-get install -qy --no-install-recommends virtualenv',
