@@ -44,6 +44,12 @@ def build_hiera_config(hiera_config_file)
     'clusterparams:gluster_nodes' => ['controller.seed-stack.local',],
     'clusterparams:infr_domain' => 'infr.controller.seed-stack.local',
     'clusterparams:controller_ips' => ['192.168.55.11'],
+    'clusterparams:dcos_package_opts' => {
+            'marathon-lb' => {
+              'mem' => 256,
+              'cpus' => 1
+              }
+            },
     'clusterparams:hub_domain' => "%{hiera('clusterparams:public_ip')}.xip.io",
   }
   write_yaml_file(File.join("test_config", "clusterparams.yaml"), cparams)
