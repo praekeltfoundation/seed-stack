@@ -87,12 +87,12 @@ module VagrantPlugins
           'clusterparams:infr_domain'       => 'infr.controller.seed-stack.local',
           'clusterparams:controller_ips'    => get_controller_ips,
           'clusterparams:hub_domain'        => "%{hiera('clusterparams:public_ip')}.xip.io",
-          'clusterparams:dcos_package_opts' => "{
+          'clusterparams:dcos_package_opts' => {
             'marathon-lb' => {
               'mem' => 256,
               'cpus' => 1
               }
-            }",
+            },
         }
         path = '/etc/puppetlabs/code/environments/production/hieradata/clusterparams.yaml'
         sudo("cat <<'EOF' > #{path}\n#{gen_conf.to_yaml}EOF")
@@ -121,7 +121,7 @@ module VagrantPlugins
             'bash ./install-optout.sh . https://controller.seed-stack.local --add-path yes',
             'source ./bin/env-setup',
             "dcos package repo add Seed #{universe_url}",
-            "cat <<'EOF' > options.json\n#{marathon_lb_opts.to_json}\nEOF",
+            #{}"cat <<'EOF' > options.json\n#{marathon_lb_opts.to_json}\nEOF",
             # We do this twice because it sometimes fails "due to concurrent
             # access".
             'dcos package install --options=options.json --yes marathon-lb',
