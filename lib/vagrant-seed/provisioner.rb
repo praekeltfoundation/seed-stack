@@ -107,6 +107,7 @@ module VagrantPlugins
             'cpus' => 1,
           }
         }
+        sudo('bash /root/dcos/dcos_cli_setup.sh')
         #sudo([
         #    'apt-get install -qy --no-install-recommends virtualenv',
         #    'cd /root',
