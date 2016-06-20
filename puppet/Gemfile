@@ -13,6 +13,7 @@ group :test do
                    when '3.4'; '3.4.3'
                    when '3.8'; '~>3.8.0'
                    when '4'; '~>4.3.0'
+                   when '4.5'; '~>4.5.0'
                    end
   gem 'puppet', puppet_version
 

@@ -1,0 +1,5 @@
+classes:
+  - dcos_node
+  - xylem_node
+
+dcos_role: master

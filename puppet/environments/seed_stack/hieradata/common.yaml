@@ -1,0 +1,10 @@
+classes:
+  - common
+
+dcos_node::gluster_nodes: "%{alias('clusterparams:gluster_nodes')}"
+dcos_node::dcos_role: "%{hiera('dcos_role')}"
+
+xylem_node::gluster_nodes: "%{alias('clusterparams:gluster_nodes')}"
+
+mc2_manager::infr_domain: "%{alias('clusterparams:infr_domain')}"
+mc2_manager::hub_domain: "%{alias('clusterparams:hub_domain')}"
